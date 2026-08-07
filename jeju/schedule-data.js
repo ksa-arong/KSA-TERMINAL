@@ -1,252 +1,240 @@
 window.scheduleData = {
   "referenceTime": "08:30",
-  "filters": [
-    {
-      "id": "coastal",
-      "label": "연안 2부두"
-    },
-    {
-      "id": "international",
-      "label": "국제 7부두"
-    }
-  ],
+  "filters": ["coastal", "international"],
+  "terminals": {
+    "coastal": { "filterLabel": "연안 2부두", "tableLabel": "연안(2부두)" },
+    "international": { "filterLabel": "국제 7부두", "tableLabel": "국제(7부두)" }
+  },
+  "ports": {
+    "jeju": "제주항",
+    "chuja_wando": "추자·완도",
+    "wando": "완도항",
+    "mokpo": "목포항",
+    "samcheonpo": "삼천포항",
+    "chuja_jindo": "추자·진도",
+    "nokdong": "녹동항",
+    "chuja_from_jindo": "추자(진도발)",
+    "chuja_from_wando": "추자(완도발)"
+  },
   "items": [
     {
       "type": "departure",
       "time": "08:00",
       "duration": "2:40",
-      "origin": "제주항",
-      "destination": "추자·완도",
+      "originId": "jeju",
+      "destinationId": "chuja_wando",
       "vessel": "송림블루오션",
       "operator": "(주)송림해운",
       "operatorPhone": "064-758-8889",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "normal"
     },
     {
       "type": "departure",
       "time": "08:40",
       "duration": "2:40",
-      "origin": "제주항",
-      "destination": "완도항",
+      "originId": "jeju",
+      "destinationId": "wando",
       "vessel": "골드스텔라(1항차)",
       "operator": "(주)한일고속",
       "operatorPhone": "1688-2100",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "통제"
+      "status": "controlled"
     },
     {
       "type": "departure",
       "time": "13:40",
       "duration": "4:30",
-      "origin": "제주항",
-      "destination": "목포항",
+      "originId": "jeju",
+      "destinationId": "mokpo",
       "vessel": "퀸제누비아 2",
       "operator": "씨월드고속훼리(주)",
       "operatorPhone": "1577-3567",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "결항"
+      "status": "cancelled"
     },
     {
       "type": "departure",
       "time": "14:30",
       "duration": "6:30",
-      "origin": "제주항",
-      "destination": "삼천포항",
+      "originId": "jeju",
+      "destinationId": "samcheonpo",
       "vessel": "오션비스타 제주",
       "operator": "(주)현성MCT",
       "operatorPhone": "064-759-8486",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "선사문의"
+      "status": "inquiry"
     },
     {
       "type": "departure",
       "time": "16:00",
       "duration": "2:40",
-      "origin": "제주항",
-      "destination": "완도항",
+      "originId": "jeju",
+      "destinationId": "wando",
       "vessel": "실버클라우드",
       "operator": "(주)한일고속",
       "operatorPhone": "1688-2100",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "통제"
+      "status": "controlled"
     },
     {
       "type": "departure",
       "time": "16:20",
       "duration": "0:50",
-      "origin": "제주항",
-      "destination": "추자·진도",
+      "originId": "jeju",
+      "destinationId": "chuja_jindo",
       "vessel": "산타모니카",
       "operator": "씨월드고속훼리(주)",
       "operatorPhone": "1577-3567",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "결항"
+      "status": "cancelled"
     },
     {
       "type": "departure",
       "time": "16:30",
       "duration": "3:40",
-      "origin": "제주항",
-      "destination": "녹동항",
+      "originId": "jeju",
+      "destinationId": "nokdong",
       "vessel": "아리온 제주",
       "operator": "(주)남해고속",
       "operatorPhone": "064-723-9700",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "선사문의"
+      "status": "inquiry"
     },
     {
       "type": "departure",
       "time": "16:45",
       "duration": "4:50",
-      "origin": "제주항",
-      "destination": "목포항",
+      "originId": "jeju",
+      "destinationId": "mokpo",
       "vessel": "퀸메리",
       "operator": "씨월드고속훼리(주)",
       "operatorPhone": "1577-3567",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "통제",
+      "status": "controlled",
       "note": "17:40 출발 예정"
     },
     {
       "type": "departure",
       "time": "19:30",
       "duration": "2:40",
-      "origin": "제주항",
-      "destination": "완도항",
+      "originId": "jeju",
+      "destinationId": "wando",
       "vessel": "골드스텔라(2항차)",
       "operator": "(주)한일고속",
       "operatorPhone": "1688-2100",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "결항",
+      "status": "cancelled",
       "note": "기상악화"
     },
     {
       "type": "arrival",
       "time": "05:10",
       "duration": "2:40",
-      "origin": "완도항",
-      "destination": "제주항",
+      "originId": "wando",
+      "destinationId": "jeju",
       "vessel": "골드스텔라(1항차)",
       "operator": "(주)한일고속",
       "operatorPhone": "1688-2100",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "통제"
+      "status": "controlled"
     },
     {
       "type": "arrival",
       "time": "05:30",
       "duration": "4:30",
-      "origin": "목포항",
-      "destination": "제주항",
+      "originId": "mokpo",
+      "destinationId": "jeju",
       "vessel": "퀸제누비아 2",
       "operator": "씨월드고속훼리(주)",
       "operatorPhone": "1577-3567",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "선사문의"
+      "status": "inquiry"
     },
     {
       "type": "arrival",
       "time": "06:00",
       "duration": "6:30",
-      "origin": "삼천포항",
-      "destination": "제주항",
+      "originId": "samcheonpo",
+      "destinationId": "jeju",
       "vessel": "오션비스타 제주",
       "operator": "(주)현성MCT",
       "operatorPhone": "064-759-8486",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "통제"
+      "status": "controlled"
     },
     {
       "type": "arrival",
       "time": "10:00",
       "duration": "0:50",
-      "origin": "추자(진도발)",
-      "destination": "제주항",
+      "originId": "chuja_from_jindo",
+      "destinationId": "jeju",
       "vessel": "산타모니카",
       "operator": "씨월드고속훼리(주)",
       "operatorPhone": "1577-3567",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "선사문의"
+      "status": "inquiry"
     },
     {
       "type": "arrival",
       "time": "12:00",
       "duration": "2:40",
-      "origin": "완도항",
-      "destination": "제주항",
+      "originId": "wando",
+      "destinationId": "jeju",
       "vessel": "실버클라우드",
       "operator": "(주)한일고속",
       "operatorPhone": "1688-2100",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "normal"
     },
     {
       "type": "arrival",
       "time": "12:40",
       "duration": "3:40",
-      "origin": "녹동항",
-      "destination": "제주항",
+      "originId": "nokdong",
+      "destinationId": "jeju",
       "vessel": "아리온 제주",
       "operator": "(주)남해고속",
       "operatorPhone": "064-723-9700",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "normal"
     },
     {
       "type": "arrival",
       "time": "13:20",
       "duration": "4:50",
-      "origin": "목포항",
-      "destination": "제주항",
+      "originId": "mokpo",
+      "destinationId": "jeju",
       "vessel": "퀸메리",
       "operator": "씨월드고속훼리(주)",
       "operatorPhone": "1577-3567",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "normal"
     },
     {
       "type": "arrival",
       "time": "17:40",
       "duration": "2:40",
-      "origin": "완도항",
-      "destination": "제주항",
+      "originId": "wando",
+      "destinationId": "jeju",
       "vessel": "골드스텔라(2항차)",
       "operator": "(주)한일고속",
       "operatorPhone": "1688-2100",
       "terminalId": "international",
-      "terminalLabel": "국제(7부두)",
-      "status": "결항",
+      "status": "cancelled",
       "note": "기상악화"
     },
     {
       "type": "arrival",
       "time": "18:40",
       "duration": "2:40",
-      "origin": "추자(완도발)",
-      "destination": "제주항",
+      "originId": "chuja_from_wando",
+      "destinationId": "jeju",
       "vessel": "송림블루오션",
       "operator": "(주)송림해운",
       "operatorPhone": "064-758-8889",
       "terminalId": "coastal",
-      "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "normal"
     }
   ]
 };

@@ -55,9 +55,9 @@
               <button class="terminal-marker marker-jeju active" type="button" data-terminal="jeju" aria-pressed="true"><i aria-hidden="true"></i><span>제주</span></button>
             </div>
           </div>
-          <article class="terminal-summary" id="terminal-summary" aria-live="polite">
+          <article class="terminal-summary" id="terminal-summary" aria-live="polite" aria-busy="true" hidden>
             <div class="terminal-summary-head">
-              <div><span>TERMINAL NETWORK</span><strong id="terminal-region">제주특별자치도</strong></div>
+              <div><span>TERMINAL NETWORK</span><strong id="terminal-region"></strong></div>
               <label class="terminal-select-wrap" for="terminal-select">
                 <span>터미널 선택</span>
                 <select id="terminal-select">
@@ -76,21 +76,21 @@
             </div>
             <div class="terminal-summary-body">
               <span class="terminal-summary-label">선택한 터미널</span>
-              <h3 id="terminal-name">제주항여객터미널</h3>
-              <p id="terminal-description">제주와 육지를 연결하는 대표적인 해상교통 관문입니다.</p>
-              <div class="terminal-address-row"><strong>위치</strong><span id="terminal-address">제주특별자치도 제주시 임항로 111</span></div>
+              <h3 id="terminal-name"></h3>
+              <p id="terminal-description"></p>
+              <div class="terminal-address-row"><strong>위치</strong><span id="terminal-address"></span></div>
               <div class="terminal-route-block">
                 <strong>주요 항로</strong>
-                <ul id="terminal-routes"><li>목포</li><li>완도</li><li>추자</li><li>녹동</li></ul>
+                <ul id="terminal-routes"></ul>
               </div>
-              <p class="terminal-hours-row"><strong>운영 안내</strong><span id="terminal-hours">매일 05:30–21:00 · 운항 일정에 따라 변동</span></p>
+              <p class="terminal-hours-row"><strong>운영 안내</strong><span id="terminal-hours"></span></p>
               <nav class="terminal-service-grid" aria-label="선택 터미널 주요 서비스">
-                <a id="terminal-schedule-link" href="jeju/index.html#schedule"><span>01</span><strong>운항정보</strong><small>오늘 운항 일정</small></a>
-                <a id="terminal-guide-link" href="jeju/guide.html"><span>02</span><strong>터미널 안내</strong><small>이용 안내</small></a>
-                <a id="terminal-directions-link" href="jeju/guide.html#directions"><span>03</span><strong>교통 안내</strong><small>오시는 길·주차</small></a>
-                <a id="terminal-facilities-link" href="jeju/guide.html#facilities"><span>04</span><strong>시설 정보</strong><small>편의시설 안내</small></a>
+                <a id="terminal-schedule-link" href="#terminal-summary"><span>01</span><strong>운항정보</strong><small>오늘 운항 일정</small></a>
+                <a id="terminal-guide-link" href="#terminal-summary"><span>02</span><strong>터미널 안내</strong><small>이용 안내</small></a>
+                <a id="terminal-directions-link" href="#terminal-summary"><span>03</span><strong>교통 안내</strong><small>오시는 길·주차</small></a>
+                <a id="terminal-facilities-link" href="#terminal-summary"><span>04</span><strong>시설 정보</strong><small>편의시설 안내</small></a>
               </nav>
-              <a class="terminal-detail-link" id="terminal-detail-link" href="jeju/index.html">제주항 홈페이지 바로가기 <span aria-hidden="true">→</span></a>
+              <a class="terminal-detail-link" id="terminal-detail-link" href="#terminal-summary"><span id="terminal-detail-text"></span><span aria-hidden="true">→</span></a>
             </div>
           </article>
         </div>

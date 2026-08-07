@@ -7,8 +7,25 @@
   if (!window.SectionTitle) throw new Error('SectionTitle 컴포넌트가 필요합니다.');
 
   const schedule = config.items || [];
-  const filters = config.filters || [];
-  const statusClass = { '정상운항': 'normal', '결항': 'cancel', '통제': 'control', '선사문의': 'inquiry' };
+  const terminalDirectory = config.terminals || {};
+  const portDirectory = config.ports || {};
+  const filters = (config.filters || []).map((filter) => {
+    if (typeof filter !== 'string') return filter;
+    const terminal = terminalDirectory[filter] || {};
+    return { id: filter, label: terminal.filterLabel || terminal.tableLabel || filter };
+  });
+  const statusMeta = {
+    normal: { className: 'normal', label: '정상운항' },
+    delayed: { className: 'control', label: '지연' },
+    cancelled: { className: 'cancel', label: '결항' },
+    controlled: { className: 'control', label: '통제' },
+    inquiry: { className: 'inquiry', label: '선사문의' },
+    '정상운항': { className: 'normal', label: '정상운항' },
+    '지연': { className: 'control', label: '지연' },
+    '결항': { className: 'cancel', label: '결항' },
+    '통제': { className: 'control', label: '통제' },
+    '선사문의': { className: 'inquiry', label: '선사문의' }
+  };
   const hasRouteType = schedule.some((item) => item.routeType);
   const referenceTime = minutes(config.referenceTime || '08:30');
   const notice = config.notice || '선사 사정 및 해상 기상 상황에 따라 운항 일정이 변동될 수 있으니, 출항 전 해당 여객선사에 반드시 확인하시기 바랍니다.';
@@ -27,6 +44,19 @@
     const hours = Math.floor(totalMinutes / 60);
     const remainingMinutes = totalMinutes % 60;
     return `${hours}:${String(remainingMinutes).padStart(2, '0')}`;
+  }
+
+  function portLabel(id, legacyLabel) {
+    return portDirectory[id] || legacyLabel || id || '-';
+  }
+
+  function terminalLabel(item) {
+    const terminal = terminalDirectory[item.terminalId] || {};
+    return terminal.tableLabel || item.terminalLabel || item.terminalId || '-';
+  }
+
+  function displayStatus(status) {
+    return statusMeta[status] || { className: 'normal', label: status || '정상운항' };
   }
 
   section.innerHTML = `
@@ -124,6 +154,7 @@
     const columnCount = 6;
     if (!items.length) return `<tr><td colspan="${columnCount}"><div class="empty-state">표시할 운항편이 없습니다.</div></td></tr>`;
     return items.map((item, index) => {
+      const status = displayStatus(item.status);
       const pastClass = minutes(item.time) < referenceTime ? 'past-row' : '';
       const tooltipId = `${type}-vessel-contact-${index}`;
       const contactPhone = item.operatorPhone || '1544-1114';
@@ -132,9 +163,9 @@
       const operatorPhone = `<span class="vessel-contact" id="${tooltipId}" role="tooltip"><span class="contact-prefix">Tel.</span><strong>${contactPhone}</strong></span>`;
       const vessel = `<span class="vessel-info has-contact" tabindex="0" aria-describedby="${tooltipId}"><strong>${item.vessel}</strong><small>${operator}</small>${operatorPhone}</span>`;
       return `<tr class="${pastClass}">
-        <td class="schedule-time" data-label="출항시간">${item.time}</td><td class="duration-time" data-label="소요시간">${durationLabel(item)}</td><td class="route" data-label="항로">${item.origin}-${item.destination}</td>
-        <td data-label="선사(선명)">${vessel}</td><td class="terminal-name" data-label="터미널">${item.terminalLabel}</td>
-        <td data-label="운항상태"><span class="status-cell"><span class="status ${statusClass[item.status] || 'normal'}">${item.status}</span></span></td>
+        <td class="schedule-time" data-label="출항시간">${item.time}</td><td class="duration-time" data-label="소요시간">${durationLabel(item)}</td><td class="route" data-label="항로">${portLabel(item.originId, item.origin)}-${portLabel(item.destinationId, item.destination)}</td>
+        <td data-label="선사(선명)">${vessel}</td><td class="terminal-name" data-label="터미널">${terminalLabel(item)}</td>
+        <td data-label="운항상태"><span class="status-cell"><span class="status ${status.className}">${status.label}</span></span></td>
       </tr>`;
     }).join('');
   }

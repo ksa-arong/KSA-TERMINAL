@@ -154,6 +154,7 @@
   if (!markers.length) return;
 
   const fields = {
+    summary: document.getElementById('terminal-summary'),
     region: document.getElementById('terminal-region'),
     name: document.getElementById('terminal-name'),
     description: document.getElementById('terminal-description'),
@@ -162,6 +163,7 @@
     hours: document.getElementById('terminal-hours'),
     select: document.getElementById('terminal-select'),
     detail: document.getElementById('terminal-detail-link'),
+    detailText: document.getElementById('terminal-detail-text'),
     schedule: document.getElementById('terminal-schedule-link'),
     guide: document.getElementById('terminal-guide-link'),
     directions: document.getElementById('terminal-directions-link'),
@@ -197,15 +199,18 @@
 
     const base = terminal.folder;
     fields.detail.href = base + '/index.html';
-    fields.detail.firstChild.textContent = terminal.shortName + ' 홈페이지 바로가기 ';
+    fields.detailText.textContent = terminal.shortName + ' 홈페이지 바로가기';
     fields.schedule.href = base + '/index.html#schedule';
     fields.guide.href = base + '/guide.html';
     fields.directions.href = base + '/guide.html#directions';
     fields.facilities.href = base + '/guide.html#facilities';
+    fields.summary.hidden = false;
+    fields.summary.setAttribute('aria-busy', 'false');
   }
 
   markers.forEach((marker) => {
     marker.addEventListener('click', () => selectTerminal(marker.dataset.terminal));
   });
   fields.select.addEventListener('change', () => selectTerminal(fields.select.value));
+  selectTerminal(fields.select.value || 'jeju');
 }());

@@ -115,3 +115,42 @@ KSA-TERMINAL/
 - `customer.html`: 전국 운항 안내 전화, 이용 공지, 자주 묻는 질문
 
 세 페이지는 `common/layout.js`에서 공통 헤더와 푸터를 그리고 `common/style.css`를 공유합니다. 포털 로고, GNB, 메가메뉴 또는 공통 안내 페이지 스타일을 바꿀 때는 `common` 파일만 수정합니다.
+
+## 운항 데이터 코드 규칙
+
+새 터미널의 `schedule-data.js`는 화면용 한글 문자열 대신 아래 코드를 기준으로 작성합니다. `common/schedule.js`가 코드와 표시명을 연결합니다. 기존 터미널 데이터는 단계적으로 전환할 수 있도록 한글 상태값과 `origin`·`destination`·`terminalLabel`도 하위 호환됩니다.
+
+### 상태 코드
+
+| 코드 | 한글 표시 | CSS 상태 |
+|---|---|---|
+| `normal` | 정상운항 | `normal` |
+| `delayed` | 지연 | `control` |
+| `cancelled` | 결항 | `cancel` |
+| `controlled` | 통제 | `control` |
+| `inquiry` | 선사문의 | `inquiry` |
+
+기본 공통 상태는 `normal`, `delayed`, `cancelled`입니다. 현재 제주 화면에 있는 `통제`, `선사문의`를 그대로 유지하기 위해 `controlled`, `inquiry`를 확장 코드로 사용합니다.
+
+### 제주 항구 ID
+
+| ID | 한글 표시 |
+|---|---|
+| `jeju` | 제주항 |
+| `chuja_wando` | 추자·완도 |
+| `wando` | 완도항 |
+| `mokpo` | 목포항 |
+| `samcheonpo` | 삼천포항 |
+| `chuja_jindo` | 추자·진도 |
+| `nokdong` | 녹동항 |
+| `chuja_from_jindo` | 추자(진도발) |
+| `chuja_from_wando` | 추자(완도발) |
+
+### 제주 터미널 ID
+
+| ID | 필터 표시 | 표 표시 |
+|---|---|---|
+| `coastal` | 연안 2부두 | 연안(2부두) |
+| `international` | 국제 7부두 | 국제(7부두) |
+
+각 운항편은 `originId`, `destinationId`, `terminalId`, `status`만 참조하고 선박명과 시각은 원문 데이터로 유지합니다.
