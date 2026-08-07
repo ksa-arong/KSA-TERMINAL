@@ -14,9 +14,12 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "08:00",
+      "duration": "2:40",
       "origin": "제주항",
       "destination": "추자·완도",
       "vessel": "송림블루오션",
+      "operator": "(주)송림해운",
+      "operatorPhone": "064-758-8889",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
       "status": "정상운항"
@@ -24,80 +27,104 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "08:40",
+      "duration": "2:40",
       "origin": "제주항",
       "destination": "완도항",
       "vessel": "골드스텔라(1항차)",
+      "operator": "(주)한일고속",
+      "operatorPhone": "1688-2100",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "departure",
       "time": "13:40",
+      "duration": "4:30",
       "origin": "제주항",
       "destination": "목포항",
       "vessel": "퀸제누비아 2",
+      "operator": "씨월드고속훼리(주)",
+      "operatorPhone": "1577-3567",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "결항"
     },
     {
       "type": "departure",
       "time": "14:30",
+      "duration": "6:30",
       "origin": "제주항",
       "destination": "삼천포항",
       "vessel": "오션비스타 제주",
+      "operator": "(주)현성MCT",
+      "operatorPhone": "064-759-8486",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "선사문의"
     },
     {
       "type": "departure",
       "time": "16:00",
+      "duration": "2:40",
       "origin": "제주항",
       "destination": "완도항",
       "vessel": "실버클라우드",
+      "operator": "(주)한일고속",
+      "operatorPhone": "1688-2100",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "departure",
       "time": "16:20",
+      "duration": "0:50",
       "origin": "제주항",
       "destination": "추자·진도",
       "vessel": "산타모니카",
+      "operator": "씨월드고속훼리(주)",
+      "operatorPhone": "1577-3567",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "결항"
     },
     {
       "type": "departure",
       "time": "16:30",
+      "duration": "3:40",
       "origin": "제주항",
       "destination": "녹동항",
       "vessel": "아리온 제주",
+      "operator": "(주)남해고속",
+      "operatorPhone": "064-723-9700",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "선사문의"
     },
     {
       "type": "departure",
       "time": "16:45",
+      "duration": "4:50",
       "origin": "제주항",
       "destination": "목포항",
       "vessel": "퀸메리",
+      "operator": "씨월드고속훼리(주)",
+      "operatorPhone": "1577-3567",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
-      "status": "지연",
+      "status": "통제",
       "note": "17:40 출발 예정"
     },
     {
       "type": "departure",
       "time": "19:30",
+      "duration": "2:40",
       "origin": "제주항",
       "destination": "완도항",
       "vessel": "골드스텔라(2항차)",
+      "operator": "(주)한일고속",
+      "operatorPhone": "1688-2100",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
       "status": "결항",
@@ -106,49 +133,64 @@ window.scheduleData = {
     {
       "type": "arrival",
       "time": "05:10",
+      "duration": "2:40",
       "origin": "완도항",
       "destination": "제주항",
       "vessel": "골드스텔라(1항차)",
+      "operator": "(주)한일고속",
+      "operatorPhone": "1688-2100",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "arrival",
       "time": "05:30",
+      "duration": "4:30",
       "origin": "목포항",
       "destination": "제주항",
       "vessel": "퀸제누비아 2",
+      "operator": "씨월드고속훼리(주)",
+      "operatorPhone": "1577-3567",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "선사문의"
     },
     {
       "type": "arrival",
       "time": "06:00",
+      "duration": "6:30",
       "origin": "삼천포항",
       "destination": "제주항",
       "vessel": "오션비스타 제주",
+      "operator": "(주)현성MCT",
+      "operatorPhone": "064-759-8486",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "arrival",
       "time": "10:00",
+      "duration": "0:50",
       "origin": "추자(진도발)",
       "destination": "제주항",
       "vessel": "산타모니카",
+      "operator": "씨월드고속훼리(주)",
+      "operatorPhone": "1577-3567",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
-      "status": "정상운항"
+      "status": "선사문의"
     },
     {
       "type": "arrival",
       "time": "12:00",
+      "duration": "2:40",
       "origin": "완도항",
       "destination": "제주항",
       "vessel": "실버클라우드",
+      "operator": "(주)한일고속",
+      "operatorPhone": "1688-2100",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
       "status": "정상운항"
@@ -156,9 +198,12 @@ window.scheduleData = {
     {
       "type": "arrival",
       "time": "12:40",
+      "duration": "3:40",
       "origin": "녹동항",
       "destination": "제주항",
       "vessel": "아리온 제주",
+      "operator": "(주)남해고속",
+      "operatorPhone": "064-723-9700",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
       "status": "정상운항"
@@ -166,9 +211,12 @@ window.scheduleData = {
     {
       "type": "arrival",
       "time": "13:20",
+      "duration": "4:50",
       "origin": "목포항",
       "destination": "제주항",
       "vessel": "퀸메리",
+      "operator": "씨월드고속훼리(주)",
+      "operatorPhone": "1577-3567",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
       "status": "정상운항"
@@ -176,9 +224,12 @@ window.scheduleData = {
     {
       "type": "arrival",
       "time": "17:40",
+      "duration": "2:40",
       "origin": "완도항",
       "destination": "제주항",
       "vessel": "골드스텔라(2항차)",
+      "operator": "(주)한일고속",
+      "operatorPhone": "1688-2100",
       "terminalId": "international",
       "terminalLabel": "국제(7부두)",
       "status": "결항",
@@ -187,9 +238,12 @@ window.scheduleData = {
     {
       "type": "arrival",
       "time": "18:40",
+      "duration": "2:40",
       "origin": "추자(완도발)",
       "destination": "제주항",
       "vessel": "송림블루오션",
+      "operator": "(주)송림해운",
+      "operatorPhone": "064-758-8889",
       "terminalId": "coastal",
       "terminalLabel": "연안(2부두)",
       "status": "정상운항"

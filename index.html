@@ -12,29 +12,93 @@
   <div id="portal-header-root"></div>
   <main id="main">
     <section class="portal-hero" aria-labelledby="portal-title">
-      <div class="container">
-        <span class="eyebrow">PASSENGER TERMINAL GUIDE</span>
-        <h1 id="portal-title">전국 여객선터미널 안내</h1>
-        <p>출발하실 터미널을 선택하면 오늘의 운항 현황과 승선 안내, 터미널 이용 정보를 확인할 수 있습니다.</p>
+      <div class="portal-hero-media" aria-hidden="true">
+        <span class="portal-hero-slide portal-hero-slide--primary active"></span>
+        <span class="portal-hero-slide portal-hero-slide--harbor"></span>
+        <span class="portal-hero-slide portal-hero-slide--island"></span>
       </div>
+      <div class="container portal-hero-content">
+        <h1 id="portal-title">바다를 건너,<br><strong>여행을 잇습니다.</strong></h1>
+        <p>전국 주요 여객선터미널의 운항 정보부터 승선 안내까지<br>더 편리하고 안전한 바닷길을 한곳에서 만나보세요.</p>
+        <div class="portal-hero-pagination" role="group" aria-label="히어로 배경 선택">
+          <button class="active" type="button" data-hero-slide="0" aria-label="첫 번째 배경 보기" aria-pressed="true"><span>01</span></button>
+          <button type="button" data-hero-slide="1" aria-label="두 번째 배경 보기" aria-pressed="false"><span>02</span></button>
+          <button type="button" data-hero-slide="2" aria-label="세 번째 배경 보기" aria-pressed="false"><span>03</span></button>
+        </div>
+      </div>
+      <nav class="container portal-hero-quick" aria-label="주요 서비스 바로가기">
+        <a href="#terminal-list-title"><span class="portal-quick-icon portal-quick-icon--terminal" aria-hidden="true"></span><strong>터미널 찾기</strong><small>전국 터미널 위치 안내</small><i aria-hidden="true">→</i></a>
+        <a href="schedule.html"><span class="portal-quick-icon portal-quick-icon--schedule" aria-hidden="true"></span><strong>운항정보</strong><small>터미널별 운항 현황</small><i aria-hidden="true">→</i></a>
+        <a href="boarding.html"><span class="portal-quick-icon portal-quick-icon--boarding" aria-hidden="true"></span><strong>승선 안내</strong><small>절차와 준비사항 확인</small><i aria-hidden="true">→</i></a>
+        <a href="customer.html"><span class="portal-quick-icon portal-quick-icon--customer" aria-hidden="true"></span><strong>고객센터</strong><small>공지사항과 이용 문의</small><i aria-hidden="true">→</i></a>
+      </nav>
     </section>
     <section class="portal-terminal-section" aria-labelledby="terminal-list-title">
       <div class="container">
-        <p class="section-kicker">SELECT TERMINAL</p>
-        <h2 id="terminal-list-title">터미널을 선택해 주세요</h2>
-        <div class="portal-grid">
-          <a class="portal-card" href="jeju/index.html"><span class="number">TERMINAL 01</span><h2>제주항</h2><p>제주항여객터미널 운항 안내</p></a>
-          <a class="portal-card" href="incheon/index.html"><span class="number">TERMINAL 02</span><h2>인천항</h2><p>인천항 연안여객터미널 운항 안내</p></a>
-          <a class="portal-card" href="yeosu/index.html"><span class="number">TERMINAL 03</span><h2>여수항</h2><p>여수항여객터미널 운항 안내</p></a>
-          <a class="portal-card" href="tongyeong/index.html"><span class="number">TERMINAL 04</span><h2>통영항</h2><p>통영항여객터미널 운항 안내</p></a>
-          <a class="portal-card" href="pohang/index.html"><span class="number">TERMINAL 05</span><h2>포항항</h2><p>포항항여객터미널 운항 안내</p></a>
-          <a class="portal-card" href="wando/index.html"><span class="number">TERMINAL 06</span><h2>완도항</h2><p>완도항여객터미널 운항 안내</p></a>
-          <a class="portal-card" href="gunsan/index.html"><span class="number">TERMINAL 07</span><h2>군산항</h2><p>군산항여객터미널 운항 안내</p></a>
+        <div class="portal-section-heading">
+          <p class="section-kicker">TERMINAL NETWORK</p>
+          <h2 id="terminal-list-title">전국 주요 터미널</h2>
+          <p>지도에서 지역을 선택하면 터미널의 주요 항로와 운항 정보, 이용 안내를 한눈에 확인할 수 있습니다.</p>
+        </div>
+        <div class="terminal-explorer">
+          <div class="terminal-map-card" aria-label="전국 여객선터미널 위치 선택 지도">
+            <div class="korea-map" id="terminal-map">
+              <button class="terminal-marker marker-incheon" type="button" data-terminal="incheon" aria-pressed="false"><i aria-hidden="true"></i><span>인천</span></button>
+              <button class="terminal-marker marker-boryeong" type="button" data-terminal="boryeong" aria-pressed="false"><i aria-hidden="true"></i><span>보령</span></button>
+              <button class="terminal-marker marker-gunsan" type="button" data-terminal="gunsan" aria-pressed="false"><i aria-hidden="true"></i><span>군산</span></button>
+              <button class="terminal-marker marker-mokpo" type="button" data-terminal="mokpo" aria-pressed="false"><i aria-hidden="true"></i><span>목포</span></button>
+              <button class="terminal-marker marker-wando" type="button" data-terminal="wando" aria-pressed="false"><i aria-hidden="true"></i><span>완도</span></button>
+              <button class="terminal-marker marker-yeosu" type="button" data-terminal="yeosu" aria-pressed="false"><i aria-hidden="true"></i><span>여수</span></button>
+              <button class="terminal-marker marker-tongyeong" type="button" data-terminal="tongyeong" aria-pressed="false"><i aria-hidden="true"></i><span>통영</span></button>
+              <button class="terminal-marker marker-busan" type="button" data-terminal="busan" aria-pressed="false"><i aria-hidden="true"></i><span>부산</span></button>
+              <button class="terminal-marker marker-pohang" type="button" data-terminal="pohang" aria-pressed="false"><i aria-hidden="true"></i><span>포항</span></button>
+              <button class="terminal-marker marker-jeju active" type="button" data-terminal="jeju" aria-pressed="true"><i aria-hidden="true"></i><span>제주</span></button>
+            </div>
+          </div>
+          <article class="terminal-summary" id="terminal-summary" aria-live="polite">
+            <div class="terminal-summary-head">
+              <div><span>TERMINAL NETWORK</span><strong id="terminal-region">제주특별자치도</strong></div>
+              <label class="terminal-select-wrap" for="terminal-select">
+                <span>터미널 선택</span>
+                <select id="terminal-select">
+                  <option value="incheon">인천항</option>
+                  <option value="boryeong">보령(대천항)</option>
+                  <option value="gunsan">군산항</option>
+                  <option value="mokpo">목포항</option>
+                  <option value="wando">완도항</option>
+                  <option value="yeosu">여수항</option>
+                  <option value="tongyeong">통영항</option>
+                  <option value="busan">부산항</option>
+                  <option value="pohang">포항항</option>
+                  <option value="jeju" selected>제주항</option>
+                </select>
+              </label>
+            </div>
+            <div class="terminal-summary-body">
+              <span class="terminal-summary-label">선택한 터미널</span>
+              <h3 id="terminal-name">제주항여객터미널</h3>
+              <p id="terminal-description">제주와 육지를 연결하는 대표적인 해상교통 관문입니다.</p>
+              <div class="terminal-address-row"><strong>위치</strong><span id="terminal-address">제주특별자치도 제주시 임항로 111</span></div>
+              <div class="terminal-route-block">
+                <strong>주요 항로</strong>
+                <ul id="terminal-routes"><li>목포</li><li>완도</li><li>추자</li><li>녹동</li></ul>
+              </div>
+              <p class="terminal-hours-row"><strong>운영 안내</strong><span id="terminal-hours">매일 05:30–21:00 · 운항 일정에 따라 변동</span></p>
+              <nav class="terminal-service-grid" aria-label="선택 터미널 주요 서비스">
+                <a id="terminal-schedule-link" href="jeju/index.html#schedule"><span>01</span><strong>운항정보</strong><small>오늘 운항 일정</small></a>
+                <a id="terminal-guide-link" href="jeju/guide.html"><span>02</span><strong>터미널 안내</strong><small>이용 안내</small></a>
+                <a id="terminal-directions-link" href="jeju/guide.html#directions"><span>03</span><strong>교통 안내</strong><small>오시는 길·주차</small></a>
+                <a id="terminal-facilities-link" href="jeju/guide.html#facilities"><span>04</span><strong>시설 정보</strong><small>편의시설 안내</small></a>
+              </nav>
+              <a class="terminal-detail-link" id="terminal-detail-link" href="jeju/index.html">제주항 홈페이지 바로가기 <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
         </div>
       </div>
     </section>
   </main>
-  <footer><div class="container footer-inner"><div><div class="footer-logo">전국 여객선터미널</div><div>안전하고 편리한 바닷길 통합 안내</div><div>© 2026 Passenger Terminal Guide. All Rights Reserved.</div></div></div></footer>
+  <div id="portal-footer-root"></div>
   <script src="common/layout.js"></script>
+  <script src="common/portal.js"></script>
 </body>
 </html>

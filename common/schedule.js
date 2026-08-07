@@ -4,11 +4,14 @@
   const config = window.scheduleData;
   const section = document.getElementById('schedule');
   if (!config || !section) throw new Error('scheduleData와 #schedule 요소가 필요합니다.');
+  if (!window.SectionTitle) throw new Error('SectionTitle 컴포넌트가 필요합니다.');
 
   const schedule = config.items || [];
   const filters = config.filters || [];
-  const statusClass = { '정상운항': 'normal', '지연': 'delay', '결항': 'cancel' };
+  const statusClass = { '정상운항': 'normal', '결항': 'cancel', '통제': 'control', '선사문의': 'inquiry' };
+  const hasRouteType = schedule.some((item) => item.routeType);
   const referenceTime = minutes(config.referenceTime || '08:30');
+  const notice = config.notice || '선사 사정 및 해상 기상 상황에 따라 운항 일정이 변동될 수 있으니, 출항 전 해당 여객선사에 반드시 확인하시기 바랍니다.';
   let expanded = false;
 
   function minutes(time) {
@@ -16,10 +19,26 @@
     return hour * 60 + minute;
   }
 
+  function durationLabel(item) {
+    if (item.duration) return item.duration;
+    if (!item.arrivalTime) return '-';
+    let totalMinutes = minutes(item.arrivalTime) - minutes(item.time);
+    if (totalMinutes < 0) totalMinutes += 24 * 60;
+    const hours = Math.floor(totalMinutes / 60);
+    const remainingMinutes = totalMinutes % 60;
+    return `${hours}:${String(remainingMinutes).padStart(2, '0')}`;
+  }
+
   section.innerHTML = `
     <div class="container">
       <div class="section-head">
-        <div><h2 id="schedule-title">실시간 운항정보</h2><p class="section-desc">터미널별 출항·입항 정보를 한눈에 확인하세요.</p></div>
+        ${window.SectionTitle.render({
+          align: 'left',
+          theme: 'light',
+          title: '실시간 운항정보',
+          subtitle: '터미널별 출항·입항 정보를 한눈에 확인하세요.',
+          titleId: 'schedule-title'
+        })}
         <span class="update-time"><strong id="today-date"></strong> ${config.referenceTime || '08:30'} 기준</span>
       </div>
       <div class="schedule-controls">
@@ -32,6 +51,11 @@
           ${filters.map((filter) => `<button class="terminal-tab" type="button" data-filter="${filter.id}" aria-pressed="false">${filter.label}</button>`).join('')}
         </div>
       </div>
+      ${hasRouteType ? `<div class="route-type-filters" id="route-type-filters" aria-label="항로 유형 필터" hidden>
+        <span>항로 유형</span>
+        <button class="route-type-filter" type="button" data-route-type="편도" aria-pressed="false">편도항로</button>
+        <button class="route-type-filter" type="button" data-route-type="순환" aria-pressed="false">순환항로</button>
+      </div>` : ''}
       <div class="movement-panel" id="departure-panel" role="tabpanel" aria-labelledby="departure-tab">
         ${table('departure')}
         ${legend()}
@@ -41,21 +65,21 @@
         ${legend()}
       </div>
       <button class="schedule-toggle" id="schedule-toggle" type="button" aria-expanded="false">전체 운항 시간표 보기</button>
-      <p class="notice-line">※ ${config.notice || '여객선사 및 해상 기상 상황에 따라 운항 여부가 변동될 수 있으니 사전에 여객선사로 확인 바랍니다. 전국여객선운항안내 1544-1114'}</p>
     </div>`;
 
   function legend() {
-    return '<div class="status-legend" aria-label="운항 상태 색상 안내"><span><i class="legend-dot" style="background:var(--green)"></i>정상운항</span><span><i class="legend-dot" style="background:var(--orange)"></i>지연</span><span><i class="legend-dot" style="background:var(--red)"></i>결항</span></div>';
+    return `<div class="schedule-meta"><p class="notice-line">※ ${notice}</p><div class="status-legend" aria-label="운항 상태 색상 안내"><span class="status normal">정상운항</span><span class="status cancel">결항</span><span class="status control">통제</span><span class="status inquiry">선사문의</span></div></div>`;
   }
 
   function table(type) {
-    const timeLabel = type === 'departure' ? '출발시간' : '도착시간';
-    return `<div class="status-table-wrap"><table><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">${timeLabel} 기준 운항 현황</caption>
-      <thead><tr><th scope="col">${timeLabel}</th><th scope="col">출발지</th><th scope="col">도착지</th><th scope="col">선박명</th><th scope="col">터미널</th><th scope="col">운항상태</th></tr></thead>
+    return `<div class="status-table-wrap"><table class="schedule-table"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">출항시간 기준 운항 현황</caption>
+      <thead><tr><th scope="col">출항시간</th><th scope="col">소요시간</th><th scope="col">항로</th><th scope="col">선사(선명)</th><th scope="col">터미널</th><th scope="col">운항상태</th></tr></thead>
       <tbody id="${type}-body"></tbody></table></div>`;
   }
 
   const terminalButtons = [...section.querySelectorAll('.terminal-tab[data-filter]')];
+  const routeTypePanel = section.querySelector('#route-type-filters');
+  const routeTypeButtons = [...section.querySelectorAll('.route-type-filter')];
   const movementTabs = [...section.querySelectorAll('.movement-tab')];
   const toggle = section.querySelector('#schedule-toggle');
 
@@ -67,9 +91,15 @@
     return section.querySelector('#departure-tab').getAttribute('aria-selected') === 'true' ? 'departure' : 'arrival';
   }
 
+  function activeRouteType() {
+    return routeTypeButtons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.routeType || 'all';
+  }
+
   function render() {
     const filter = activeFilter();
-    const filtered = filter === 'all' ? schedule : schedule.filter((item) => item.terminalId === filter);
+    const routeType = activeRouteType();
+    const terminalItems = filter === 'all' ? schedule : schedule.filter((item) => item.terminalId === filter);
+    const filtered = routeType === 'all' ? terminalItems : terminalItems.filter((item) => item.routeType === routeType);
     const departures = filtered.filter((item) => item.type === 'departure');
     const arrivals = filtered.filter((item) => item.type === 'arrival');
     const visibleDepartures = expanded ? departures : departures.filter((item) => minutes(item.time) >= referenceTime).slice(0, 5);
@@ -83,16 +113,27 @@
     toggle.hidden = !expanded && allItems.length === visibleItems.length;
     toggle.textContent = expanded ? '운항 시간표 접기' : '전체 운항 시간표 보기';
     toggle.setAttribute('aria-expanded', String(expanded));
+
+    if (routeTypePanel) {
+      const showRouteTypes = filter !== 'all' && terminalItems.some((item) => item.routeType);
+      routeTypePanel.hidden = !showRouteTypes;
+    }
   }
 
   function rows(items, type) {
-    const timeLabel = type === 'departure' ? '출발시간' : '도착시간';
-    if (!items.length) return '<tr><td colspan="6"><div class="empty-state">표시할 운항편이 없습니다.</div></td></tr>';
-    return items.map((item) => {
+    const columnCount = 6;
+    if (!items.length) return `<tr><td colspan="${columnCount}"><div class="empty-state">표시할 운항편이 없습니다.</div></td></tr>`;
+    return items.map((item, index) => {
       const pastClass = minutes(item.time) < referenceTime ? 'past-row' : '';
+      const tooltipId = `${type}-vessel-contact-${index}`;
+      const contactPhone = item.operatorPhone || '1544-1114';
+      const fallbackOperator = item.vessel.endsWith('해운') ? item.vessel : `${item.vessel.replace(/호$/, '')}해운`;
+      const operator = item.operator || fallbackOperator;
+      const operatorPhone = `<span class="vessel-contact" id="${tooltipId}" role="tooltip"><span class="contact-prefix">Tel.</span><strong>${contactPhone}</strong></span>`;
+      const vessel = `<span class="vessel-info has-contact" tabindex="0" aria-describedby="${tooltipId}"><strong>${item.vessel}</strong><small>${operator}</small>${operatorPhone}</span>`;
       return `<tr class="${pastClass}">
-        <td class="schedule-time" data-label="${timeLabel}">${item.time}</td><td data-label="출발지">${item.origin}</td><td data-label="도착지">${item.destination}</td>
-        <td class="route" data-label="선박명">${item.vessel}</td><td class="terminal-name" data-label="터미널">${item.terminalLabel}</td>
+        <td class="schedule-time" data-label="출항시간">${item.time}</td><td class="duration-time" data-label="소요시간">${durationLabel(item)}</td><td class="route" data-label="항로">${item.origin}-${item.destination}</td>
+        <td data-label="선사(선명)">${vessel}</td><td class="terminal-name" data-label="터미널">${item.terminalLabel}</td>
         <td data-label="운항상태"><span class="status-cell"><span class="status ${statusClass[item.status] || 'normal'}">${item.status}</span></span></td>
       </tr>`;
     }).join('');
@@ -101,6 +142,15 @@
   terminalButtons.forEach((button) => button.addEventListener('click', () => {
     terminalButtons.forEach((item) => item.setAttribute('aria-pressed', 'false'));
     button.setAttribute('aria-pressed', 'true');
+    routeTypeButtons.forEach((item) => item.setAttribute('aria-pressed', 'false'));
+    expanded = false;
+    render();
+  }));
+
+  routeTypeButtons.forEach((button) => button.addEventListener('click', () => {
+    const selected = button.getAttribute('aria-pressed') === 'true';
+    routeTypeButtons.forEach((item) => item.setAttribute('aria-pressed', 'false'));
+    button.setAttribute('aria-pressed', String(!selected));
     expanded = false;
     render();
   }));

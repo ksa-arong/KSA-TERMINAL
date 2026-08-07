@@ -15,6 +15,7 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "09:50",
+      "duration": "3:00",
       "origin": "포항항",
       "destination": "울릉도",
       "vessel": "동해스타호",
@@ -25,6 +26,7 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "18:00",
+      "duration": "3:10",
       "origin": "포항항",
       "destination": "울릉도",
       "vessel": "포항누리호",
@@ -36,22 +38,24 @@ window.scheduleData = {
     {
       "type": "arrival",
       "time": "14:30",
+      "duration": "3:00",
       "origin": "울릉도",
       "destination": "포항항",
       "vessel": "동해스타호",
       "terminalId": "island",
       "terminalLabel": "울릉 항로",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "arrival",
       "time": "20:10",
+      "duration": "3:10",
       "origin": "울릉도",
       "destination": "포항항",
       "vessel": "포항누리호",
       "terminalId": "main",
       "terminalLabel": "포항항",
-      "status": "결항",
+      "status": "선사문의",
       "note": "기상악화"
     }
   ]

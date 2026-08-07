@@ -15,6 +15,7 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "09:30",
+      "duration": "1:00",
       "origin": "군산항",
       "destination": "선유도",
       "vessel": "군산바다호",
@@ -25,32 +26,35 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "14:40",
+      "duration": "2:30",
       "origin": "군산항",
       "destination": "어청도",
       "vessel": "서해드림호",
       "terminalId": "main",
       "terminalLabel": "군산항",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "arrival",
       "time": "11:50",
+      "duration": "1:00",
       "origin": "선유도",
       "destination": "군산항",
       "vessel": "군산바다호",
       "terminalId": "island",
       "terminalLabel": "섬 항로",
-      "status": "정상운항"
+      "status": "결항"
     },
     {
       "type": "arrival",
       "time": "18:00",
+      "duration": "2:30",
       "origin": "어청도",
       "destination": "군산항",
       "vessel": "서해드림호",
       "terminalId": "main",
       "terminalLabel": "군산항",
-      "status": "정상운항"
+      "status": "선사문의"
     }
   ]
 };

@@ -15,6 +15,7 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "09:10",
+      "duration": "1:20",
       "origin": "통영항",
       "destination": "욕지도",
       "vessel": "통영바다호",
@@ -25,32 +26,35 @@ window.scheduleData = {
     {
       "type": "departure",
       "time": "15:10",
+      "duration": "0:50",
       "origin": "통영항",
       "destination": "한산도",
       "vessel": "한려수도호",
       "terminalId": "main",
       "terminalLabel": "통영항",
-      "status": "정상운항"
+      "status": "통제"
     },
     {
       "type": "arrival",
       "time": "11:40",
+      "duration": "1:20",
       "origin": "욕지도",
       "destination": "통영항",
       "vessel": "통영바다호",
       "terminalId": "island",
       "terminalLabel": "섬 항로",
-      "status": "정상운항"
+      "status": "결항"
     },
     {
       "type": "arrival",
       "time": "17:20",
+      "duration": "0:50",
       "origin": "한산도",
       "destination": "통영항",
       "vessel": "한려수도호",
       "terminalId": "main",
       "terminalLabel": "통영항",
-      "status": "정상운항"
+      "status": "선사문의"
     }
   ]
 };
