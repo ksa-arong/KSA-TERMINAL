@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="전국 주요 여객선터미널의 운항 정보와 이용 안내를 확인하세요.">
-  <title>전국 여객선터미널 안내</title>
+  <meta name="description" content="전국 주요 여객선터미널의 운항 정보와 이용 안내를 확인하세요." data-i18n-attr="content:portal.metaDescription">
+  <title data-i18n="portal.metaTitle">전국 여객선터미널 안내</title>
   <link rel="stylesheet" href="common/style.css">
 </head>
 <body class="portal-page">
-  <a class="skip-link" href="#main">본문 바로가기</a>
+  <a class="skip-link" href="#main" data-i18n="common.skip">본문 바로가기</a>
   <div id="portal-header-root"></div>
   <main id="main">
     <section class="portal-hero" aria-labelledby="portal-title">
@@ -18,77 +18,66 @@
         <span class="portal-hero-slide portal-hero-slide--island"></span>
       </div>
       <div class="container portal-hero-content">
-        <h1 id="portal-title">바다를 건너,<br><strong>여행을 잇습니다.</strong></h1>
-        <p>전국 주요 여객선터미널의 운항 정보부터 승선 안내까지<br>더 편리하고 안전한 바닷길을 한곳에서 만나보세요.</p>
-        <div class="portal-hero-pagination" role="group" aria-label="히어로 배경 선택">
-          <button class="active" type="button" data-hero-slide="0" aria-label="첫 번째 배경 보기" aria-pressed="true"><span>01</span></button>
-          <button type="button" data-hero-slide="1" aria-label="두 번째 배경 보기" aria-pressed="false"><span>02</span></button>
-          <button type="button" data-hero-slide="2" aria-label="세 번째 배경 보기" aria-pressed="false"><span>03</span></button>
+        <h1 id="portal-title"><span data-i18n="portal.heroTitle1">바다를 건너,</span><br><strong data-i18n="portal.heroTitle2">여행을 잇습니다.</strong></h1>
+        <p><span data-i18n="portal.heroDescription1">전국 주요 여객선터미널의 운항 정보부터 승선 안내까지</span><br><span data-i18n="portal.heroDescription2">더 편리하고 안전한 바닷길을 한곳에서 만나보세요.</span></p>
+        <div class="portal-hero-pagination" role="group" aria-label="히어로 배경 선택" data-i18n-attr="aria-label:portal.heroPicker">
+          <button class="active" type="button" data-hero-slide="0" aria-label="첫 번째 배경 보기" data-i18n-attr="aria-label:portal.heroSlide1" aria-pressed="true"><span>01</span></button>
+          <button type="button" data-hero-slide="1" aria-label="두 번째 배경 보기" data-i18n-attr="aria-label:portal.heroSlide2" aria-pressed="false"><span>02</span></button>
+          <button type="button" data-hero-slide="2" aria-label="세 번째 배경 보기" data-i18n-attr="aria-label:portal.heroSlide3" aria-pressed="false"><span>03</span></button>
         </div>
       </div>
-      <nav class="container portal-hero-quick" aria-label="주요 서비스 바로가기">
-        <a href="#terminal-list-title"><span class="portal-quick-icon portal-quick-icon--terminal" aria-hidden="true"></span><strong>터미널 찾기</strong><small>전국 터미널 위치 안내</small><i aria-hidden="true">→</i></a>
-        <a href="schedule.html"><span class="portal-quick-icon portal-quick-icon--schedule" aria-hidden="true"></span><strong>운항정보</strong><small>터미널별 운항 현황</small><i aria-hidden="true">→</i></a>
-        <a href="boarding.html"><span class="portal-quick-icon portal-quick-icon--boarding" aria-hidden="true"></span><strong>승선 안내</strong><small>절차와 준비사항 확인</small><i aria-hidden="true">→</i></a>
-        <a href="customer.html"><span class="portal-quick-icon portal-quick-icon--customer" aria-hidden="true"></span><strong>고객센터</strong><small>공지사항과 이용 문의</small><i aria-hidden="true">→</i></a>
+      <nav class="container portal-hero-quick" aria-label="주요 서비스 바로가기" data-i18n-attr="aria-label:portal.quickAria">
+        <a href="#terminal-list-title"><span class="portal-quick-icon portal-quick-icon--terminal" aria-hidden="true"></span><strong data-i18n="portal.findTerminal">터미널 찾기</strong><small data-i18n="portal.findTerminalDesc">전국 터미널 위치 안내</small><i aria-hidden="true">→</i></a>
+        <a href="schedule.html"><span class="portal-quick-icon portal-quick-icon--schedule" aria-hidden="true"></span><strong data-i18n="portal.schedule">운항정보</strong><small data-i18n="portal.scheduleDesc">터미널별 운항 현황</small><i aria-hidden="true">→</i></a>
+        <a href="boarding.html"><span class="portal-quick-icon portal-quick-icon--boarding" aria-hidden="true"></span><strong data-i18n="portal.boarding">승선 안내</strong><small data-i18n="portal.boardingDesc">절차와 준비사항 확인</small><i aria-hidden="true">→</i></a>
+        <a href="customer.html"><span class="portal-quick-icon portal-quick-icon--customer" aria-hidden="true"></span><strong data-i18n="portal.customer">고객센터</strong><small data-i18n="portal.customerDesc">공지사항과 이용 문의</small><i aria-hidden="true">→</i></a>
       </nav>
     </section>
     <section class="portal-terminal-section" aria-labelledby="terminal-list-title">
       <div class="container">
         <div class="portal-section-heading">
           <p class="section-kicker">TERMINAL NETWORK</p>
-          <h2 id="terminal-list-title">전국 주요 터미널</h2>
-          <p>지도에서 지역을 선택하면 터미널의 주요 항로와 운항 정보, 이용 안내를 한눈에 확인할 수 있습니다.</p>
+          <h2 id="terminal-list-title" data-i18n="portal.networkTitle">전국 주요 터미널</h2>
+          <p data-i18n="portal.networkDescription">지도에서 지역을 선택하면 터미널의 주요 항로와 운항 정보, 이용 안내를 한눈에 확인할 수 있습니다.</p>
         </div>
         <div class="terminal-explorer">
           <div class="terminal-map-card" aria-label="전국 여객선터미널 위치 선택 지도">
             <div class="korea-map" id="terminal-map">
-              <button class="terminal-marker marker-incheon" type="button" data-terminal="incheon" aria-pressed="false"><i aria-hidden="true"></i><span>인천</span></button>
-              <button class="terminal-marker marker-boryeong" type="button" data-terminal="boryeong" aria-pressed="false"><i aria-hidden="true"></i><span>보령</span></button>
-              <button class="terminal-marker marker-gunsan" type="button" data-terminal="gunsan" aria-pressed="false"><i aria-hidden="true"></i><span>군산</span></button>
-              <button class="terminal-marker marker-mokpo" type="button" data-terminal="mokpo" aria-pressed="false"><i aria-hidden="true"></i><span>목포</span></button>
-              <button class="terminal-marker marker-wando" type="button" data-terminal="wando" aria-pressed="false"><i aria-hidden="true"></i><span>완도</span></button>
-              <button class="terminal-marker marker-yeosu" type="button" data-terminal="yeosu" aria-pressed="false"><i aria-hidden="true"></i><span>여수</span></button>
-              <button class="terminal-marker marker-tongyeong" type="button" data-terminal="tongyeong" aria-pressed="false"><i aria-hidden="true"></i><span>통영</span></button>
-              <button class="terminal-marker marker-busan" type="button" data-terminal="busan" aria-pressed="false"><i aria-hidden="true"></i><span>부산</span></button>
-              <button class="terminal-marker marker-pohang" type="button" data-terminal="pohang" aria-pressed="false"><i aria-hidden="true"></i><span>포항</span></button>
-              <button class="terminal-marker marker-jeju active" type="button" data-terminal="jeju" aria-pressed="true"><i aria-hidden="true"></i><span>제주</span></button>
+              <button class="terminal-marker marker-incheon" type="button" data-terminal="incheon" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-boryeong" type="button" data-terminal="boryeong" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-gunsan" type="button" data-terminal="gunsan" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-mokpo" type="button" data-terminal="mokpo" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-wando" type="button" data-terminal="wando" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-yeosu" type="button" data-terminal="yeosu" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-tongyeong" type="button" data-terminal="tongyeong" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-busan" type="button" data-terminal="busan" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-pohang" type="button" data-terminal="pohang" aria-pressed="false"><i aria-hidden="true"></i><span></span></button>
+              <button class="terminal-marker marker-jeju active" type="button" data-terminal="jeju" aria-pressed="true"><i aria-hidden="true"></i><span></span></button>
             </div>
           </div>
           <article class="terminal-summary" id="terminal-summary" aria-live="polite" aria-busy="true" hidden>
             <div class="terminal-summary-head">
               <div><span>TERMINAL NETWORK</span><strong id="terminal-region"></strong></div>
               <label class="terminal-select-wrap" for="terminal-select">
-                <span>터미널 선택</span>
-                <select id="terminal-select">
-                  <option value="incheon">인천항</option>
-                  <option value="boryeong">보령(대천항)</option>
-                  <option value="gunsan">군산항</option>
-                  <option value="mokpo">목포항</option>
-                  <option value="wando">완도항</option>
-                  <option value="yeosu">여수항</option>
-                  <option value="tongyeong">통영항</option>
-                  <option value="busan">부산항</option>
-                  <option value="pohang">포항항</option>
-                  <option value="jeju" selected>제주항</option>
-                </select>
+                <span data-i18n="portal.select">터미널 선택</span>
+                <select id="terminal-select"></select>
               </label>
             </div>
             <div class="terminal-summary-body">
-              <span class="terminal-summary-label">선택한 터미널</span>
+              <span class="terminal-summary-label" data-i18n="portal.selected">선택한 터미널</span>
               <h3 id="terminal-name"></h3>
               <p id="terminal-description"></p>
-              <div class="terminal-address-row"><strong>위치</strong><span id="terminal-address"></span></div>
+              <div class="terminal-address-row"><strong data-i18n="portal.location">위치</strong><span id="terminal-address"></span></div>
               <div class="terminal-route-block">
-                <strong>주요 항로</strong>
+                <strong data-i18n="portal.routes">주요 항로</strong>
                 <ul id="terminal-routes"></ul>
               </div>
-              <p class="terminal-hours-row"><strong>운영 안내</strong><span id="terminal-hours"></span></p>
+              <p class="terminal-hours-row"><strong data-i18n="portal.hours">운영 안내</strong><span id="terminal-hours"></span></p>
               <nav class="terminal-service-grid" aria-label="선택 터미널 주요 서비스">
-                <a id="terminal-schedule-link" href="#terminal-summary"><span>01</span><strong>운항정보</strong><small>오늘 운항 일정</small></a>
-                <a id="terminal-guide-link" href="#terminal-summary"><span>02</span><strong>터미널 안내</strong><small>이용 안내</small></a>
-                <a id="terminal-directions-link" href="#terminal-summary"><span>03</span><strong>교통 안내</strong><small>오시는 길·주차</small></a>
-                <a id="terminal-facilities-link" href="#terminal-summary"><span>04</span><strong>시설 정보</strong><small>편의시설 안내</small></a>
+                <a id="terminal-schedule-link" href="#terminal-summary"><span>01</span><strong data-i18n="portal.schedule">운항정보</strong><small data-i18n="portal.todaySchedule">오늘 운항 일정</small></a>
+                <a id="terminal-guide-link" href="#terminal-summary"><span>02</span><strong data-i18n="portal.terminalGuide">터미널 안내</strong><small data-i18n="portal.useGuide">이용 안내</small></a>
+                <a id="terminal-directions-link" href="#terminal-summary"><span>03</span><strong data-i18n="portal.transit">교통 안내</strong><small data-i18n="portal.transitDesc">오시는 길·주차</small></a>
+                <a id="terminal-facilities-link" href="#terminal-summary"><span>04</span><strong data-i18n="portal.facilities">시설 정보</strong><small data-i18n="portal.facilitiesDesc">편의시설 안내</small></a>
               </nav>
               <a class="terminal-detail-link" id="terminal-detail-link" href="#terminal-summary"><span id="terminal-detail-text"></span><span aria-hidden="true">→</span></a>
             </div>
@@ -98,6 +87,9 @@
     </section>
   </main>
   <div id="portal-footer-root"></div>
+  <script src="common/locales/ko.js"></script>
+  <script src="common/locales/en.js"></script>
+  <script src="common/i18n.js"></script>
   <script src="common/layout.js"></script>
   <script src="common/portal.js"></script>
 </body>

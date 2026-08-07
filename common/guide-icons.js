@@ -22,14 +22,8 @@
   };
 
   const facilityIcons = {
-    '대합실': 'lounge',
-    '수유실': 'nursing',
-    '편의점': 'store',
-    '식당': 'restaurant',
-    '물품보관함': 'locker',
-    '무료 Wi-Fi': 'wifi',
-    '교통약자 편의시설': 'accessibility',
-    '유실물 센터': 'lostFound'
+    waitingRoom: 'lounge', nursing: 'nursing', store: 'store', restaurant: 'restaurant',
+    locker: 'locker', wifi: 'wifi', accessibility: 'accessibility', lostFound: 'lostFound'
   };
 
   function icon(name, className = '') {
@@ -40,7 +34,8 @@
   window.TerminalGuideIcons = {
     icon,
     facilityIcon(name) {
-      return facilityIcons[name] || 'facilities';
+      const match = Object.keys(facilityIcons).find((key) => window.i18n && window.i18n.t(`facilities.${key}`) === name);
+      return facilityIcons[match] || 'facilities';
     }
   };
 })();

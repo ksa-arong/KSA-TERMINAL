@@ -5,6 +5,8 @@
   const heroSlides = [...document.querySelectorAll('.portal-hero-slide')];
   const heroButtons = [...document.querySelectorAll('[data-hero-slide]')];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const t = window.i18n.t;
+  const localize = window.i18n.localize;
   let currentHeroSlide = 0;
   let heroTimer = null;
 
@@ -49,103 +51,53 @@
 
   const terminals = {
     incheon: {
-      region: '인천광역시',
-      name: '인천항 연안여객터미널',
-      shortName: '인천항',
-      description: '서해 5도와 수도권을 잇는 섬 여행의 출발점입니다.',
-      address: '인천광역시 중구 연안부두로 70',
-      routes: ['백령도', '덕적도', '대연평도'],
-      hours: '운항일 기준 06:00–21:00 · 기상에 따라 변동',
+      markerName: { ko: '인천', en: '' }, region: { ko: '인천광역시', en: '' }, name: { ko: '인천항 연안여객터미널', en: '' }, shortName: { ko: '인천항', en: '' },
+      description: { ko: '서해 5도와 수도권을 잇는 섬 여행의 출발점입니다.', en: '' }, address: { ko: '인천광역시 중구 연안부두로 70', en: '' }, routes: { ko: ['백령도', '덕적도', '대연평도'], en: [] }, hours: { ko: '운항일 기준 06:00–21:00 · 기상에 따라 변동', en: '' },
       folder: 'incheon'
     },
     boryeong: {
-      region: '충청남도',
-      name: '대천항여객선터미널',
-      shortName: '대천항',
-      description: '', // TODO: 한 줄 설명
-      address: '', // TODO: 정확한 주소 확인 필요
-      routes: ['원산도', '삽시도', '장고도', '외연도'], // TODO: 실제 운항 노선 확인
-      hours: '', // TODO: 운영시간 확인
+      markerName: { ko: '보령', en: '' }, region: { ko: '충청남도', en: '' }, name: { ko: '대천항여객선터미널', en: '' }, shortName: { ko: '대천항', en: '' },
+      description: { ko: '', en: '' }, address: { ko: '', en: '' }, routes: { ko: ['원산도', '삽시도', '장고도', '외연도'], en: [] }, hours: { ko: '', en: '' }, // TODO: 정보 확인 필요
       folder: 'boryeong'
     },
     gunsan: {
-      region: '전북특별자치도',
-      name: '군산항여객터미널',
-      shortName: '군산항',
-      description: '고군산군도와 서해 섬을 연결하는 군산의 해상교통 거점입니다.',
-      address: '전북특별자치도 군산시 군산항 일대',
-      routes: ['어청도', '개야도', '선유도'],
-      hours: '운항일 기준 06:00–20:00 · 노선별 상이',
+      markerName: { ko: '군산', en: '' }, region: { ko: '전북특별자치도', en: '' }, name: { ko: '군산항여객터미널', en: '' }, shortName: { ko: '군산항', en: '' },
+      description: { ko: '고군산군도와 서해 섬을 연결하는 군산의 해상교통 거점입니다.', en: '' }, address: { ko: '전북특별자치도 군산시 군산항 일대', en: '' }, routes: { ko: ['어청도', '개야도', '선유도'], en: [] }, hours: { ko: '운항일 기준 06:00–20:00 · 노선별 상이', en: '' },
       folder: 'gunsan'
     },
     mokpo: {
-      region: '전라남도',
-      name: '목포연안여객선터미널',
-      shortName: '목포항',
-      description: '', // TODO
-      address: '', // TODO
-      routes: ['제주', '홍도·흑산도', '비금·도초'], // TODO: 확인
-      hours: '', // TODO
+      markerName: { ko: '목포', en: '' }, region: { ko: '전라남도', en: '' }, name: { ko: '목포연안여객선터미널', en: '' }, shortName: { ko: '목포항', en: '' },
+      description: { ko: '', en: '' }, address: { ko: '', en: '' }, routes: { ko: ['제주', '홍도·흑산도', '비금·도초'], en: [] }, hours: { ko: '', en: '' }, // TODO: 정보 확인 필요
       folder: 'mokpo'
     },
     wando: {
-      region: '전라남도',
-      name: '완도항여객터미널',
-      shortName: '완도항',
-      description: '청정 다도해와 제주를 잇는 전남 서남해안의 여객 관문입니다.',
-      address: '전라남도 완도군 완도항 일대',
-      routes: ['제주', '청산도', '노화도'],
-      hours: '운항일 기준 05:30–20:00 · 노선별 상이',
+      markerName: { ko: '완도', en: '' }, region: { ko: '전라남도', en: '' }, name: { ko: '완도항여객터미널', en: '' }, shortName: { ko: '완도항', en: '' },
+      description: { ko: '청정 다도해와 제주를 잇는 전남 서남해안의 여객 관문입니다.', en: '' }, address: { ko: '전라남도 완도군 완도항 일대', en: '' }, routes: { ko: ['제주', '청산도', '노화도'], en: [] }, hours: { ko: '운항일 기준 05:30–20:00 · 노선별 상이', en: '' },
       folder: 'wando'
     },
     yeosu: {
-      region: '전라남도',
-      name: '여수항여객터미널',
-      shortName: '여수항',
-      description: '아름다운 다도해 섬을 연결하는 남해안의 여객 관문입니다.',
-      address: '전라남도 여수시 여수항 일대',
-      routes: ['거문도', '금오도', '개도'],
-      hours: '운항일 기준 06:00–20:00 · 노선별 상이',
+      markerName: { ko: '여수', en: '' }, region: { ko: '전라남도', en: '' }, name: { ko: '여수항여객터미널', en: '' }, shortName: { ko: '여수항', en: '' },
+      description: { ko: '아름다운 다도해 섬을 연결하는 남해안의 여객 관문입니다.', en: '' }, address: { ko: '전라남도 여수시 여수항 일대', en: '' }, routes: { ko: ['거문도', '금오도', '개도'], en: [] }, hours: { ko: '운항일 기준 06:00–20:00 · 노선별 상이', en: '' },
       folder: 'yeosu'
     },
     tongyeong: {
-      region: '경상남도',
-      name: '통영항여객터미널',
-      shortName: '통영항',
-      description: '한려수도의 여러 섬으로 향하는 통영의 대표 여객터미널입니다.',
-      address: '경상남도 통영시 통영항 일대',
-      routes: ['욕지도', '한산도', '사량도'],
-      hours: '운항일 기준 06:00–20:00 · 노선별 상이',
+      markerName: { ko: '통영', en: '' }, region: { ko: '경상남도', en: '' }, name: { ko: '통영항여객터미널', en: '' }, shortName: { ko: '통영항', en: '' },
+      description: { ko: '한려수도의 여러 섬으로 향하는 통영의 대표 여객터미널입니다.', en: '' }, address: { ko: '경상남도 통영시 통영항 일대', en: '' }, routes: { ko: ['욕지도', '한산도', '사량도'], en: [] }, hours: { ko: '운항일 기준 06:00–20:00 · 노선별 상이', en: '' },
       folder: 'tongyeong'
     },
     busan: {
-      region: '부산광역시',
-      name: '부산항연안여객터미널',
-      shortName: '부산항',
-      description: '', // TODO
-      address: '', // TODO
-      routes: ['제주'], // TODO: 확인
-      hours: '', // TODO
+      markerName: { ko: '부산', en: '' }, region: { ko: '부산광역시', en: '' }, name: { ko: '부산항연안여객터미널', en: '' }, shortName: { ko: '부산항', en: '' },
+      description: { ko: '', en: '' }, address: { ko: '', en: '' }, routes: { ko: ['제주'], en: [] }, hours: { ko: '', en: '' }, // TODO: 정보 확인 필요
       folder: 'busan'
     },
     pohang: {
-      region: '경상북도',
-      name: '포항항여객터미널',
-      shortName: '포항항',
-      description: '동해와 울릉도를 연결하는 경북 동해안의 바닷길 관문입니다.',
-      address: '경상북도 포항시 포항항 일대',
-      routes: ['울릉도'],
-      hours: '운항일 기준 06:00–21:00 · 기상에 따라 변동',
+      markerName: { ko: '포항', en: '' }, region: { ko: '경상북도', en: '' }, name: { ko: '포항항여객터미널', en: '' }, shortName: { ko: '포항항', en: '' },
+      description: { ko: '동해와 울릉도를 연결하는 경북 동해안의 바닷길 관문입니다.', en: '' }, address: { ko: '경상북도 포항시 포항항 일대', en: '' }, routes: { ko: ['울릉도'], en: [] }, hours: { ko: '운항일 기준 06:00–21:00 · 기상에 따라 변동', en: '' },
       folder: 'pohang'
     },
     jeju: {
-      region: '제주특별자치도',
-      name: '제주항여객터미널',
-      shortName: '제주항',
-      description: '제주와 육지를 연결하는 대표적인 해상교통 관문입니다.',
-      address: '제주특별자치도 제주시 임항로 111',
-      routes: ['목포', '완도', '추자', '녹동'],
-      hours: '매일 05:30–21:00 · 운항 일정에 따라 변동',
+      markerName: { ko: '제주', en: '' }, region: { ko: '제주특별자치도', en: '' }, name: { ko: '제주항여객터미널', en: '' }, shortName: { ko: '제주항', en: '' },
+      description: { ko: '제주와 육지를 연결하는 대표적인 해상교통 관문입니다.', en: '' }, address: { ko: '제주특별자치도 제주시 임항로 111', en: '' }, routes: { ko: ['목포', '완도', '추자', '녹동'], en: [] }, hours: { ko: '매일 05:30–21:00 · 운항 일정에 따라 변동', en: '' },
       folder: 'jeju'
     }
   };
@@ -170,9 +122,24 @@
     facilities: document.getElementById('terminal-facilities-link')
   };
 
+  function renderTerminalControls() {
+    fields.select.replaceChildren();
+    Object.entries(terminals).forEach(([id, terminal]) => {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = localize(terminal.shortName);
+      option.selected = id === 'jeju';
+      fields.select.append(option);
+    });
+    markers.forEach((marker) => {
+      const terminal = terminals[marker.dataset.terminal];
+      if (terminal) marker.querySelector('span').textContent = localize(terminal.markerName);
+    });
+  }
+
   function renderRoutes(routes) {
     fields.routes.replaceChildren();
-    routes.forEach((route) => {
+    (localize(routes) || []).forEach((route) => {
       const item = document.createElement('li');
       item.textContent = route;
       fields.routes.append(item);
@@ -190,16 +157,16 @@
     });
 
     fields.select.value = id;
-    fields.region.textContent = terminal.region;
-    fields.name.textContent = terminal.name;
-    fields.description.textContent = terminal.description;
-    fields.address.textContent = terminal.address;
-    fields.hours.textContent = terminal.hours;
+    fields.region.textContent = localize(terminal.region);
+    fields.name.textContent = localize(terminal.name);
+    fields.description.textContent = localize(terminal.description);
+    fields.address.textContent = localize(terminal.address);
+    fields.hours.textContent = localize(terminal.hours);
     renderRoutes(terminal.routes);
 
     const base = terminal.folder;
     fields.detail.href = base + '/index.html';
-    fields.detailText.textContent = terminal.shortName + ' 홈페이지 바로가기';
+    fields.detailText.textContent = t('portal.homepage', { name: localize(terminal.shortName) });
     fields.schedule.href = base + '/index.html#schedule';
     fields.guide.href = base + '/guide.html';
     fields.directions.href = base + '/guide.html#directions';
@@ -211,6 +178,7 @@
   markers.forEach((marker) => {
     marker.addEventListener('click', () => selectTerminal(marker.dataset.terminal));
   });
+  renderTerminalControls();
   fields.select.addEventListener('change', () => selectTerminal(fields.select.value));
   selectTerminal(fields.select.value || 'jeju');
 }());

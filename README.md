@@ -154,3 +154,22 @@ KSA-TERMINAL/
 | `international` | 국제 7부두 | 국제(7부두) |
 
 각 운항편은 `originId`, `destinationId`, `terminalId`, `status`만 참조하고 선박명과 시각은 원문 데이터로 유지합니다.
+
+## 다국어(i18n) 골격
+
+공통 UI 문구는 `common/locales/ko.js`와 `common/locales/en.js`의 중첩 키로 관리합니다. `common/i18n.js`는 `window.i18n.t('nav.home')` 형태의 조회 함수와 터미널 고유 데이터용 `localize({ ko, en })`를 제공합니다. JSON이나 `fetch`를 사용하지 않으므로 `file://`로 연 페이지에서도 동작합니다.
+
+- 언어 판정: URL 경로에 `/en/`이 포함되면 `en`, 아니면 `ko`
+- 폴백 순서: 현재 언어 → 한국어 → 키 문자열
+- 빈 영문 값은 화면에 출력하지 않고 한국어로 폴백
+- 누락 경고: 기본값은 꺼짐. 개발 중 `window.i18n.setMissingWarnings(true)`로 활성화
+- 번역 티어: T1 공통 UI·상태·항구명, T2 포털 메인, T3 제주 페이지, T4 포털 하위 페이지
+- 영문 사전의 빈 값 옆 `TODO[Tn]` 주석은 후속 번역 작업의 우선순위를 뜻합니다.
+
+터미널 고유 문구는 사전에 중복하지 않고 데이터 파일 안에서 `{ ko: '...', en: '' }` 짝으로 관리합니다. 시각, 선박명, 전화번호, 날짜처럼 번역하지 않는 값은 기존 문자열을 유지합니다. 제주 공지사항과 승선 안내 카드도 현재는 같은 파일의 짝 필드를 사용하므로 별도 언어 파일 간 키 불일치가 생기지 않습니다.
+
+운항 상태는 `schedule.status.<code>`, 제주 항구명은 `ports.<id>` 사전 키로 표시합니다. 위에 정리한 상태 코드·항구 ID가 후속 터미널 전환의 기준입니다. 제주 터미널 표시명은 `schedule-data.js`의 `filterLabel`·`tableLabel` 짝 필드에서 관리합니다.
+
+### 1단계 키 대조 결과
+
+`ko.js`와 `en.js`는 동일한 최상위 영역(`common`, `nav`, `header`, `mega`, `footer`, `terminalPage`, `schedule`, `ports`, `facilities`, `portal`)을 갖습니다. 제주 장문 콘텐츠는 별도 locale 파일로 분리하지 않고 `terminal-data.js` 내부의 짝 필드로 관리하므로 별도 키 대조 대상이 없습니다. 이번 범위에서 제외한 `guide.js`, `terminal-guide.js`, 포털 하위 3개 페이지 문구는 후속 T4 작업에서 전환합니다.

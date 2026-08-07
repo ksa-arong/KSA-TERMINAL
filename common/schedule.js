@@ -5,6 +5,8 @@
   const section = document.getElementById('schedule');
   if (!config || !section) throw new Error('scheduleData와 #schedule 요소가 필요합니다.');
   if (!window.SectionTitle) throw new Error('SectionTitle 컴포넌트가 필요합니다.');
+  const t = window.i18n ? window.i18n.t : (key) => key;
+  const localize = window.i18n ? window.i18n.localize : (value) => value && value.ko !== undefined ? value.ko : value;
 
   const schedule = config.items || [];
   const terminalDirectory = config.terminals || {};
@@ -12,20 +14,13 @@
   const filters = (config.filters || []).map((filter) => {
     if (typeof filter !== 'string') return filter;
     const terminal = terminalDirectory[filter] || {};
-    return { id: filter, label: terminal.filterLabel || terminal.tableLabel || filter };
+    return { id: filter, label: localize(terminal.filterLabel || terminal.tableLabel) || filter };
   });
   const statusMeta = {
-    normal: { className: 'normal', label: '정상운항' },
-    delayed: { className: 'control', label: '지연' },
-    cancelled: { className: 'cancel', label: '결항' },
-    controlled: { className: 'control', label: '통제' },
-    inquiry: { className: 'inquiry', label: '선사문의' },
-    '정상운항': { className: 'normal', label: '정상운항' },
-    '지연': { className: 'control', label: '지연' },
-    '결항': { className: 'cancel', label: '결항' },
-    '통제': { className: 'control', label: '통제' },
-    '선사문의': { className: 'inquiry', label: '선사문의' }
+    normal: { className: 'normal' }, delayed: { className: 'control' }, cancelled: { className: 'cancel' },
+    controlled: { className: 'control' }, inquiry: { className: 'inquiry' }
   };
+  const legacyStatusCodes = { '정상운항': 'normal', '지연': 'delayed', '결항': 'cancelled', '통제': 'controlled', '선사문의': 'inquiry' };
   const hasRouteType = schedule.some((item) => item.routeType);
   const referenceTime = minutes(config.referenceTime || '08:30');
   const notice = config.notice || '선사 사정 및 해상 기상 상황에 따라 운항 일정이 변동될 수 있으니, 출항 전 해당 여객선사에 반드시 확인하시기 바랍니다.';
@@ -47,16 +42,19 @@
   }
 
   function portLabel(id, legacyLabel) {
-    return portDirectory[id] || legacyLabel || id || '-';
+    const directoryLabel = localize(portDirectory[id]);
+    const dictionaryKey = id && t(`ports.${id}`);
+    return directoryLabel || (dictionaryKey !== `ports.${id}` ? dictionaryKey : '') || legacyLabel || id || '-';
   }
 
   function terminalLabel(item) {
     const terminal = terminalDirectory[item.terminalId] || {};
-    return terminal.tableLabel || item.terminalLabel || item.terminalId || '-';
+    return localize(terminal.tableLabel) || item.terminalLabel || item.terminalId || '-';
   }
 
   function displayStatus(status) {
-    return statusMeta[status] || { className: 'normal', label: status || '정상운항' };
+    const code = statusMeta[status] ? status : legacyStatusCodes[status];
+    return code ? { ...statusMeta[code], label: t(`schedule.status.${code}`) } : { className: 'normal', label: status || t('schedule.status.normal') };
   }
 
   section.innerHTML = `
@@ -72,19 +70,19 @@
         <span class="update-time"><strong id="today-date"></strong> ${config.referenceTime || '08:30'} 기준</span>
       </div>
       <div class="schedule-controls">
-        <div class="movement-tabs" role="tablist" aria-label="입출항 선택">
-          <button class="movement-tab" id="departure-tab" type="button" role="tab" aria-selected="true" aria-controls="departure-panel">출항 현황</button>
-          <button class="movement-tab" id="arrival-tab" type="button" role="tab" aria-selected="false" aria-controls="arrival-panel" tabindex="-1">입항 현황</button>
+        <div class="movement-tabs" role="tablist" aria-label="${t('schedule.movementAria')}">
+          <button class="movement-tab" id="departure-tab" type="button" role="tab" aria-selected="true" aria-controls="departure-panel">${t('schedule.departure')}</button>
+          <button class="movement-tab" id="arrival-tab" type="button" role="tab" aria-selected="false" aria-controls="arrival-panel" tabindex="-1">${t('schedule.arrival')}</button>
         </div>
-        <div class="terminal-tabs" id="terminal-filters" aria-label="터미널 필터">
-          <button class="terminal-tab" type="button" data-filter="all" aria-pressed="true">전체</button>
+        <div class="terminal-tabs" id="terminal-filters" aria-label="${t('schedule.terminalFilterAria')}">
+          <button class="terminal-tab" type="button" data-filter="all" aria-pressed="true">${t('schedule.all')}</button>
           ${filters.map((filter) => `<button class="terminal-tab" type="button" data-filter="${filter.id}" aria-pressed="false">${filter.label}</button>`).join('')}
         </div>
       </div>
-      ${hasRouteType ? `<div class="route-type-filters" id="route-type-filters" aria-label="항로 유형 필터" hidden>
-        <span>항로 유형</span>
-        <button class="route-type-filter" type="button" data-route-type="편도" aria-pressed="false">편도항로</button>
-        <button class="route-type-filter" type="button" data-route-type="순환" aria-pressed="false">순환항로</button>
+      ${hasRouteType ? `<div class="route-type-filters" id="route-type-filters" aria-label="${t('schedule.routeFilterAria')}" hidden>
+        <span>${t('schedule.routeType')}</span>
+        <button class="route-type-filter" type="button" data-route-type="편도" aria-pressed="false">${t('schedule.oneWay')}</button>
+        <button class="route-type-filter" type="button" data-route-type="순환" aria-pressed="false">${t('schedule.circular')}</button>
       </div>` : ''}
       <div class="movement-panel" id="departure-panel" role="tabpanel" aria-labelledby="departure-tab">
         ${table('departure')}
@@ -94,11 +92,11 @@
         ${table('arrival')}
         ${legend()}
       </div>
-      <button class="schedule-toggle" id="schedule-toggle" type="button" aria-expanded="false">전체 운항 시간표 보기</button>
+      <button class="schedule-toggle" id="schedule-toggle" type="button" aria-expanded="false">${t('schedule.expand')}</button>
     </div>`;
 
   function legend() {
-    return `<div class="schedule-meta"><p class="notice-line">※ ${notice}</p><div class="status-legend" aria-label="운항 상태 색상 안내"><span class="status normal">정상운항</span><span class="status cancel">결항</span><span class="status control">통제</span><span class="status inquiry">선사문의</span></div></div>`;
+    return `<div class="schedule-meta"><p class="notice-line">※ ${notice}</p><div class="status-legend" aria-label="${t('schedule.legendAria')}"><span class="status normal">${t('schedule.status.normal')}</span><span class="status cancel">${t('schedule.status.cancelled')}</span><span class="status control">${t('schedule.status.controlled')}</span><span class="status inquiry">${t('schedule.status.inquiry')}</span></div></div>`;
   }
 
   function table(type) {
@@ -141,7 +139,7 @@
     const allItems = currentType() === 'departure' ? departures : arrivals;
     const visibleItems = currentType() === 'departure' ? visibleDepartures : visibleArrivals;
     toggle.hidden = !expanded && allItems.length === visibleItems.length;
-    toggle.textContent = expanded ? '운항 시간표 접기' : '전체 운항 시간표 보기';
+    toggle.textContent = expanded ? t('schedule.collapse') : t('schedule.expand');
     toggle.setAttribute('aria-expanded', String(expanded));
 
     if (routeTypePanel) {

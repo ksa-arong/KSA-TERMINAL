@@ -2,19 +2,8 @@ window.scheduleData = {
   "referenceTime": "08:30",
   "filters": ["coastal", "international"],
   "terminals": {
-    "coastal": { "filterLabel": "연안 2부두", "tableLabel": "연안(2부두)" },
-    "international": { "filterLabel": "국제 7부두", "tableLabel": "국제(7부두)" }
-  },
-  "ports": {
-    "jeju": "제주항",
-    "chuja_wando": "추자·완도",
-    "wando": "완도항",
-    "mokpo": "목포항",
-    "samcheonpo": "삼천포항",
-    "chuja_jindo": "추자·진도",
-    "nokdong": "녹동항",
-    "chuja_from_jindo": "추자(진도발)",
-    "chuja_from_wando": "추자(완도발)"
+    "coastal": { "filterLabel": { "ko": "연안 2부두", "en": "" }, "tableLabel": { "ko": "연안(2부두)", "en": "" } },
+    "international": { "filterLabel": { "ko": "국제 7부두", "en": "" }, "tableLabel": { "ko": "국제(7부두)", "en": "" } }
   },
   "items": [
     {
