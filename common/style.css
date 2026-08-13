@@ -758,27 +758,8 @@ body.menu-open { overflow: hidden; }
   .site-header .gnb-link { font-size: var(--font-h3); }
 }
 /* Airport-network inspired portal selector */
-.portal-page .terminal-explorer {
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: white;
-  box-shadow: var(--shadow);
-}
-.portal-page .terminal-map-card {
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
 .portal-page .terminal-summary {
   border-left: 1px solid var(--line);
-  border-radius: 0;
-  box-shadow: none;
-}
-.portal-page .terminal-summary-head {
-  min-height: 88px;
-  padding: 16px 28px;
 }
 .portal-page .terminal-summary-head > div {
   display: flex;
@@ -824,10 +805,6 @@ body.menu-open { overflow: hidden; }
 .terminal-select-wrap select:focus-visible {
   outline: 3px solid var(--blue-100);
   outline-offset: 2px;
-}
-.portal-page .terminal-summary-body {
-  min-height: 472px;
-  padding: 30px 30px 26px;
 }
 .portal-page .terminal-summary h3 {
   margin-top: 7px;
@@ -951,17 +928,12 @@ body.menu-open { overflow: hidden; }
   .portal-page .terminal-summary-head {
     align-items: flex-start;
     gap: 12px;
-    padding: 18px 22px;
   }
   .terminal-select-wrap {
     width: 100%;
   }
   .terminal-select-wrap select {
     width: 100%;
-  }
-  .portal-page .terminal-summary-body {
-    min-height: 0;
-    padding: 26px 22px 22px;
   }
   .terminal-address-row,
   .terminal-hours-row,
@@ -1741,8 +1713,6 @@ button.all-terminals-link {
   transform: translateY(-2px);
 }
 .portal-page .site-header .gnb-link {
-  font-size: var(--portal-gnb-size);
-  font-weight: var(--weight-semibold);
   letter-spacing: -.015em;
 }
 .portal-footer-logo {
@@ -1762,21 +1732,6 @@ button.all-terminals-link {
   background: rgba(255, 255, 255, .98);
   color: var(--navy-900);
 }
-.portal-subpage .brand-logo,
-.portal-subpage .site-header .gnb-link,
-.portal-subpage .header-utils,
-.portal-subpage .icon-button,
-.portal-subpage .language-button,
-.portal-subpage .site-header .menu-button {
-  color: var(--navy-900);
-}
-.portal-subpage .site-header .gnb-link::after { background: var(--navy-800); }
-.portal-subpage .search-button {
-  border-color: var(--line);
-  background: var(--sky-50);
-  backdrop-filter: none;
-}
-.portal-subpage .site-header.scrolled { position: fixed; }
 .portal-subhero {
   padding: var(--portal-subhero-padding-top) 0 var(--portal-subhero-padding-bottom);
   background:
@@ -2159,7 +2114,6 @@ button.all-terminals-link {
 .portal-page .site-header .gnb-link {
   min-height: 96px;
   color: rgba(255, 255, 255, .9);
-  font-weight: var(--weight-medium);
 }
 .portal-page .site-header .gnb-link::after {
   bottom: 16px;
