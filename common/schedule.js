@@ -7,6 +7,113 @@
   if (!window.SectionTitle) throw new Error('SectionTitle 컴포넌트가 필요합니다.');
   const t = window.i18n ? window.i18n.t : (key) => key;
   const localize = window.i18n ? window.i18n.localize : (value) => value && value.ko !== undefined ? value.ko : value;
+  const escapeHtml = window.PortalDomUtils.escapeHtml;
+
+  if (config.schemaVersion === '2.0' && Array.isArray(config.routes)) {
+    renderRegionSchedule();
+    return;
+  }
+
+  function renderRegionSchedule() {
+    const dayLabels = { mon: '월', tue: '화', wed: '수', thu: '목', fri: '금', sat: '토', sun: '일' };
+    const terminalName = (id) => localize(config.terminals?.[id]?.name) || id;
+    const formatDate = (date) => {
+      const parts = String(date).split('-');
+      return parts.length === 3 ? `${Number(parts[1])}.${Number(parts[2])}.` : String(date);
+    };
+    const formatVia = (via) => {
+      if (!Array.isArray(via) || via.length === 0) return '없음';
+      return via.map((stop) => {
+        const details = [];
+        if (stop.arr) details.push(`도착 ${stop.arr}`);
+        if (stop.dep) details.push(`출항 ${stop.dep}`);
+        if (stop.durationBefore) details.push(`이전 구간 ${localize(stop.durationBefore)}`);
+        if (stop.durationAfter) details.push(`다음 구간 ${localize(stop.durationAfter)}`);
+        return `${escapeHtml(localize(stop.port))}${details.length ? ` (${details.map(escapeHtml).join(' · ')})` : ''}`;
+      }).join('<br>');
+    };
+    const rowsTable = (rows, caption) => {
+      if (!rows.length) return '';
+      const showTrip = rows.every((row) => row.trip);
+      const showSegment = rows.every((row) => row.from && row.to);
+      const showDeparture = rows.every((row) => row.dep);
+      const showArrival = rows.every((row) => row.arr);
+      const showDuration = rows.every((row) => row.duration);
+      const showVia = rows.some((row) => Array.isArray(row.via) && row.via.length > 0);
+      const headers = [
+        ['구분', true], ['항차', showTrip], ['구간', showSegment], ['출항', showDeparture], ['도착', showArrival], ['소요', showDuration], ['경유', showVia]
+      ].filter(([, visible]) => visible).map(([label]) => `<th scope="col">${label}</th>`).join('');
+      const body = rows.map((row) => `<tr>
+        <td data-label="구분"><strong>${row.direction === 'inbound' ? '오는편' : '가는편'}</strong></td>
+        ${showTrip ? `<td data-label="항차">${escapeHtml(localize(row.trip))}</td>` : ''}
+        ${showSegment ? `<td data-label="구간">${escapeHtml(localize(row.from))} → ${escapeHtml(localize(row.to))}</td>` : ''}
+        ${showDeparture ? `<td data-label="출항"><time>${escapeHtml(row.dep)}</time></td>` : ''}
+        ${showArrival ? `<td data-label="도착"><time>${escapeHtml(row.arr)}</time></td>` : ''}
+        ${showDuration ? `<td data-label="소요">${escapeHtml(localize(row.duration))}</td>` : ''}
+        ${showVia ? `<td data-label="경유">${formatVia(row.via)}</td>` : ''}
+      </tr>`).join('');
+      return `<div class="region-table-wrap"><table class="region-schedule-table"><caption>${escapeHtml(caption)}</caption><thead><tr>${headers}</tr></thead><tbody>${body}</tbody></table></div>`;
+    };
+    const suspension = (route) => {
+      const dates = route.suspended?.dates || [];
+      const weekdays = route.suspended?.weekdays || [];
+      const note = localize(route.suspended?.note);
+      if (!dates.length && !weekdays.length && !note) return '';
+      return `<div class="region-suspension"><strong>휴항</strong>${dates.length ? `<span>${dates.map(formatDate).join(', ')}</span>` : ''}${weekdays.length ? `<span>${weekdays.map((day) => dayLabels[day] || day).join('·')}요일</span>` : ''}${note ? `<span>${escapeHtml(note)}</span>` : ''}</div>`;
+    };
+    const scheduleMarkup = (route) => {
+      const standardRows = [
+        ...(route.outbound || []).map((row) => ({ ...row, direction: 'outbound' })),
+        ...(route.inbound || []).map((row) => ({ ...row, direction: 'inbound' }))
+      ];
+      const standard = rowsTable(standardRows, `${localize(route.destination) || localize(route.group)} 항로 운항 시간표`);
+      const patterns = (route.patterns || []).map((pattern) => {
+        const dayText = (pattern.days || []).map((day) => dayLabels[day] || day).join('·');
+        const note = localize(pattern.note);
+        return `<section class="region-pattern" aria-label="${escapeHtml(`${dayText}요일 운항`)}"><h4>${escapeHtml(dayText)}요일${note ? ` <span>${escapeHtml(note)}</span>` : ''}</h4>${rowsTable(pattern.legs || [], `${dayText}요일 운항 시간표`)}</section>`;
+      }).join('');
+      return `${standard}${patterns}`;
+    };
+    const routeCards = config.routes.map((entry) => {
+      const route = entry.route;
+      const patternHasInbound = (route.patterns || []).some((pattern) => (pattern.legs || []).some((leg) => leg.direction === 'inbound'));
+      const isRoundTrip = Boolean((route.inbound || []).length || route.duration || patternHasInbound);
+      const title = localize(isRoundTrip ? route.destination : route.group) || localize(route.destination);
+      const vesselName = localize(route.vessel?.name);
+      const operatorText = (route.operators || []).map((operator) => `${escapeHtml(localize(operator.name))} ${regionPhone(operator.tel)}`).join('<span aria-hidden="true"> · </span>');
+      const note = localize(route.note);
+      const hasSchedule = (route.outbound || []).length || (route.inbound || []).length || (route.patterns || []).length;
+      return `<article class="region-route-card" data-layout="${isRoundTrip ? 'round-trip' : 'port-call'}">
+        <header class="region-route-header">
+          <div>${hasSchedule ? `<span class="region-route-type">${isRoundTrip ? '왕복형' : '기항지형'}</span>` : ''}<h3>${escapeHtml(title)}</h3></div>
+          <span class="region-berth">${escapeHtml(terminalName(route.berthId))}</span>
+        </header>
+        <dl class="region-route-meta">
+          ${vesselName ? `<div><dt>선박</dt><dd><strong>${escapeHtml(vesselName)}</strong>${route.vessel.tonnage ? ` <span>${escapeHtml(route.vessel.tonnage)}톤</span>` : ''}${route.vessel.capacity ? ` <span>정원 ${escapeHtml(route.vessel.capacity)}명</span>` : ''}</dd></div>` : ''}
+          ${route.duration ? `<div><dt>소요시간</dt><dd>${escapeHtml(localize(route.duration))}</dd></div>` : ''}
+          ${operatorText ? `<div><dt>선사</dt><dd>${operatorText}</dd></div>` : ''}
+          ${route.departurePort ? `<div><dt>출항지</dt><dd>${escapeHtml(localize(route.departurePort))}</dd></div>` : ''}
+        </dl>
+        ${hasSchedule ? scheduleMarkup(route) : '<p class="region-service-stopped"><strong>운항중단</strong></p>'}
+        ${suspension(route)}
+        ${note ? `<p class="region-route-note"><strong>비고</strong> ${escapeHtml(note)}</p>` : ''}
+      </article>`;
+    }).join('');
+
+    function regionPhone(tel) {
+      const callable = String(tel).split('~')[0].replace(/[^\d+]/g, '');
+      return `<a href="tel:${callable}">${escapeHtml(tel)}</a>`;
+    }
+
+    section.innerHTML = `<div class="container">
+      <div class="region-schedule-heading">
+        <div><p class="section-kicker">SCHEDULE</p><h2 id="schedule-title">운항 시간표</h2><p>가는편과 오는편을 항로·선박별로 확인하세요.</p></div>
+        <div class="region-schedule-source"><strong>${escapeHtml(config.period)}</strong><span>자료 기준 <time datetime="${escapeHtml(config.sourceDate)}">2026.09.16.</time></span></div>
+      </div>
+      <p class="region-source-title">출처: ${escapeHtml(localize(config.source))}</p>
+      <div class="region-route-list">${routeCards}</div>
+    </div>`;
+  }
 
   const schedule = config.items || [];
   const terminalDirectory = config.terminals || {};

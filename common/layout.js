@@ -679,7 +679,127 @@ function renderSharedLayout() {
     });
   }
 
-  if (document.body.classList.contains('portal-page')) {
+  function regionSectionHeading(kicker, title, description, id) {
+    return `<div class="region-section-heading"><p class="section-kicker">${escapeHtml(kicker)}</p><h2 id="${id}">${escapeHtml(title)}</h2>${description ? `<p>${escapeHtml(description)}</p>` : ''}</div>`;
+  }
+
+  function regionTelephone(tel, label = tel) {
+    const callable = String(tel).split('~')[0].replace(/[^\d+]/g, '');
+    return `<a class="region-contact-tel" href="tel:${callable}">${escapeHtml(label)}</a>`;
+  }
+
+  function renderRegionQuickNav() {
+    const items = [
+      ['schedule', '운항 시간표', '항로별 출항·입항 시간', '#schedule'],
+      ['terminal', '터미널·부두', '연안 2부두·국제 7부두', '#terminals'],
+      ['customer', '선사 연락처', '운항 전 선사 확인', '#operators'],
+      ['booking', '화물·크루즈 문의', '선적 및 크루즈 연락처', '#special-contacts']
+    ];
+    return `<nav class="container portal-hero-service-grid region-quick-nav" aria-label="제주항 페이지 바로가기">${items.map(([icon, title, description, href], index) => `<a class="portal-hero-service-card portal-hero-service-card--${index + 1}" href="${href}">${renderPortalQuickIcon(icon)}<strong>${title}</strong><small>${description}</small></a>`).join('')}</nav>`;
+  }
+
+  function renderRegionTemplate(data, app) {
+    const terminalName = localize(data.name);
+    const scheduleConfig = window.scheduleData || {};
+    const routes = Array.isArray(scheduleConfig.routes) ? scheduleConfig.routes : [];
+    const operators = [];
+    const operatorKeys = new Set();
+    routes.forEach((entry) => (entry.route?.operators || []).forEach((operator) => {
+      const key = `${localize(operator.name)}|${operator.tel}`;
+      if (!operatorKeys.has(key)) {
+        operatorKeys.add(key);
+        operators.push(operator);
+      }
+    }));
+
+    const terminalCards = (data.terminals || []).map((terminal) => `<article class="region-info-card"><span class="region-card-label">${terminal.id === 'coastal' ? 'COASTAL' : 'INTERNATIONAL'}</span><h3>${escapeHtml(localize(terminal.name))}</h3><address>${escapeHtml(localize(terminal.address))}</address></article>`).join('');
+    const operatorCards = operators.map((operator) => `<article class="region-contact-card"><h3>${escapeHtml(localize(operator.name))}</h3>${regionTelephone(operator.tel)}</article>`).join('');
+    const cargoCards = (data.cargoContacts || []).map((contact) => `<li><span><strong>${escapeHtml(localize(contact.route))}</strong>${escapeHtml(localize(contact.name))}</span>${regionTelephone(contact.tel)}</li>`).join('');
+    const cruiseCards = (data.cruiseContacts || []).map((contact) => `<li><strong>${escapeHtml(localize(contact.name))}</strong>${regionTelephone(contact.tel)}</li>`).join('');
+    const notices = (data.notices || []).map((notice) => `<li>${escapeHtml(localize(notice))}</li>`).join('');
+    const representative = data.contacts?.representative;
+    const national = data.contacts?.national;
+    const hero = data.hero || {};
+
+    app.innerHTML = `
+      <a class="skip-link" href="#main">${t('common.skip')}</a>
+      ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
+      <main id="main">
+        <section class="portal-hero region-hero" id="home" aria-labelledby="region-hero-title">
+          <div class="portal-hero-media" aria-hidden="true"><span class="portal-hero-slide portal-hero-slide--jeju active"></span></div>
+          <div class="container portal-hero-content region-hero-content">
+            <span class="eyebrow">${escapeHtml(localize(hero.eyebrow))}</span>
+            <h1 id="region-hero-title">${escapeHtml(localize(hero.title))}</h1>
+            <p>${escapeHtml(localize(hero.description))}</p>
+            <p class="region-source">${escapeHtml(localize(scheduleConfig.source))}</p>
+          </div>
+          ${renderRegionQuickNav()}
+        </section>
+        <section class="region-section region-schedule-section" id="schedule" aria-labelledby="schedule-title"></section>
+        <section class="region-section region-terminals" id="terminals" aria-labelledby="terminals-title">
+          <div class="container">
+            ${regionSectionHeading('TERMINAL', '터미널·부두 안내', '제주항 여객선은 선박별 지정 부두에서 출항합니다.', 'terminals-title')}
+            <div class="region-card-grid region-card-grid--two">${terminalCards}</div>
+            <div class="region-primary-contacts" aria-label="대표 안내 연락처">
+              ${representative ? `<div><span>${escapeHtml(localize(representative.label))}</span>${regionTelephone(representative.tel)}</div>` : ''}
+              ${national ? `<div><span>${escapeHtml(localize(national.label))}${national.note ? ` <small>${escapeHtml(localize(national.note))}</small>` : ''}</span>${regionTelephone(national.tel)}</div>` : ''}
+            </div>
+            <div class="region-action-links">
+              ${Object.values(data.links || {}).map((link) => `<a class="btn btn--outline" href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}<span aria-hidden="true">↗</span></a>`).join('')}
+            </div>
+          </div>
+        </section>
+        <section class="region-section region-operators" id="operators" aria-labelledby="operators-title">
+          <div class="container">
+            ${regionSectionHeading('OPERATORS', '선사 연락처', '운항 여부와 승선 관련 사항은 출항 전에 해당 선사로 확인하세요.', 'operators-title')}
+            <div class="region-card-grid region-card-grid--three">${operatorCards}</div>
+          </div>
+        </section>
+        <section class="region-section region-special-contacts" id="special-contacts" aria-labelledby="special-contacts-title">
+          <div class="container">
+            ${regionSectionHeading('CONTACT', '화물선적·크루즈 문의', '', 'special-contacts-title')}
+            <div class="region-contact-columns">
+              <article><h3>화물선적 문의</h3><ul>${cargoCards}</ul></article>
+              <article><h3>크루즈 문의</h3><ul>${cruiseCards}</ul></article>
+            </div>
+          </div>
+        </section>
+        <section class="region-section region-notices" id="notices" aria-labelledby="notices-title">
+          <div class="container">
+            ${regionSectionHeading('NOTICE', '유의사항', '', 'notices-title')}
+            <ul>${notices}</ul>
+          </div>
+        </section>
+      </main>
+      ${sharedSiteFooter('../')}`;
+
+    initializeHeader();
+    initializeSiteFooter();
+    initializeFloatingQuick();
+  }
+
+  function renderRegionGuidePlaceholder(data, app) {
+    const terminalName = localize(data.name);
+    app.innerHTML = `
+      <a class="skip-link" href="#main">${t('common.skip')}</a>
+      ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
+      <main id="main" class="region-guide-main">
+        <section class="region-guide-placeholder" aria-labelledby="region-guide-title">
+          <div class="container">
+            <p class="section-kicker">TERMINAL GUIDE</p>
+            <h1 id="region-guide-title">제주항 터미널 이용안내</h1>
+            <strong>준비 중</strong>
+            <p>요금, 오시는 길, 시설 안내는 확인된 데이터가 없어 현재 제공하지 않습니다.</p>
+            <a class="btn btn--outline" href="./index.html#terminals">터미널·부두 안내로 돌아가기</a>
+          </div>
+        </section>
+      </main>
+      ${sharedSiteFooter('../')}`;
+    initializeHeader();
+    initializeSiteFooter();
+  }
+
+  if (document.body.classList.contains('portal-page') && !document.body.classList.contains('region-template-page')) {
     const subpageData = window.PORTAL_SUBPAGE_DATA;
     const rootPrefix = subpageData ? renderPortalSubpage(subpageData) : '';
     if (window.i18n) window.i18n.translateDocument(document);
@@ -704,6 +824,12 @@ function renderSharedLayout() {
   const data = window.terminalData;
   const app = document.getElementById('app');
   if (!data || !app) throw new Error('terminalData와 #app 요소가 필요합니다.');
+
+  if (data.template === 'portal-region') {
+    if (document.body.classList.contains('guide-page')) renderRegionGuidePlaceholder(data, app);
+    else renderRegionTemplate(data, app);
+    return;
+  }
 
   const terminalName = localize(data.name);
 
