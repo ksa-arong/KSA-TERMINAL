@@ -1,6 +1,22 @@
 (function defineMenuData() {
   'use strict';
 
+  const regionStatuses = Object.freeze({
+    incheon: 'preparing',
+    gunsan: 'preparing',
+    mokpo: 'partial',
+    wando: 'preparing',
+    yeosu: 'preparing',
+    jeju: 'ready',
+    tongyeong: 'preparing',
+    pohang: 'preparing'
+  });
+
+  window.PORTAL_REGION_STATUSES = regionStatuses;
+  window.getPortalRegionStatus = (regionId, fallback = null) => (
+    regionStatuses[regionId] || fallback
+  );
+
   window.MENU_DATA = [
     {
       id: 'terminal', labelKey: 'portalNav.terminal', href: 'terminal/terminal-list.html', currentSection: 'terminal',

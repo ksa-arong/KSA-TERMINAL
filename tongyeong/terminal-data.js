@@ -1,4 +1,4 @@
-window.terminalData = {
+window._legacyTerminalData = {
   "name": "통영항여객터미널",
   "englishName": "TONGYEONG PORT PASSENGER TERMINAL",
   "phone": "000-0000-0000",
@@ -75,4 +75,21 @@ window.terminalData = {
       "date": "2026.06.25"
     }
   ]
+};
+
+window.terminalData = {
+  template: "portal-region",
+  schemaVersion: "2.0",
+  regionId: "tongyeong",
+  status: "preparing",
+  verified: false,
+  name: { ko: "통영항여객터미널", en: "" },
+  englishName: "TONGYEONG PORT PASSENGER TERMINAL",
+  guideTitle: { ko: "통영항여객터미널 운항 안내", en: "" },
+  guideUnavailable: { ko: "검증된 터미널 기본정보와 운항 시간표를 준비하고 있습니다. 확인이 완료된 정보만 순차적으로 제공하겠습니다.", en: "" },
+  guideActions: [
+    { label: { ko: "전국여객선운항안내 1544-1114", en: "" }, href: "tel:15441114" },
+    { label: { ko: "KSA 여객선 예매", en: "" }, href: "http://island.theksa.co.kr" }
+  ],
+  _legacy: window._legacyTerminalData
 };

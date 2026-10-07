@@ -4170,6 +4170,47 @@ button.all-terminals-link {
     line-height: var(--global-line-height-normal);
 }
 
+.terminal-card-status {
+    display: flex;
+    min-height: 176px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--spacing-12);
+}
+
+.terminal-card-status-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #e5f2f9;
+    color: #0c5d8d;
+    font-size: var(--font-body-sm);
+    font-weight: var(--global-font-weight-semibold);
+}
+
+.terminal-card-status p {
+    max-width: 34ch;
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.terminal-card-status--partial {
+    min-height: 132px;
+}
+
+@media (max-width: 700px) {
+    .terminal-card-status {
+        min-height: 161px;
+    }
+
+    .terminal-card-status--partial {
+        min-height: 92px;
+    }
+}
+
 .terminal-card-row {
     display: grid;
     grid-template-columns: 82px minmax(0, 1fr);
@@ -13905,6 +13946,13 @@ button.all-terminals-link:focus-visible,
 .region-guide-placeholder p:not(.section-kicker) {
     margin: 22px auto 28px;
     color: #53687b;
+}
+
+.region-guide-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
 }
 
 .region-template-page a:focus-visible,

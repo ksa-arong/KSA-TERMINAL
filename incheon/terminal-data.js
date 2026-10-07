@@ -1,4 +1,4 @@
-window.terminalData = {
+window._legacyTerminalData = {
   name: "인천항 연안여객터미널",
   englishName: "INCHEON COASTAL PASSENGER TERMINAL",
   phone: "1599-5985",
@@ -82,4 +82,21 @@ window.terminalData = {
       date: "2026.07.08"
     }
   ]
+};
+
+window.terminalData = {
+  template: "portal-region",
+  schemaVersion: "2.0",
+  regionId: "incheon",
+  status: "preparing",
+  verified: false,
+  name: { ko: "인천항 연안여객터미널", en: "" },
+  englishName: "INCHEON COASTAL PASSENGER TERMINAL",
+  guideTitle: { ko: "인천항 연안여객터미널 운항 안내", en: "" },
+  guideUnavailable: { ko: "검증된 터미널 기본정보와 운항 시간표를 준비하고 있습니다. 확인이 완료된 정보만 순차적으로 제공하겠습니다.", en: "" },
+  guideActions: [
+    { label: { ko: "전국여객선운항안내 1544-1114", en: "" }, href: "tel:15441114" },
+    { label: { ko: "KSA 여객선 예매", en: "" }, href: "http://island.theksa.co.kr" }
+  ],
+  _legacy: window._legacyTerminalData
 };

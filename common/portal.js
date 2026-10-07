@@ -162,13 +162,54 @@
         return list;
     }
 
+    function createTerminalStatusNotice(status) {
+        const notice = document.createElement('div');
+        const badge = document.createElement('strong');
+        const description = document.createElement('p');
+        notice.className = `terminal-card-status terminal-card-status--${status}`;
+        notice.setAttribute('role', 'status');
+        badge.className = 'terminal-card-status-badge';
+        if (status === 'partial') {
+            badge.textContent = '운항 시간표만 제공';
+            description.textContent = '검증된 운항 정보만 제공하며 터미널 기본정보는 준비 중입니다.';
+        } else {
+            badge.textContent = '운항 정보 준비 중';
+            description.textContent = '검증된 터미널 정보와 운항 시간표를 준비하고 있습니다.';
+        }
+        notice.append(badge, description);
+        return notice;
+    }
+
     function createTerminalCard(terminal, region) {
         const card = document.createElement('section');
         const content = document.createElement('div');
+        const status = window.getPortalRegionStatus
+            ? window.getPortalRegionStatus(region.id, region.status)
+            : region.status;
 
         card.className = 'terminal-card';
         card.setAttribute('aria-label', localize(terminal.name));
         content.className = 'terminal-card-content';
+
+        if (status === 'preparing') {
+            content.append(createTerminalStatusNotice(status));
+            card.append(content);
+            return card;
+        }
+
+        if (status === 'partial') {
+            content.append(createTerminalStatusNotice(status));
+            if ((terminal.routes || []).length) {
+                const routes = document.createElement('div');
+                const routesTitle = document.createElement('strong');
+                routes.className = 'terminal-card-row terminal-card-routes';
+                routesTitle.textContent = t('portal.routes');
+                routes.append(routesTitle, createRouteList(terminal));
+                content.append(routes);
+            }
+            card.append(content);
+            return card;
+        }
 
         const address = document.createElement('div');
         address.className = 'terminal-card-row terminal-card-address';

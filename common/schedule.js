@@ -2,6 +2,7 @@
   'use strict';
 
   const config = window.scheduleData;
+  if (config?.status === 'preparing') return;
   const section = document.getElementById('schedule');
   if (!config || !section) throw new Error('scheduleData와 #schedule 요소가 필요합니다.');
   if (!window.SectionTitle) throw new Error('SectionTitle 컴포넌트가 필요합니다.');

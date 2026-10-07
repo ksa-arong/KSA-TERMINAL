@@ -795,6 +795,13 @@ function renderSharedLayout() {
     const guideUnavailable = localize(data.guideUnavailable) || '요금, 오시는 길, 시설 안내는 확인된 데이터가 없어 현재 제공하지 않습니다.';
     const guideBackLabel = localize(data.guideBackLabel) || '터미널·부두 안내로 돌아가기';
     const guideBackHref = data.guideBackHref || './index.html#terminals';
+    const guideActions = (data.guideActions || []).map((action) => {
+      const external = /^https?:\/\//.test(action.href || '');
+      return `<a class="btn btn--outline" href="${escapeHtml(action.href)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHtml(localize(action.label))}${external ? '<span aria-hidden="true">↗</span>' : ''}</a>`;
+    }).join('');
+    const actionMarkup = guideActions
+      ? `<div class="region-guide-actions">${guideActions}</div>`
+      : `<a class="btn btn--outline" href="${escapeHtml(guideBackHref)}">${escapeHtml(guideBackLabel)}</a>`;
     app.innerHTML = `
       <a class="skip-link" href="#main">${t('common.skip')}</a>
       ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
@@ -802,10 +809,10 @@ function renderSharedLayout() {
         <section class="region-guide-placeholder" aria-labelledby="region-guide-title">
           <div class="container">
             <p class="section-kicker">TERMINAL GUIDE</p>
-            <h1 id="region-guide-title">${escapeHtml(guideTitle)}</h1>
-            <strong>준비 중</strong>
-            <p>${escapeHtml(guideUnavailable)}</p>
-            <a class="btn btn--outline" href="${escapeHtml(guideBackHref)}">${escapeHtml(guideBackLabel)}</a>
+             <h1 id="region-guide-title">${escapeHtml(guideTitle)}</h1>
+             <strong>준비 중</strong>
+             <p>${escapeHtml(guideUnavailable)}</p>
+             ${actionMarkup}
           </div>
         </section>
       </main>
@@ -841,8 +848,15 @@ function renderSharedLayout() {
   if (!data || !app) throw new Error('terminalData와 #app 요소가 필요합니다.');
 
   if (data.template === 'portal-region') {
-    if (document.body.classList.contains('guide-page')) renderRegionGuidePlaceholder(data, app);
-    else renderRegionTemplate(data, app);
+    const regionStatus = window.getPortalRegionStatus
+      ? window.getPortalRegionStatus(data.regionId, data.status)
+      : data.status;
+    if (regionStatus) data.status = regionStatus;
+    if (regionStatus === 'preparing' || document.body.classList.contains('guide-page')) {
+      renderRegionGuidePlaceholder(data, app);
+    } else {
+      renderRegionTemplate(data, app);
+    }
     return;
   }
 

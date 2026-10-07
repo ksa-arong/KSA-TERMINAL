@@ -1,4 +1,4 @@
-window.scheduleData = {
+window._legacyScheduleData = {
   referenceTime: "08:30",
   notice: "선사 사정 및 해상 기상 상황에 따라 운항 일정이 변동될 수 있으니, 출항 전 해당 여객선사에 반드시 확인하시기 바랍니다.",
   filters: [
@@ -115,4 +115,12 @@ window.scheduleData = {
       status: "결항"
     }
   ]
+};
+
+window.scheduleData = {
+  schemaVersion: "2.0",
+  status: "preparing",
+  verified: false,
+  routes: [],
+  _legacy: window._legacyScheduleData
 };

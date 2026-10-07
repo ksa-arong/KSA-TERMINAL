@@ -1541,4 +1541,15 @@
             pohangTerminalTypeOrder.indexOf(a.type) - pohangTerminalTypeOrder.indexOf(b.type)
         ));
     }
+
+    Object.entries(window.PORTAL_DATA.regions).forEach(([regionId, region]) => {
+        const status = window.getPortalRegionStatus?.(regionId);
+        if (!status) return;
+        region.status = status;
+        if (status === 'preparing') {
+            region.terminals.forEach((terminal) => {
+                terminal.verified = false;
+            });
+        }
+    });
 }());

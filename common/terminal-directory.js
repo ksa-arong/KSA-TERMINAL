@@ -50,6 +50,24 @@
         '포항': 'https://www.daezer.com/',
         '동해': 'https://www.dwship.co.kr/'
     };
+    const regionFolderByName = {
+        '군산': 'gunsan',
+        '목포': 'mokpo',
+        '완도': 'wando',
+        '여수': 'yeosu',
+        '제주': 'jeju',
+        '통영': 'tongyeong',
+        '포항': 'pohang'
+    };
+    const regionStatusByName = Object.fromEntries(
+        Object.entries(regionFolderByName).map(([region, folder]) => [
+            region,
+            window.getPortalRegionStatus?.(folder)
+        ])
+    );
+    terminals.forEach((terminal) => {
+        if (regionStatusByName[terminal.region] === 'preparing') terminal.verified = false;
+    });
     const normalize = (value) => String(value || '').trim().toLocaleLowerCase('ko-KR').replace(/\s+/g, ' ');
 
     const allOption = document.createElement('option');
@@ -79,8 +97,10 @@
         const link = document.createElement('a');
         link.className = 'btn btn--md btn--outline';
         link.href = href;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
+        if (/^https?:\/\//.test(href)) {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        }
         const labelText = document.createElement('span');
         labelText.textContent = label;
         const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -96,7 +116,7 @@
             ? '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle>'
             : '<path d="M15 3h6v6"></path><path d="m10 14 11-11"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>';
         link.append(icon, labelText);
-        link.setAttribute('aria-label', `${terminal.name} ${label} (새 창)`);
+        link.setAttribute('aria-label', `${terminal.name} ${label}${link.target ? ' (새 창)' : ''}`);
         return link;
     }
 
@@ -107,6 +127,9 @@
     }
 
     function terminalHomepage(terminal) {
+        if (regionStatusByName[terminal.region] === 'preparing') {
+            return `../${regionFolderByName[terminal.region]}/index.html`;
+        }
         if (terminal.region === '포항' && terminal.name.includes('울릉')) return 'https://www.ulcruise.co.kr/';
         return homepageByRegion[terminal.region];
     }
@@ -124,16 +147,21 @@
         const name = document.createElement('strong');
         name.textContent = terminal.name;
         const address = document.createElement('p');
-        address.textContent = terminal.address;
+        const preparing = regionStatusByName[terminal.region] === 'preparing';
+        address.textContent = preparing ? '검증된 정보 준비 중' : terminal.address;
         heading.append(region, name);
         info.append(heading, address);
 
         const actions = document.createElement('div');
         actions.className = 'portal-terminal-directory-mobile-actions';
-        actions.append(
-            createActionLink(terminal, '홈페이지', terminalHomepage(terminal)),
-            createActionLink(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`)
-        );
+        if (preparing) {
+            actions.append(createActionLink(terminal, '지역 안내', terminalHomepage(terminal)));
+        } else {
+            actions.append(
+                createActionLink(terminal, '홈페이지', terminalHomepage(terminal)),
+                createActionLink(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`)
+            );
+        }
         entry.append(info, actions);
         return entry;
     }
@@ -142,15 +170,16 @@
         const row = document.createElement('tr');
         const nameCell = createCell('', 'portal-terminal-directory-name');
         const name = document.createElement('strong');
+        const preparing = regionStatusByName[terminal.region] === 'preparing';
 
         name.textContent = terminal.name;
         nameCell.append(name, createMobileEntry(terminal));
         row.append(
             createCell(terminal.region, 'portal-terminal-directory-region'),
             nameCell,
-            createCell(terminal.address, 'portal-terminal-directory-address'),
-            createLinkCell(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`),
-            createLinkCell(terminal, '홈페이지', terminalHomepage(terminal))
+            createCell(preparing ? '검증된 정보 준비 중' : terminal.address, 'portal-terminal-directory-address'),
+            preparing ? createCell('준비 중', 'portal-terminal-directory-action') : createLinkCell(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`),
+            createLinkCell(terminal, preparing ? '지역 안내' : '홈페이지', terminalHomepage(terminal))
         );
         return row;
     }
@@ -160,7 +189,8 @@
         const selectedRegion = regionSelect.value;
         const query = normalize(queryInput.value);
         const matches = terminals.filter((terminal) => {
-            const searchableText = normalize(`${terminal.name} ${terminal.address} ${terminal.region}`);
+            const searchableAddress = regionStatusByName[terminal.region] === 'preparing' ? '' : terminal.address;
+            const searchableText = normalize(`${terminal.name} ${searchableAddress} ${terminal.region}`);
             return (selectedRegion === 'all' || terminal.region === selectedRegion) &&
                 (!query || searchableText.includes(query));
         });

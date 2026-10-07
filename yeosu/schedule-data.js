@@ -1,5 +1,5 @@
 // TODO: 실제 선박명 확인 필요
-window.scheduleData = {
+window._legacyScheduleData = {
   "referenceTime": "08:30",
   "filters": [
     {
@@ -58,4 +58,12 @@ window.scheduleData = {
       "status": "선사문의"
     }
   ]
+};
+
+window.scheduleData = {
+  schemaVersion: "2.0",
+  status: "preparing",
+  verified: false,
+  routes: [],
+  _legacy: window._legacyScheduleData
 };
