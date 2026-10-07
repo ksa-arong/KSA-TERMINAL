@@ -96,7 +96,7 @@ function renderSharedLayout() {
       <a href="${terminalRoot}incheon/index.html"><span>인천항</span><i aria-hidden="true">→</i></a>
       <span class="terminal-switcher-disabled" aria-disabled="true"><span>보령(대천항)</span><small>${t('common.ready')}</small></span>
       <a href="${terminalRoot}gunsan/index.html"><span>군산항</span><i aria-hidden="true">→</i></a>
-      <span class="terminal-switcher-disabled" aria-disabled="true"><span>목포항</span><small>${t('common.ready')}</small></span>
+      <a href="${terminalRoot}mokpo/index.html"><span>목포항</span><i aria-hidden="true">→</i></a>
       <a href="${terminalRoot}wando/index.html"><span>완도항</span><i aria-hidden="true">→</i></a>
       <a href="${terminalRoot}yeosu/index.html"><span>여수항</span><i aria-hidden="true">→</i></a>
       <a href="${terminalRoot}tongyeong/index.html"><span>통영항</span><i aria-hidden="true">→</i></a>
@@ -688,14 +688,17 @@ function renderSharedLayout() {
     return `<a class="region-contact-tel" href="tel:${callable}">${escapeHtml(label)}</a>`;
   }
 
-  function renderRegionQuickNav() {
-    const items = [
+  function renderRegionQuickNav(data) {
+    const defaultItems = [
       ['schedule', '운항 시간표', '항로별 출항·입항 시간', '#schedule'],
       ['terminal', '터미널·부두', '연안 2부두·국제 7부두', '#terminals'],
       ['customer', '선사 연락처', '운항 전 선사 확인', '#operators'],
       ['booking', '화물·크루즈 문의', '선적 및 크루즈 연락처', '#special-contacts']
     ];
-    return `<nav class="container portal-hero-service-grid region-quick-nav" aria-label="제주항 페이지 바로가기">${items.map(([icon, title, description, href], index) => `<a class="portal-hero-service-card portal-hero-service-card--${index + 1}" href="${href}">${renderPortalQuickIcon(icon)}<strong>${title}</strong><small>${description}</small></a>`).join('')}</nav>`;
+    const customItems = (data.quickNav || []).map((item) => [item.icon, localize(item.title), localize(item.description), item.href]);
+    const items = customItems.length ? customItems : defaultItems;
+    const ariaLabel = customItems.length ? `${localize(data.name)} 페이지 바로가기` : '제주항 페이지 바로가기';
+    return `<nav class="container portal-hero-service-grid region-quick-nav" aria-label="${escapeHtml(ariaLabel)}">${items.map(([icon, title, description, href], index) => `<a class="portal-hero-service-card portal-hero-service-card--${index + 1}" href="${href}">${renderPortalQuickIcon(icon)}<strong>${escapeHtml(title)}</strong><small>${escapeHtml(description)}</small></a>`).join('')}</nav>`;
   }
 
   function renderRegionTemplate(data, app) {
@@ -720,23 +723,8 @@ function renderSharedLayout() {
     const representative = data.contacts?.representative;
     const national = data.contacts?.national;
     const hero = data.hero || {};
-
-    app.innerHTML = `
-      <a class="skip-link" href="#main">${t('common.skip')}</a>
-      ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
-      <main id="main">
-        <section class="portal-hero region-hero" id="home" aria-labelledby="region-hero-title">
-          <div class="portal-hero-media" aria-hidden="true"><span class="portal-hero-slide portal-hero-slide--jeju active"></span></div>
-          <div class="container portal-hero-content region-hero-content">
-            <span class="eyebrow">${escapeHtml(localize(hero.eyebrow))}</span>
-            <h1 id="region-hero-title">${escapeHtml(localize(hero.title))}</h1>
-            <p>${escapeHtml(localize(hero.description))}</p>
-            <p class="region-source">${escapeHtml(localize(scheduleConfig.source))}</p>
-          </div>
-          ${renderRegionQuickNav()}
-        </section>
-        <section class="region-section region-schedule-section" id="schedule" aria-labelledby="schedule-title"></section>
-        <section class="region-section region-terminals" id="terminals" aria-labelledby="terminals-title">
+    const hasTerminalInfo = Boolean(terminalCards || representative || national || Object.keys(data.links || {}).length);
+    const terminalSection = hasTerminalInfo ? `<section class="region-section region-terminals" id="terminals" aria-labelledby="terminals-title">
           <div class="container">
             ${regionSectionHeading('TERMINAL', '터미널·부두 안내', '제주항 여객선은 선박별 지정 부두에서 출항합니다.', 'terminals-title')}
             <div class="region-card-grid region-card-grid--two">${terminalCards}</div>
@@ -748,22 +736,45 @@ function renderSharedLayout() {
               ${Object.values(data.links || {}).map((link) => `<a class="btn btn--outline" href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}<span aria-hidden="true">↗</span></a>`).join('')}
             </div>
           </div>
+        </section>` : '';
+    const specialContactGroups = [
+      cargoCards ? `<article><h3>화물선적 문의</h3><ul>${cargoCards}</ul></article>` : '',
+      cruiseCards ? `<article><h3>크루즈 문의</h3><ul>${cruiseCards}</ul></article>` : ''
+    ].filter(Boolean);
+    const specialContactsTitle = localize(data.specialContactsTitle) || '화물선적·크루즈 문의';
+    const specialContactsSection = specialContactGroups.length ? `<section class="region-section region-special-contacts" id="special-contacts" aria-labelledby="special-contacts-title">
+          <div class="container">
+            ${regionSectionHeading('CONTACT', specialContactsTitle, '', 'special-contacts-title')}
+            <div class="region-contact-columns${specialContactGroups.length === 1 ? ' region-contact-columns--single' : ''}">
+              ${specialContactGroups.join('\n              ')}
+            </div>
+          </div>
+        </section>` : '';
+    const heroSlide = data.regionId === 'mokpo' ? 'mokpo' : 'jeju';
+
+    app.innerHTML = `
+      <a class="skip-link" href="#main">${t('common.skip')}</a>
+      ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
+      <main id="main">
+        <section class="portal-hero region-hero" id="home" aria-labelledby="region-hero-title">
+          <div class="portal-hero-media" aria-hidden="true"><span class="portal-hero-slide portal-hero-slide--${heroSlide} active"></span></div>
+          <div class="container portal-hero-content region-hero-content">
+            <span class="eyebrow">${escapeHtml(localize(hero.eyebrow))}</span>
+            <h1 id="region-hero-title">${escapeHtml(localize(hero.title))}</h1>
+            <p>${escapeHtml(localize(hero.description))}</p>
+            <p class="region-source">${escapeHtml(localize(scheduleConfig.source))}</p>
+          </div>
+          ${renderRegionQuickNav(data)}
         </section>
+        <section class="region-section region-schedule-section" id="schedule" aria-labelledby="schedule-title"></section>
+        ${terminalSection}
         <section class="region-section region-operators" id="operators" aria-labelledby="operators-title">
           <div class="container">
             ${regionSectionHeading('OPERATORS', '선사 연락처', '운항 여부와 승선 관련 사항은 출항 전에 해당 선사로 확인하세요.', 'operators-title')}
             <div class="region-card-grid region-card-grid--three">${operatorCards}</div>
           </div>
         </section>
-        <section class="region-section region-special-contacts" id="special-contacts" aria-labelledby="special-contacts-title">
-          <div class="container">
-            ${regionSectionHeading('CONTACT', '화물선적·크루즈 문의', '', 'special-contacts-title')}
-            <div class="region-contact-columns">
-              <article><h3>화물선적 문의</h3><ul>${cargoCards}</ul></article>
-              <article><h3>크루즈 문의</h3><ul>${cruiseCards}</ul></article>
-            </div>
-          </div>
-        </section>
+        ${specialContactsSection}
         <section class="region-section region-notices" id="notices" aria-labelledby="notices-title">
           <div class="container">
             ${regionSectionHeading('NOTICE', '유의사항', '', 'notices-title')}
@@ -780,6 +791,10 @@ function renderSharedLayout() {
 
   function renderRegionGuidePlaceholder(data, app) {
     const terminalName = localize(data.name);
+    const guideTitle = localize(data.guideTitle) || '제주항 터미널 이용안내';
+    const guideUnavailable = localize(data.guideUnavailable) || '요금, 오시는 길, 시설 안내는 확인된 데이터가 없어 현재 제공하지 않습니다.';
+    const guideBackLabel = localize(data.guideBackLabel) || '터미널·부두 안내로 돌아가기';
+    const guideBackHref = data.guideBackHref || './index.html#terminals';
     app.innerHTML = `
       <a class="skip-link" href="#main">${t('common.skip')}</a>
       ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
@@ -787,10 +802,10 @@ function renderSharedLayout() {
         <section class="region-guide-placeholder" aria-labelledby="region-guide-title">
           <div class="container">
             <p class="section-kicker">TERMINAL GUIDE</p>
-            <h1 id="region-guide-title">제주항 터미널 이용안내</h1>
+            <h1 id="region-guide-title">${escapeHtml(guideTitle)}</h1>
             <strong>준비 중</strong>
-            <p>요금, 오시는 길, 시설 안내는 확인된 데이터가 없어 현재 제공하지 않습니다.</p>
-            <a class="btn btn--outline" href="./index.html#terminals">터미널·부두 안내로 돌아가기</a>
+            <p>${escapeHtml(guideUnavailable)}</p>
+            <a class="btn btn--outline" href="${escapeHtml(guideBackHref)}">${escapeHtml(guideBackLabel)}</a>
           </div>
         </section>
       </main>

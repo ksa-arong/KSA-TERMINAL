@@ -4774,6 +4774,12 @@ button.all-terminals-link {
     background-position: 50% 52%;
 }
 
+.portal-hero-slide--mokpo {
+    --portal-hero-slide-overlay: var(--portal-hero-overlay-island-harbor);
+    background-image: url("images/portal-hero-mokpo-coastal-outpaint-v2.png");
+    background-position: 50% 52%;
+}
+
 .portal-hero-slide--pohang {
     --portal-hero-slide-overlay: var(--portal-hero-overlay-pohang);
     background-image: url("images/portal-hero-pohang-international-v2.jpg");
@@ -6645,6 +6651,10 @@ button.all-terminals-link {
     }
     .portal-hero-slide--jeju {
         background-position: 40% center;
+        background-size: cover;
+    }
+    .portal-hero-slide--mokpo {
+        background-position: 52% center;
         background-size: cover;
     }
     .portal-hero-slide--pohang {
@@ -13828,6 +13838,21 @@ button.all-terminals-link:focus-visible,
 
 .region-contact-columns li strong {
     color: #1c374f;
+}
+
+.region-contact-columns--single {
+    grid-template-columns: 1fr;
+}
+
+.region-verification-pending {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: #fff2d8;
+    color: #704b00 !important;
+    font-size: 12px !important;
+    font-weight: 750;
 }
 
 .region-notices ul {
