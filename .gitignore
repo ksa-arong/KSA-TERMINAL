@@ -1,0 +1,17 @@
+# Local Codex/browser verification profiles
+.codex/
+
+# Test and coverage output
+coverage/
+
+# Dependency and build output
+node_modules/
+dist/
+
+# Logs and local caches
+*.log
+.cache/
+
+# OS metadata
+.DS_Store
+Thumbs.db
