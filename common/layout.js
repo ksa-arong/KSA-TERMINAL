@@ -1,61 +1,97 @@
-(function bootstrapI18n() {
-  if (window.i18n) return;
-  const source = document.currentScript && document.currentScript.src;
-  if (!source || document.readyState !== 'loading') return;
-  const base = source.slice(0, source.lastIndexOf('/') + 1);
-  document.write(`<script src="${base}locales/ko.js"><\/script><script src="${base}locales/en.js"><\/script><script src="${base}i18n.js"><\/script>`);
-}());
-
 function renderSharedLayout() {
   'use strict';
 
   const t = window.i18n ? window.i18n.t : (key) => key;
   const localize = window.i18n ? window.i18n.localize : (value) => value && value.ko !== undefined ? value.ko : value;
+  const currentYear = new Date().getFullYear();
+  const resolveText = (value) => value && typeof value === 'object' && value.key ? t(value.key) : localize(value);
+  const menuData = Array.isArray(window.MENU_DATA) ? window.MENU_DATA : [];
 
-  const escapeHtml = (value = '') => String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+  const escapeHtml = window.PortalDomUtils.escapeHtml;
+
+  const menuSurfaceItems = (surface) => menuData
+    .filter((item) => !item.hidden && item[surface])
+    .sort((a, b) => a[surface].order - b[surface].order)
+    .map((item) => item[surface]);
+  const portalExternalAttributes = (item) => item.external ? ` target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(`${t(item.labelKey)} (${t('common.newWindow')})`)}"` : '';
+  const withRootPrefix = (href, rootPrefix = '') => {
+    if (!rootPrefix || href.startsWith('#') || /^[a-z][a-z\d+.-]*:/i.test(href)) return href;
+    return `${rootPrefix}${href}`;
+  };
+
+  const portalQuickIconPaths = {
+    terminal: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+    schedule: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+    booking: '<path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4V6Z"/><path d="M12 8v2m0 4v2"/>',
+    customer: '<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><path d="M4 13v4a2 2 0 0 0 2 2h2v-7H6a2 2 0 0 0-2 1Zm16 0v4a2 2 0 0 1-2 2h-2v-7h2a2 2 0 0 1 2 1Z"/>'
+  };
+
+  const renderPortalQuickIcon = (name) => `<svg class="line-icon line-icon--large portal-quick-icon portal-quick-icon--${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${portalQuickIconPaths[name] || portalQuickIconPaths.terminal}</svg>`;
+
+  function renderPortalQuickMenu() {
+    const quickItems = menuSurfaceItems('quick').map((item, index) => `<a class="portal-hero-service-card portal-hero-service-card--${index + 1}" href="${item.href}"${portalExternalAttributes(item)}>${renderPortalQuickIcon(item.icon)}<strong data-i18n="${item.labelKey}">${t(item.labelKey)}</strong><small data-i18n="${item.descriptionKey}">${t(item.descriptionKey)}</small></a>`).join('');
+    return `<div class="container portal-hero-service-grid">${quickItems}</div>`;
+  }
 
   function sharedHeader(options) {
-    const { brandName, portal = false, guidePage = false, portalSection = '' } = options;
-    const portalPages = {
-      schedule: 'schedule.html',
-      boarding: 'boarding.html',
-      customer: 'customer.html'
-    };
-    const link = (section) => {
-      if (portal) {
-        if (section === 'schedule') return portalPages.schedule;
-        if (section === 'boarding') return portalPages.boarding;
-        if (section === 'notice') return `${portalPages.customer}#notice`;
-        if (section === 'contact') return `${portalPages.customer}#contact`;
-      }
-      return guidePage ? `./index.html#${section}` : `#${section}`;
-    };
-    const detailLink = (section, anchor = '') => portal ? `${portalPages[section]}${anchor}` : link(section);
-    const guideLink = (section) => {
-      if (portal) return section === 'faq' ? `${portalPages.customer}#faq` : 'index.html#terminal-list-title';
-      return guidePage ? `#${section}` : `./guide.html#${section}`;
-    };
-    const homeLink = portal ? 'index.html' : guidePage ? './index.html' : '#home';
-    const portalLink = portal ? 'index.html#terminal-list-title' : '../index.html';
-    const terminalRoot = portal ? '' : '../';
-    const terminalOverviewLink = portal ? 'index.html#terminal-list-title' : '../index.html#terminal-list-title';
+    const { brandName, portal = false, guidePage = false, portalSection = '', rootPrefix = '' } = options;
+    const currentLanguage = window.i18n?.language === 'en' ? 'en' : 'ko';
+    const currentLanguageCode = currentLanguage === 'en' ? 'ENG' : 'KOR';
+    const currentLanguageName = t(`header.${currentLanguage === 'en' ? 'english' : 'korean'}`);
+    const homeLink = portal ? withRootPrefix('index.html', rootPrefix) : guidePage ? './index.html' : '#home';
+    const terminalRoot = portal ? rootPrefix : '../';
     const currentClass = (section) => {
       if (portal) {
-        if (section === 'home' && !portalSection) return ' current';
+        if (section === 'terminal' && !portalSection) return ' current';
         return portalSection === section ? ' current' : '';
       }
       if (section === 'home' && !guidePage) return ' current';
       if (section === 'terminal' && guidePage) return ' current';
       return '';
     };
+    const menuItems = menuData.map((item) => portal ? item : item.terminal).filter((item) => item && !item.hidden);
+    const resolveMenuHref = (href) => {
+      if (portal) return withRootPrefix(href, rootPrefix);
+      if (!href.startsWith('{terminal}/')) return href;
+      const relative = href.slice('{terminal}/'.length);
+      if (relative.startsWith('index.html#')) return guidePage ? `./${relative}` : `#${relative.split('#')[1]}`;
+      if (relative === 'guide.html#main') return guidePage ? '#main' : './guide.html';
+      if (relative.startsWith('guide.html#')) return guidePage ? `#${relative.split('#')[1]}` : `./${relative}`;
+      return `./${relative}`;
+    };
+    const externalAttributes = (item) => portalExternalAttributes(item);
+    const externalLinkIcon = '<svg class="mega-menu-external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="m10 14 11-11"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>';
+    const renderGnbItems = () => menuItems.map((item) => {
+      const current = Boolean(currentClass(item.currentSection || ''));
+      return `
+      <li class="gnb-item"><a class="gnb-link${current ? ' current' : ''}" data-mega="${item.id}" href="${resolveMenuHref(item.href)}"${externalAttributes(item)}${current ? ' aria-current="page"' : ''}>${t(item.labelKey)}</a></li>`;
+    }).join('');
+    const renderMobileMenuGroups = () => menuItems.map((item) => {
+      const visibleChildren = item.children.filter((child) => !child.hidden);
+      if (!item.href && visibleChildren.length === 0) return '';
+      const current = Boolean(currentClass(item.currentSection || ''));
+      const submenuId = `mobile-menu-submenu-${item.id}`;
+      const childLinks = visibleChildren.length > 0
+        ? `<ul class="mobile-menu-links" id="${submenuId}"${current ? '' : ' hidden'}>${visibleChildren.map((child) => `<li><a href="${resolveMenuHref(child.href)}"${externalAttributes(child)}>${t(child.labelKey)}</a></li>`).join('')}</ul>`
+        : '';
+      const toggle = visibleChildren.length > 0
+        ? `<button class="mobile-menu-toggle" type="button" aria-label="${escapeHtml(`${t(item.labelKey)} ${t('header.mobileDetail')}`)}" aria-expanded="${String(current)}" aria-controls="${submenuId}"><span aria-hidden="true"></span></button>`
+        : '';
+      return `<section class="mobile-menu-group${current ? ' is-open' : ''}"><div class="mobile-menu-primary"><h2><a class="mobile-menu-title${current ? ' current' : ''}" href="${resolveMenuHref(item.href)}"${externalAttributes(item)}${current ? ' aria-current="page"' : ''}>${t(item.labelKey)}</a></h2>${toggle}</div>${childLinks}</section>`;
+    }).join('');
+    const renderMobileUtility = () => `
+      <nav class="mobile-menu-utility" aria-label="${t('header.quickMenu')}">
+        <a href="${resolveMenuHref('privacy.html')}">${t('footer.privacy')}</a>
+        <a href="${resolveMenuHref('terms.html')}">${t('footer.terms')}</a>
+      </nav>`;
+    const renderMegaMenu = () => `
+      <div class="container mega-menu-inner ${portal ? 'portal-mega-menu-inner' : 'terminal-mega-menu-inner'}">
+        ${menuItems.map((item) => `<div class="mega-column" role="group" aria-label="${escapeHtml(t(item.labelKey))}">${item.children.filter((child) => !child.hidden).map((child) => `<a${child.external ? ' class="mega-menu-external-link"' : ''} href="${resolveMenuHref(child.href)}"${externalAttributes(child)}><span>${t(child.labelKey)}</span>${child.external ? externalLinkIcon : ''}</a>`).join('')}</div>`).join('')}
+      </div>`;
     const brandContent = portal
-      ? `<span class="portal-brand-assets" aria-hidden="true"><img class="portal-brand-image portal-brand-image--white" src="common/images/ksa-wordmark-white.png" alt=""><img class="portal-brand-image portal-brand-image--color" src="common/images/ksa-wordmark-color.png" alt=""></span><span class="portal-brand-wordmark">${escapeHtml(brandName)}</span>`
+      ? `<span class="portal-header-brand-assets" aria-hidden="true"><img class="portal-header-brand-image" src="${withRootPrefix('common/images/logo.png', rootPrefix)}" alt="" width="954" height="196"></span>`
       : escapeHtml(brandName);
+    const mobileMenuLogoSrc = portal ? withRootPrefix('common/images/logo.png', rootPrefix) : '../common/images/logo.png';
     const terminalMenuItems = `
       <a href="${terminalRoot}incheon/index.html"><span>인천항</span><i aria-hidden="true">→</i></a>
       <span class="terminal-switcher-disabled" aria-disabled="true"><span>보령(대천항)</span><small>${t('common.ready')}</small></span>
@@ -68,71 +104,328 @@ function renderSharedLayout() {
       <a href="${terminalRoot}pohang/index.html"><span>포항항</span><i aria-hidden="true">→</i></a>
       <a href="${terminalRoot}jeju/index.html"><span>제주항</span><i aria-hidden="true">→</i></a>`;
 
+    const gnbItems = renderGnbItems();
+    const mobileMenuGroups = renderMobileMenuGroups();
+    const mobileUtility = renderMobileUtility();
+    const megaMenuContent = renderMegaMenu();
     return `
       <header class="site-header" id="site-header">
-        <div class="header-inner">
+        <div class="container header-inner">
           <a class="brand-logo${portal ? ' portal-brand-logo' : ''}" href="${homeLink}" aria-label="${escapeHtml(brandName)} ${t('common.homeSuffix')}">${brandContent}</a>
           <nav class="gnb" id="main-nav" aria-label="${t('header.mainMenu')}">
             <ul class="gnb-list">
-              <li class="gnb-item"><a class="gnb-link${currentClass('home')}" href="${homeLink}">${t('nav.home')}</a></li>
-              <li class="gnb-item"><a class="gnb-link${currentClass('schedule')}" data-mega="schedule" href="${link('schedule')}">${t('nav.schedule')}</a></li>
-              <li class="gnb-item"><a class="gnb-link${currentClass('boarding')}" data-mega="boarding" href="${link('boarding')}">${t('nav.boarding')}</a></li>
-              <li class="gnb-item"><a class="gnb-link${currentClass('terminal')}" data-mega="terminal" href="${portal ? 'index.html#terminal-list-title' : guidePage ? '#main' : './guide.html'}">${t('nav.terminal')}</a></li>
-              <li class="gnb-item"><a class="gnb-link${currentClass('customer')}" data-mega="contact" href="${portal ? portalPages.customer : link('contact')}">${t('nav.customer')}</a></li>
+              ${gnbItems}
+
             </ul>
-            <div class="mobile-menu-detail" aria-label="${t('header.mobileDetail')}">
-              <strong>${t('header.quickMenu')}</strong>
-              <a href="${link('schedule')}">${t('mega.realtime')}</a><a href="${link('boarding')}">${t('mega.process')}</a>
-              <a href="${guideLink('directions')}">${t('mega.directions')}</a><a href="${link('notice')}">${t('mega.notices')}</a>
-              <a href="${portalLink}">${t('footer.allTerminals')}</a>
-            </div>
           </nav>
           <div class="header-utils">
             <div class="terminal-switcher">
               <button class="all-terminals-link" id="terminal-switcher-button" type="button" aria-expanded="false" aria-controls="terminal-switcher-menu"><span class="utility-grid-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${t('header.allTerminals')}<span class="terminal-switcher-chevron" aria-hidden="true"></span></button>
               <div class="terminal-switcher-menu" id="terminal-switcher-menu" aria-hidden="true">
-                <div class="terminal-switcher-head"><div><span>${t('header.network')}</span><strong>${t('header.terminalHomepage')}</strong></div><a href="${terminalOverviewLink}">${t('header.allMap')}</a></div>
+                <div class="terminal-switcher-head"><strong>${t('header.terminalHomepage')}</strong></div>
                 <div class="terminal-switcher-grid">${terminalMenuItems}</div>
               </div>
             </div>
+            <div class="language-switcher">
+              <button class="language-button" id="language-switcher-button" type="button" aria-label="${escapeHtml(`${t('header.language')}: ${currentLanguageName}`)}" aria-expanded="false" aria-controls="language-switcher-menu"><svg class="language-globe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21M12 3C9.6 5.5 8.4 8.5 8.4 12S9.6 18.5 12 21"></path></svg><span>${currentLanguageCode}</span><span class="chevron" aria-hidden="true"></span></button>
+              <div class="language-switcher-menu" id="language-switcher-menu" aria-label="${t('header.language')}" hidden>
+                <div class="language-switcher-grid">
+                  <button class="language-switcher-option is-current" type="button" aria-current="true"><strong>KOR</strong><span>${t('header.korean')}</span></button>
+                  <span class="language-switcher-option is-disabled" aria-disabled="true"><strong>ENG</strong><small>${t('common.ready')}</small></span>
+                </div>
+              </div>
+            </div>
             ${portal ? '' : `<button class="icon-button search-button" type="button" aria-label="${t('header.search')}"><span class="search-icon" aria-hidden="true"></span></button>`}
-            <button class="language-button" type="button" aria-label="${t('header.language')}">KOR<span class="chevron" aria-hidden="true"></span></button>
-            <button class="menu-button" type="button" aria-label="${t('header.menuOpen')}" aria-expanded="false" aria-controls="main-nav"><span></span></button>
+            <button class="menu-button" type="button" aria-label="${t('header.menuOpen')}" aria-expanded="false" aria-controls="mobile-menu-panel"><span></span></button>
           </div>
         </div>
         <div class="mega-menu" id="mega-menu" aria-hidden="true">
-          <div class="mega-menu-inner">
-            <div class="mega-intro"><span>MENU GUIDE</span><strong>${t('mega.intro').replaceAll('\n', '<br>')}</strong></div>
-            <div class="mega-column"><h2>${t('nav.schedule')}</h2><a href="${detailLink('schedule', '#realtime')}">${t('mega.realtime')}</a><a href="${detailLink('schedule', '#planning')}">${t('mega.plan')}</a><a href="${detailLink('schedule', '#cancellation')}">${t('mega.cancellation')}</a></div>
-            <div class="mega-column"><h2>${t('nav.boarding')}</h2><a href="${detailLink('boarding', '#process')}">${t('mega.process')}</a><a href="${detailLink('boarding', '#identity')}">${t('mega.identity')}</a><a href="${detailLink('boarding', '#baggage')}">${t('mega.baggage')}</a><a href="${detailLink('boarding', '#vehicle')}">${t('mega.vehicle')}</a></div>
-            <div class="mega-column"><h2>${t('nav.terminal')}</h2><a href="${guideLink('directions')}">${t('mega.directions')}</a><a href="${guideLink('facilities')}">${t('mega.facilities')}</a><a href="${guideLink('parking')}">${t('mega.parking')}</a></div>
-            <div class="mega-column"><h2>${t('nav.customer')}</h2><a href="${link('notice')}">${t('mega.notices')}</a><a href="${guideLink('faq')}">${t('mega.faq')}</a><a href="${link('contact')}">${t('mega.inquiry')}</a></div>
-          </div>
+          ${megaMenuContent}
         </div>
-      </header>`;
+      </header>
+      <aside class="mobile-menu-panel" id="mobile-menu-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-label="${escapeHtml(`${brandName} ${t('header.mainMenu')}`)}" inert>
+        <div class="mobile-menu-header">
+          <a class="mobile-menu-brand" href="${homeLink}" aria-label="${escapeHtml(brandName)} ${t('common.homeSuffix')}"><img src="${mobileMenuLogoSrc}" alt="" width="954" height="196"></a>
+          <div class="mobile-terminal-selector">
+            <button class="mobile-menu-terminal-button" type="button" aria-expanded="false" aria-controls="mobile-terminal-menu"><span>${t('header.mobileTerminal')}</span><i aria-hidden="true"></i></button>
+            <div class="mobile-terminal-menu" id="mobile-terminal-menu" aria-label="${t('header.terminalHomepage')}" hidden>
+              ${terminalMenuItems}
+            </div>
+          </div>
+          <button class="mobile-menu-close" type="button" aria-label="${t('header.menuClose')}"><span aria-hidden="true"></span></button>
+        </div>
+        <div class="mobile-menu-scroll">
+          <nav class="mobile-menu-nav" aria-label="${t('header.mainMenu')}">
+            ${mobileMenuGroups}
+          </nav>
+          ${mobileUtility}
+        </div>
+      </aside>`;
   }
 
-  function sharedFooter(data, guidePage = false) {
+  function sharedTerminalFooter(data, guidePage = false) {
     const directionsLink = guidePage ? '#directions' : './guide.html#directions';
     const name = localize(data.name);
     return `
-      <footer><div class="container footer-inner"><div><div class="footer-logo">${escapeHtml(name)}</div><div>${t('footer.phone')} ${escapeHtml(data.phone)}</div><div>© 2026 ${escapeHtml(data.englishName)}. All Rights Reserved.</div></div><div class="footer-links"><a href="#privacy">${t('footer.privacy')}</a><a href="#terms">${t('footer.terms')}</a><a href="${directionsLink}">${t('footer.directions')}</a><a href="../index.html">${t('footer.allTerminals')}</a></div></div></footer>`;
+      <footer class="terminal-footer"><div class="container terminal-footer-inner"><div><div class="terminal-footer-logo">${escapeHtml(name)}</div><div>${t('footer.phone')} ${escapeHtml(data.phone)}</div><div>© ${currentYear} ${escapeHtml(data.englishName)}. All Rights Reserved.</div></div><div class="terminal-footer-links"><a href="../privacy.html">${t('footer.privacy')}</a><a href="../terms.html">${t('footer.terms')}</a><a href="../sitemap.html">${t('footer.sitemap')}</a><a href="${directionsLink}">${t('footer.directions')}</a><a href="../index.html">${t('footer.allTerminals')}</a></div></div></footer>`;
   }
 
-  function sharedPortalFooter() {
+  function sharedSiteFooter(rootPrefix = '') {
+    const relatedOptions = [
+      ['https://www.theksa.or.kr/', '한국해운조합'],
+      ['https://island.theksa.co.kr/', 'KSA여객선예매'],
+      ['https://www.mof.go.kr/', '해양수산부']
+    ].map(([href, label]) => `<option value="${href}">${label}</option>`).join('');
     return `
-      <footer class="portal-footer">
-        <div class="container footer-inner">
-          <div>
-            <a class="footer-logo portal-footer-logo" href="index.html"><span class="portal-brand-assets" aria-hidden="true"><img class="portal-brand-image portal-brand-image--white" src="common/images/ksa-wordmark-white.png" alt=""><img class="portal-brand-image portal-brand-image--color" src="common/images/ksa-wordmark-color.png" alt=""></span><span>전국여객선터미널</span></a>
-            <div>${t('footer.slogan')}</div>
-            <div>© 2026 Passenger Terminal Guide. All Rights Reserved.</div>
+      <footer class="site-footer">
+        <div class="container">
+          <div class="site-footer-top">
+            <nav class="site-footer-policy" aria-label="정책 및 이용 안내">
+              <a class="is-emphasis" href="${withRootPrefix('privacy.html', rootPrefix)}">${t('footer.privacy')}</a>
+              <a href="${withRootPrefix('terms.html', rootPrefix)}">${t('footer.terms')}</a>
+              <a href="${withRootPrefix('sitemap.html', rootPrefix)}">${t('footer.sitemap')}</a>
+            </nav>
           </div>
-          <div class="footer-links"><a href="schedule.html">${t('portal.schedule')}</a><a href="boarding.html">${t('nav.boarding')}</a><a href="index.html#terminal-list-title">${t('nav.terminal')}</a><a href="customer.html">${t('nav.customer')}</a></div>
+          <div class="site-footer-main">
+            <div class="site-footer-company">
+              <a class="site-footer-logo" href="${withRootPrefix('index.html', rootPrefix)}" aria-label="전국여객선터미널 홈">
+                <img class="site-footer-brand-image" src="${withRootPrefix('common/images/logo.png', rootPrefix)}" alt="" width="954" height="196">
+              </a>
+              <p class="site-footer-contact"><strong>전국여객선운항안내</strong><a href="tel:1544-1114">1544-1114</a></p>
+              <address class="site-footer-address">
+                <span>[07590] 서울특별시 강서구 공항대로 379</span>
+                <span>TEL : <a href="tel:02-6096-2000">02-6096-2000</a></span>
+                <span>FAX : 02-6096-2259</span>
+              </address>
+              <p class="site-footer-copyright">COPYRIGHT(C)${currentYear} KOREA SHIPPING ASSOCIATION. ALL RIGHTS RESERVED.</p>
+            </div>
+            <div class="site-footer-selects">
+              <label class="site-footer-select"><span class="sr-only">관련사이트</span><select class="site-footer-related-select"><option value="">관련사이트</option>${relatedOptions}</select></label>
+            </div>
+          </div>
         </div>
       </footer>`;
   }
 
+  function initializeSiteFooter() {
+    const relatedSelect = document.querySelector('.site-footer-related-select');
+    relatedSelect?.addEventListener('change', () => {
+      if (relatedSelect.value) window.open(relatedSelect.value, '_blank', 'noopener,noreferrer');
+      relatedSelect.value = '';
+    });
+  }
+
+  function initializeFloatingQuick() {
+    let floatingQuick = document.querySelector('[data-portal-floating-quick]');
+    if (!floatingQuick) {
+      floatingQuick = document.createElement('aside');
+      floatingQuick.className = 'portal-floating-quick portal-floating-quick--top-only';
+      floatingQuick.dataset.portalFloatingQuick = '';
+      floatingQuick.setAttribute('aria-label', '페이지 이동');
+      floatingQuick.innerHTML = `
+        <div class="portal-floating-quick__panel">
+          <nav class="portal-floating-quick__links" aria-label="페이지 이동">
+            <button class="portal-floating-quick__link portal-floating-quick__top" type="button" data-portal-quick-top aria-label="페이지 맨 위로 이동">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg>
+              <span>TOP</span>
+            </button>
+          </nav>
+        </div>`;
+      document.body.append(floatingQuick);
+    }
+
+    if (floatingQuick.dataset.quickInitialized === 'true') return;
+    floatingQuick.dataset.quickInitialized = 'true';
+
+    const toggle = floatingQuick.querySelector('[data-portal-quick-toggle]');
+    const topButton = floatingQuick.querySelector('[data-portal-quick-top]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncVisibility = () => floatingQuick.classList.toggle('show', window.scrollY > 160);
+
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const collapsed = floatingQuick.classList.toggle('is-collapsed');
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+        toggle.setAttribute('aria-label', collapsed ? '퀵메뉴 펼치기' : '퀵메뉴 접기');
+      });
+    }
+
+    if (topButton) {
+      topButton.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+      });
+    }
+
+    window.addEventListener('scroll', syncVisibility, { passive: true });
+    syncVisibility();
+  }
+
+  function getPortalMenuContext(menuId = '') {
+    const [parentId, childId = ''] = String(menuId).split('/');
+    const parent = menuData.find((item) => item.id === parentId);
+    if (!parent) throw new Error(`MENU_DATA에서 ${menuId} 메뉴를 찾을 수 없습니다.`);
+    const child = childId ? parent.children.find((item) => item.id === childId) : null;
+    if (childId && !child) throw new Error(`MENU_DATA에서 ${menuId} 메뉴를 찾을 수 없습니다.`);
+    return { parent, child };
+  }
+
+  function renderPortalPreparingBlock(options, rootPrefix = '') {
+    if (!options) return '';
+    const linkLabel = resolveText(options.linkLabel);
+    const externalAttributes = options.external
+      ? ` target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(`${linkLabel} (${t('common.newWindow')})`)}"`
+      : '';
+    return `<div class="portal-preparing-block" aria-labelledby="${escapeHtml(options.titleId || 'preparing-title')}">
+      <div><span>${escapeHtml(resolveText(options.label))}</span><h3 id="${escapeHtml(options.titleId || 'preparing-title')}">${escapeHtml(resolveText(options.title))}</h3></div>
+      <a href="${withRootPrefix(options.href, rootPrefix)}"${externalAttributes}>${escapeHtml(linkLabel)} <i aria-hidden="true">→</i></a>
+    </div>`;
+  }
+  function renderPortalSubpage(data) {
+    const app = document.getElementById('app');
+    if (!app) throw new Error('포털 서브페이지에는 #app 요소가 필요합니다.');
+
+    const { parent, child } = getPortalMenuContext(data.menuId);
+    const rootPrefix = data.rootPrefix ?? '../';
+    const indexPage = Boolean(data.indexPage || !child);
+    const pageLabel = t((child || parent).labelKey);
+    const parentLabel = t(parent.labelKey);
+    const pageTitle = resolveText(data.title) || pageLabel;
+    const pageDescription = resolveText(data.description) || '';
+    const metaTitle = resolveText(data.metaTitle) || `${pageTitle} | ${t('portal.metaTitle').replace(' 안내', '')}`;
+    const metaDescription = resolveText(data.metaDescription) || pageDescription;
+    const resolvePortalLink = (item) => withRootPrefix(item.href, rootPrefix);
+    const visibleChildren = parent.children.filter((item) => !item.hidden);
+    const renderBreadcrumbItems = (items, activeId) => items.filter((item) => !item.hidden).map((item) => {
+      const current = item.id === activeId;
+      return `<li><a class="${current ? 'active' : ''}" href="${resolvePortalLink(item)}"${portalExternalAttributes(item)}${current ? ' aria-current="page"' : ''}>${t(item.labelKey)}</a></li>`;
+    }).join('');
+    const depthOneItems = renderBreadcrumbItems(menuData, parent.id);
+    const depthTwoItems = renderBreadcrumbItems(visibleChildren, child ? child.id : '');
+    const breadcrumb = `<nav class="portal-breadcrumb portal-subnav-breadcrumb" aria-label="현재 위치">
+      <a class="portal-breadcrumb-home" href="${withRootPrefix('index.html', rootPrefix)}" aria-label="${t('nav.home')}"><svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.7h-6v-6h-5v6h-6z"/></svg></a>
+      <span class="portal-breadcrumb-separator" aria-hidden="true"></span>
+      <div class="portal-breadcrumb-dropdown">
+        <button class="portal-breadcrumb-trigger" type="button" aria-expanded="false" aria-controls="portal-depth-one-menu"><span>${parentLabel}</span><i aria-hidden="true"></i></button>
+        <ul class="portal-breadcrumb-menu" id="portal-depth-one-menu" hidden>${depthOneItems}</ul>
+      </div>
+      ${indexPage ? '' : `<span class="portal-breadcrumb-separator" aria-hidden="true"></span>
+      <div class="portal-breadcrumb-dropdown">
+        <button class="portal-breadcrumb-trigger" type="button" aria-expanded="false" aria-controls="portal-depth-two-menu"><span>${pageLabel}</span><i aria-hidden="true"></i></button>
+        <ul class="portal-breadcrumb-menu" id="portal-depth-two-menu" hidden>${depthTwoItems}</ul>
+      </div>`}
+    </nav>`;
+    const childCards = indexPage ? `<div class="portal-terminal-directory">${visibleChildren.map((item) => `<a class="portal-terminal-link-card" href="${resolvePortalLink(item)}"${portalExternalAttributes(item)}><span class="portal-card-region">${parentLabel}</span><h3>${t(item.labelKey)}</h3><strong>${t(item.labelKey)} <i aria-hidden="true">→</i></strong></a>`).join('')}</div>` : '';
+
+    const content = (typeof data.content === 'function' ? data.content({ t, escapeHtml, rootPrefix }) : data.content) || renderPortalPreparingBlock(data.emptyState, rootPrefix);
+    const renderSection = (section = {}) => {
+      const sectionTitle = resolveText(section.title);
+      const sectionClass = `portal-template-section${section.soft ? ' portal-template-section--soft' : ''}`;
+      return `<section class="${sectionClass}"><div class="container">
+        ${sectionTitle ? `<div class="portal-template-section-heading${section.accent ? ' has-accent' : ''}"><h2>${escapeHtml(sectionTitle)}</h2></div>` : ''}
+        ${section.content || ''}
+      </div></section>`;
+    };
+    const primaryContent = indexPage ? `${childCards}${content}` : content;
+    const pageContent = Array.isArray(data.sections) && data.sections.length
+      ? data.sections.map((section) => renderSection(section)).join('')
+      : renderSection({ content: primaryContent });
+
+    document.body.dataset.portalSection = parent.currentSection || parent.id;
+    document.body.classList.add('portal-template-page');
+    document.title = metaTitle;
+    const description = document.querySelector('meta[name="description"]');
+    if (description) description.content = metaDescription;
+
+    app.innerHTML = `
+      <a class="skip-link" href="#main">${t('common.skip')}</a>
+      <div id="portal-header-root"></div>
+      <main id="main">
+        <div class="portal-subnav-bar"><div class="container">${breadcrumb}</div></div>
+        <section class="portal-subhero" aria-labelledby="page-title"><div class="container">
+          <div class="portal-subhero-title">
+            <h1 id="page-title">${escapeHtml(pageTitle)}</h1>
+          </div>
+        </div></section>
+        ${pageContent}
+      </main>
+      <div id="site-footer-root"></div>`;
+
+    return rootPrefix;
+  }
+
+  function initializePortalBreadcrumb() {
+    const breadcrumb = document.querySelector('.portal-subnav-breadcrumb');
+    if (!breadcrumb) return;
+    const dropdowns = [...breadcrumb.querySelectorAll('.portal-breadcrumb-dropdown')];
+
+    function setDropdown(dropdown, open, returnFocus = false) {
+      const trigger = dropdown.querySelector('.portal-breadcrumb-trigger');
+      const menu = dropdown.querySelector('.portal-breadcrumb-menu');
+      dropdown.classList.toggle('open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      if (!open && returnFocus) trigger.focus();
+    }
+
+    function closeOthers(current) {
+      dropdowns.forEach((dropdown) => {
+        if (dropdown !== current) setDropdown(dropdown, false);
+      });
+    }
+
+    dropdowns.forEach((dropdown) => {
+      const trigger = dropdown.querySelector('.portal-breadcrumb-trigger');
+      const menu = dropdown.querySelector('.portal-breadcrumb-menu');
+      const links = [...menu.querySelectorAll('a')];
+
+      trigger.addEventListener('click', () => {
+        const open = trigger.getAttribute('aria-expanded') !== 'true';
+        closeOthers(dropdown);
+        setDropdown(dropdown, open);
+      });
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          closeOthers(dropdown);
+          setDropdown(dropdown, true);
+          links[0]?.focus();
+        }
+        if (event.key === 'Escape') setDropdown(dropdown, false, true);
+      });
+      menu.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          setDropdown(dropdown, false, true);
+          return;
+        }
+        if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const currentIndex = links.indexOf(document.activeElement);
+        const nextIndex = event.key === 'Home' ? 0
+          : event.key === 'End' ? links.length - 1
+            : event.key === 'ArrowDown' ? (currentIndex + 1) % links.length
+              : (currentIndex - 1 + links.length) % links.length;
+        links[nextIndex]?.focus();
+      });
+      menu.addEventListener('click', (event) => {
+        if (event.target.closest('a')) setDropdown(dropdown, false);
+      });
+      dropdown.addEventListener('mouseleave', () => setDropdown(dropdown, false));
+    });
+
+    breadcrumb.addEventListener('focusout', () => window.setTimeout(() => {
+      if (!breadcrumb.contains(document.activeElement)) dropdowns.forEach((dropdown) => setDropdown(dropdown, false));
+    }, 0));
+    document.addEventListener('click', (event) => {
+      if (!breadcrumb.contains(event.target)) dropdowns.forEach((dropdown) => setDropdown(dropdown, false));
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const openDropdown = dropdowns.find((dropdown) => dropdown.classList.contains('open'));
+      if (openDropdown) setDropdown(openDropdown, false, true);
+    });
+  }
+  window.portalLayoutComponents = { renderPreparingBlock: renderPortalPreparingBlock };
   function initializeHeader() {
     const header = document.querySelector('.site-header');
     const nav = header.querySelector('.gnb');
@@ -142,6 +435,86 @@ function renderSharedLayout() {
     const terminalSwitcher = header.querySelector('.terminal-switcher');
     const terminalSwitcherButton = header.querySelector('#terminal-switcher-button');
     const terminalSwitcherMenu = header.querySelector('#terminal-switcher-menu');
+    const languageSwitcher = header.querySelector('.language-switcher');
+    const languageSwitcherButton = header.querySelector('#language-switcher-button');
+    const languageSwitcherMenu = header.querySelector('#language-switcher-menu');
+    const mobileMenuPanel = document.querySelector('#mobile-menu-panel');
+    const mobileMenuClose = mobileMenuPanel.querySelector('.mobile-menu-close');
+    const mobileMenuToggles = [...mobileMenuPanel.querySelectorAll('.mobile-menu-toggle')];
+    const mobileTerminalSelector = mobileMenuPanel.querySelector('.mobile-terminal-selector');
+    const mobileTerminalButton = mobileMenuPanel.querySelector('.mobile-menu-terminal-button');
+    const mobileTerminalMenu = mobileMenuPanel.querySelector('#mobile-terminal-menu');
+    let mobileMenuScrollY = 0;
+    let mobileMenuTrigger = menuButton;
+
+    const isMobileMenuViewport = () => window.innerWidth < 1024;
+    const mobileMenuFocusableElements = () => [...mobileMenuPanel.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true' && !element.closest('[hidden]'));
+
+    function setPageScrollLocked(locked) {
+      if (locked) {
+        mobileMenuScrollY = window.scrollY;
+        document.body.style.setProperty('--mobile-menu-scroll-offset', `-${mobileMenuScrollY}px`);
+        document.documentElement.classList.add('mobile-menu-open');
+        document.body.classList.add('menu-open');
+        return;
+      }
+      document.documentElement.classList.remove('mobile-menu-open');
+      document.body.classList.remove('menu-open');
+      document.body.style.removeProperty('--mobile-menu-scroll-offset');
+      window.scrollTo({ top: mobileMenuScrollY, left: 0, behavior: 'instant' });
+    }
+
+    function setMobileMenu(open, { restoreFocus = true, trigger = menuButton } = {}) {
+      const shouldOpen = Boolean(open && isMobileMenuViewport());
+      const wasOpen = mobileMenuPanel.classList.contains('is-open');
+
+      if (shouldOpen && !wasOpen) {
+        mobileMenuTrigger = trigger;
+        setMegaMenu(false);
+        setTerminalSwitcher(false);
+        setLanguageSwitcher(false);
+        setPageScrollLocked(true);
+      }
+
+      mobileMenuPanel.classList.toggle('is-open', shouldOpen);
+      mobileMenuPanel.setAttribute('aria-hidden', String(!shouldOpen));
+      menuButton.classList.toggle('is-open', shouldOpen);
+      menuButton.setAttribute('aria-expanded', String(shouldOpen));
+      menuButton.setAttribute('aria-label', shouldOpen ? t('header.menuClose') : t('header.menuOpen'));
+
+      if (shouldOpen) {
+        mobileMenuPanel.removeAttribute('inert');
+        window.requestAnimationFrame(() => {
+          const firstMenuLink = mobileMenuPanel.querySelector('.mobile-menu-nav a[href]');
+          (firstMenuLink || mobileMenuClose).focus();
+        });
+        return;
+      }
+
+      setMobileTerminalMenu(false);
+      mobileMenuPanel.setAttribute('inert', '');
+      if (!wasOpen) return;
+      if (restoreFocus && mobileMenuTrigger && typeof mobileMenuTrigger.focus === 'function') {
+        mobileMenuTrigger.focus({ preventScroll: true });
+      }
+      setPageScrollLocked(false);
+    }
+
+    function setMobileMenuGroup(toggle, open) {
+      const submenu = document.getElementById(toggle.getAttribute('aria-controls'));
+      const group = toggle.closest('.mobile-menu-group');
+      toggle.setAttribute('aria-expanded', String(open));
+      group.classList.toggle('is-open', open);
+      submenu.hidden = !open;
+    }
+
+    function setMobileTerminalMenu(open, { restoreFocus = false } = {}) {
+      mobileTerminalButton.setAttribute('aria-expanded', String(open));
+      mobileTerminalSelector.classList.toggle('is-open', open);
+      mobileTerminalMenu.hidden = !open;
+      if (restoreFocus) mobileTerminalButton.focus();
+    }
 
     function setTerminalSwitcher(open) {
       terminalSwitcher.classList.toggle('open', open);
@@ -149,9 +522,19 @@ function renderSharedLayout() {
       terminalSwitcherMenu.setAttribute('aria-hidden', String(!open));
     }
 
+    function setLanguageSwitcher(open, { restoreFocus = false } = {}) {
+      languageSwitcher.classList.toggle('open', open);
+      languageSwitcherButton.setAttribute('aria-expanded', String(open));
+      languageSwitcherMenu.hidden = !open;
+      if (restoreFocus) languageSwitcherButton.focus();
+    }
+
     function setMegaMenu(open) {
-      if (window.innerWidth <= 1000) return;
-      if (open) setTerminalSwitcher(false);
+      if (window.innerWidth < 1024) return;
+      if (open) {
+        setTerminalSwitcher(false);
+        setLanguageSwitcher(false);
+      }
       header.classList.toggle('mega-open', open);
       megaMenu.setAttribute('aria-hidden', String(!open));
     }
@@ -165,6 +548,7 @@ function renderSharedLayout() {
       if (!header.contains(document.activeElement)) {
         setMegaMenu(false);
         setTerminalSwitcher(false);
+        setLanguageSwitcher(false);
       }
     }, 0));
 
@@ -172,6 +556,7 @@ function renderSharedLayout() {
       event.stopPropagation();
       const open = !terminalSwitcher.classList.contains('open');
       setMegaMenu(false);
+      setLanguageSwitcher(false);
       setTerminalSwitcher(open);
     });
     terminalSwitcherMenu.addEventListener('click', (event) => {
@@ -179,47 +564,115 @@ function renderSharedLayout() {
     });
     document.addEventListener('click', (event) => {
       if (!terminalSwitcher.contains(event.target)) setTerminalSwitcher(false);
+      if (!languageSwitcher.contains(event.target)) setLanguageSwitcher(false);
+    });
+    languageSwitcherButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const open = !languageSwitcher.classList.contains('open');
+      setMegaMenu(false);
+      setTerminalSwitcher(false);
+      setLanguageSwitcher(open);
+    });
+    languageSwitcherMenu.addEventListener('click', (event) => {
+      if (event.target.closest('.language-switcher-option.is-current')) setLanguageSwitcher(false, { restoreFocus: true });
     });
 
     menuButton.addEventListener('click', () => {
-      const open = !nav.classList.contains('open');
-      nav.classList.toggle('open', open);
-      menuButton.classList.toggle('is-open', open);
-      menuButton.setAttribute('aria-expanded', String(open));
-      menuButton.setAttribute('aria-label', open ? t('header.menuClose') : t('header.menuOpen'));
-      document.body.classList.toggle('menu-open', open);
+      setMobileMenu(!mobileMenuPanel.classList.contains('is-open'), { trigger: menuButton });
+    });
+    mobileMenuClose.addEventListener('click', () => setMobileMenu(false));
+    mobileTerminalButton.addEventListener('click', () => {
+      setMobileTerminalMenu(mobileTerminalButton.getAttribute('aria-expanded') !== 'true');
+    });
+    mobileMenuToggles.forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') !== 'true';
+        mobileMenuToggles.forEach((otherToggle) => {
+          if (otherToggle !== toggle) setMobileMenuGroup(otherToggle, false);
+        });
+        setMobileMenuGroup(toggle, open);
+      });
+    });
+    mobileMenuPanel.addEventListener('click', (event) => {
+      if (!mobileTerminalSelector.contains(event.target)) setMobileTerminalMenu(false);
+      const anchor = event.target.closest('a');
+      if (!anchor) return;
+
+      const target = anchor.getAttribute('target');
+      const opensNewContext = Boolean(target && target !== '_self');
+      const destination = new URL(anchor.href, window.location.href);
+      const staysOnCurrentPage = Boolean(
+        destination.origin === window.location.origin &&
+        destination.pathname === window.location.pathname &&
+        destination.search === window.location.search &&
+        destination.hash
+      );
+
+      if (opensNewContext || staysOnCurrentPage) setMobileMenu(false);
     });
 
     nav.addEventListener('click', (event) => {
       const anchor = event.target.closest('a');
       if (!anchor) return;
-      header.querySelectorAll('.gnb-link').forEach((item) => item.classList.remove('current'));
-      if (anchor.classList.contains('gnb-link')) anchor.classList.add('current');
-      if (window.innerWidth <= 1000) {
-        nav.classList.remove('open');
-        menuButton.classList.remove('is-open');
-        menuButton.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('menu-open');
+      header.querySelectorAll('.gnb-link').forEach((item) => {
+        item.classList.remove('current');
+        item.removeAttribute('aria-current');
+      });
+      if (anchor.classList.contains('gnb-link')) {
+        anchor.classList.add('current');
+        anchor.setAttribute('aria-current', 'page');
       }
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape') return;
-      setMegaMenu(false);
-      setTerminalSwitcher(false);
-      nav.classList.remove('open');
-      menuButton.classList.remove('is-open');
-      menuButton.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('menu-open');
+      const mobileMenuOpen = mobileMenuPanel.classList.contains('is-open');
+      if (event.key === 'Escape') {
+        setMegaMenu(false);
+        setTerminalSwitcher(false);
+        if (languageSwitcher.classList.contains('open')) {
+          event.preventDefault();
+          setLanguageSwitcher(false, { restoreFocus: true });
+          return;
+        }
+        if (mobileTerminalButton.getAttribute('aria-expanded') === 'true') {
+          event.preventDefault();
+          setMobileTerminalMenu(false, { restoreFocus: true });
+          return;
+        }
+        if (mobileMenuOpen) {
+          event.preventDefault();
+          setMobileMenu(false);
+        }
+        return;
+      }
+      if (event.key !== 'Tab' || !mobileMenuOpen) return;
+
+      const focusableElements = mobileMenuFocusableElements();
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        mobileMenuClose.focus();
+        return;
+      }
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+      if (event.shiftKey && (activeElement === firstElement || !mobileMenuPanel.contains(activeElement))) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     });
 
+    nav.setAttribute('aria-hidden', String(isMobileMenuViewport()));
     window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 8), { passive: true });
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 1000) {
-        nav.classList.remove('open');
-        menuButton.classList.remove('is-open');
-        document.body.classList.remove('menu-open');
+      if (window.innerWidth >= 1024) {
+        setMobileMenu(false, { restoreFocus: false });
+        nav.setAttribute('aria-hidden', 'false');
       } else {
+        nav.setAttribute('aria-hidden', 'true');
         setMegaMenu(false);
         setTerminalSwitcher(false);
       }
@@ -227,15 +680,24 @@ function renderSharedLayout() {
   }
 
   if (document.body.classList.contains('portal-page')) {
+    const subpageData = window.PORTAL_SUBPAGE_DATA;
+    const rootPrefix = subpageData ? renderPortalSubpage(subpageData) : '';
     if (window.i18n) window.i18n.translateDocument(document);
     const portalHeaderRoot = document.getElementById('portal-header-root');
-    const portalFooterRoot = document.getElementById('portal-footer-root');
+    const siteFooterRoot = document.getElementById('site-footer-root');
+    const portalQuickRoot = document.getElementById('portal-hero-quick');
     const portalSection = document.body.dataset.portalSection || '';
     if (portalHeaderRoot) {
-      portalHeaderRoot.outerHTML = sharedHeader({ brandName: t('portal.metaTitle').replace(' 안내', ''), portal: true, portalSection });
+      portalHeaderRoot.outerHTML = sharedHeader({ brandName: t('portal.metaTitle').replace(' 안내', ''), portal: true, portalSection, rootPrefix });
       initializeHeader();
     }
-    if (portalFooterRoot) portalFooterRoot.outerHTML = sharedPortalFooter();
+    if (siteFooterRoot) {
+      siteFooterRoot.outerHTML = sharedSiteFooter(rootPrefix);
+      initializeSiteFooter();
+    }
+    if (portalQuickRoot) portalQuickRoot.innerHTML = renderPortalQuickMenu();
+    if (subpageData) initializePortalBreadcrumb();
+    initializeFloatingQuick();
     return;
   }
 
@@ -255,15 +717,16 @@ function renderSharedLayout() {
       <a class="skip-link" href="#main">${t('common.skip')}</a>
       ${sharedHeader({ brandName: terminalName, guidePage: true })}
       <main id="main"><div id="terminal-guide-page"></div></main>
-      ${sharedFooter(data, true)}`;
+      ${sharedTerminalFooter(data, true)}`;
     initializeHeader();
+    initializeFloatingQuick();
     return;
   }
 
   const boardingCards = data.boardingCards.map((card, index) => `
     <article class="guide-card"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(localize(card.title))}</h3><p>${escapeHtml(localize(card.description))}</p></article>`).join('');
   const notices = data.notices.map((notice, index) => `
-    <li><a href="#notice"><span class="news-tag${index === 0 ? ' important' : ''}">${escapeHtml(localize(notice.category))}</span><span class="news-title">${escapeHtml(localize(notice.title))}</span><time class="news-date" datetime="${escapeHtml(notice.date.replaceAll('.', '-'))}">${escapeHtml(notice.date)}</time></a></li>`).join('');
+    <li><a href="#notice"><span class="portal-content-badge">${escapeHtml(localize(notice.category))}</span><span class="news-title">${escapeHtml(localize(notice.title))}</span><time class="news-date" datetime="${escapeHtml(notice.date.replaceAll('.', '-'))}">${escapeHtml(notice.date)}</time></a></li>`).join('');
 
   document.title = terminalName;
   const description = document.querySelector('meta[name="description"]');
@@ -275,7 +738,7 @@ function renderSharedLayout() {
     <main id="main">
       <section class="hero" id="home" aria-labelledby="hero-title"><div class="container"><div class="hero-content">
         <span class="eyebrow">WELCOME TO ${escapeHtml(data.englishName)}</span><h1 id="hero-title">${escapeHtml(localize(data.heroTitle)).replaceAll('\n', '<br>')}</h1>
-        <p>${escapeHtml(localize(data.heroDescription)).replaceAll('\n', '<br>')}</p><a class="button button-primary" href="#schedule">${t('terminalPage.heroButton')}</a>
+        <p>${escapeHtml(localize(data.heroDescription)).replaceAll('\n', '<br>')}</p><a class="btn btn--lg btn--solid btn--arrow" href="#schedule">${t('terminalPage.heroButton')}</a>
       </div></div></section>
       <div class="quick-wrap" aria-label="${t('terminalPage.quickAria')}"><div class="container quick-grid">
         <a class="quick-card" href="#schedule"><span class="quick-icon" aria-hidden="true">◷</span><span><strong>${t('terminalPage.timetable')}</strong><small>${t('terminalPage.timetableDesc')}</small></span></a>
@@ -286,7 +749,7 @@ function renderSharedLayout() {
       <section id="schedule" class="section-soft" aria-labelledby="schedule-title"></section>
       ${data.terminalGuide ? '<section id="terminal-guide" aria-labelledby="terminal-guide-title"></section>' : ''}
       <section id="boarding" aria-labelledby="boarding-title"><div class="container guide-layout">
-        <div class="guide-intro"><p class="section-kicker">BOARDING GUIDE</p><h2 id="boarding-title">${t('terminalPage.boardingTitle').replaceAll('\n', '<br>')}</h2><p>${escapeHtml(localize(data.boardingIntro))}</p><a class="button button-outline" href="#boarding-detail">${t('terminalPage.boardingMore')}</a></div>
+        <div class="guide-intro"><p class="section-kicker">BOARDING GUIDE</p><h2 id="boarding-title">${t('terminalPage.boardingTitle').replaceAll('\n', '<br>')}</h2><p>${escapeHtml(localize(data.boardingIntro))}</p><a class="btn btn--lg btn--outline" href="#boarding-detail">${t('terminalPage.boardingMore')}</a></div>
         <div class="guide-grid" id="boarding-detail">${boardingCards}</div>
       </div></section>
       <section id="notice" class="section-soft" aria-labelledby="notice-title"><div class="container">
@@ -300,9 +763,10 @@ function renderSharedLayout() {
         <div class="info-block"><strong>${t('terminalPage.address')}</strong><p>${escapeHtml(localize(data.address)).replaceAll('\n', '<br>')}</p></div><div class="info-block"><strong>${t('terminalPage.hours')}</strong><p>${escapeHtml(localize(data.hours)).replaceAll('\n', '<br>')}</p></div><div class="info-block" id="fare"><strong>${t('terminalPage.parking')}</strong><p>${escapeHtml(localize(data.parking)).replaceAll('\n', '<br>')}</p></div>
       </div></section>
     </main>
-    ${sharedFooter(data)}`;
+    ${sharedTerminalFooter(data)}`;
 
   initializeHeader();
+  initializeFloatingQuick();
 }
 
 if (window.i18n) renderSharedLayout();

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="기상 악화나 안전 점검에 따른 여객선 지연·결항 안내입니다.">
+  <title>지연·결항 안내 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'schedule/cancellation',
+      rootPrefix: '../',
+      title: '지연·결항 안내',
+      description: '기상 악화나 안전 점검으로 일정이 변경되면 선사와 터미널의 안내를 따라 주세요.',
+      content: `
+<section class="portal-content-block portal-split-guide" aria-labelledby="cancellation-title">
+  <div class="portal-content-heading portal-content-heading--stacked">
+    <span>03</span>
+    <div><h2 id="cancellation-title">지연·결항 안내</h2><p>기상 악화나 안전 점검으로 일정이 변경되면 선사와 터미널의 안내를 따라 주세요.</p></div>
+  </div>
+  <div class="portal-check-panel">
+    <h3>운항 변동 시 확인할 내용</h3>
+    <ul><li>변경된 출발·도착 예정 시각</li><li>대체편 또는 다음 운항편 이용 가능 여부</li><li>승선권 변경·환불은 구매처와 선사 규정 확인</li><li>차량 선적 예약의 변경 처리 여부</li></ul>
+    <a href="../customer/faq.html">자주 묻는 질문 확인 <span aria-hidden="true">→</span></a>
+  </div>
+</section>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+</body>
+</html>

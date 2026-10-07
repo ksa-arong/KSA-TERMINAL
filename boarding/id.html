@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="승선자 본인 확인에 필요한 신분 확인 수단을 안내합니다.">
+  <title>신분증 안내 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'boarding/identity',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.identity' },
+      content: `
+<section class="portal-content-block id-guide" aria-labelledby="identity-guide-title">
+  <div class="portal-content-heading">
+    <h2 id="identity-guide-title">신분증 인정범위</h2>
+    <p>승선자 본인 확인에 필요한 신분 확인 수단을 안내합니다.</p>
+  </div>
+  <div class="id-guide-audience" role="group" aria-label="대상별 신분증 인정범위 필터">
+    <button class="id-guide-card" type="button" data-identity-filter="all" aria-pressed="true" aria-controls="identity-guide-table-body">전체</button>
+    <button class="id-guide-card" type="button" data-identity-filter="general" aria-pressed="false" aria-controls="identity-guide-table-body">일반인</button>
+    <button class="id-guide-card" type="button" data-identity-filter="military" aria-pressed="false" aria-controls="identity-guide-table-body">군인</button>
+    <button class="id-guide-card" type="button" data-identity-filter="foreigner" aria-pressed="false" aria-controls="identity-guide-table-body">외국인</button>
+    <button class="id-guide-card" type="button" data-identity-filter="youth" aria-pressed="false" aria-controls="identity-guide-table-body">초·중·고·미취학</button>
+    <button class="id-guide-card" type="button" data-identity-filter="islander" aria-pressed="false" aria-controls="identity-guide-table-body">도서민</button>
+  </div>
+  <div class="portal-table-wrap id-guide-matrix-wrap" role="region" aria-label="대상별 신분증 인정범위 표" tabindex="0">
+    <table class="id-guide-matrix">
+      <caption class="sr-only">대상별 인정 신분증과 대체 가능한 신분증</caption>
+      <colgroup><col class="id-guide-matrix-target"><col class="id-guide-matrix-accepted"><col class="id-guide-matrix-alternative"></colgroup>
+      <thead><tr><th scope="col">대상</th><th scope="col">인정되는 신분증</th><th scope="col">대체 가능한 신분증</th></tr></thead>
+      <tbody id="identity-guide-table-body">
+        <tr data-identity-row="general"><th scope="row">일반인<br><small>대학생 포함</small></th><td data-label="인정되는 신분증"><ul><li class="id-guide-primary">주민등록증</li><li class="id-guide-primary">(국제)운전면허증</li><li class="id-guide-primary">여권(여행증명서 포함)</li><li>공무원증</li><li>국가기술자격증</li><li>장애인복지카드(장애인등록증)</li><li>노인복지카드</li><li>국가보훈등록증(국가유공자증, 국가유공자유족증 포함)</li><li>학생증</li><li>선원수첩</li><li>교원자격증(사립학교 포함)</li><li>지자체가 발행한 도·시·군·구민증</li><li>전역증 또는 사진이 포함된 군경력증명서(전역 후 1년 이내에 한함)</li><li>사진이 포함된 정부 운영(또는 인정) 신원확인수단(모바일 포함)</li><li>승선 지역 무인민원발급기를 통해 발급받은 주민등록표 등본·초본·가족관계증명서(유효기간에 한함)</li></ul></td><td data-label="대체 가능한 신분증"><ul><li>해당 읍·면·동 행정복지센터에서 발급한 주민등록증 발급신청 확인서(사진 포함)</li></ul></td></tr>
+        <tr data-identity-row="military"><th scope="row">군인</th><td data-label="인정되는 신분증"><ul><li>①에서 정한 인정범위 전체</li><li class="id-guide-primary">장교·부사관 신분증</li><li class="id-guide-primary">군무원증</li><li>사관생도 학생증</li></ul></td><td data-label="대체 가능한 신분증"><ul><li>부대장이 발급한 신분확인증명서(사진 포함)</li></ul></td></tr>
+        <tr data-identity-row="foreigner"><th scope="row">외국인</th><td data-label="인정되는 신분증"><ul><li class="id-guide-primary">외국인등록증(모바일 포함)</li><li>재외동포 국내거소증</li><li>유효기간 내 여권</li><li>국내에서 발행한 장애인복지카드(장애인등록증), 국가유공자(유족)증, (국제)운전면허증, 해외(국제)학생증, 영주권카드(그린카드), 주한미군발행신분증</li></ul></td><td data-label="대체 가능한 신분증"><p class="id-guide-empty">대체 가능한 신분증 없음</p></td></tr>
+        <tr data-identity-row="youth"><th scope="row">초·중·고학생, 미취학아동 등</th><td data-label="인정되는 신분증"><ul><li>①, ③에서 정한 인정범위 전체</li><li class="id-guide-primary">청소년증</li><li>건강보험증</li><li>주민등록표 등본·초본·가족관계증명서</li></ul></td><td data-label="대체 가능한 신분증"><ul><li>학교장이 발급한 신분확인증명서(사진 포함)</li><li>보호자(부모, 친족, 교사 등) 동반 시 보호자 확인(인터뷰 등)으로 인적사항에 대한 신분증으로 갈음(외국인 포함)</li></ul></td></tr>
+        <tr data-identity-row="islander"><th scope="row">도서민</th><td data-label="인정되는 신분증"><ul><li class="id-guide-primary">①~④을 적용하되 도서민 운임지원 관리시스템에 사진 정보를 사전에 등록하여 발권 및 승선 시 신원확인이 된 경우 유효한 신분증을 소지한 것으로 간주</li></ul><p class="id-guide-note">* 단, 시스템 불능 등 비상 상황에 대비, 신분증을 항상 휴대하여 발권·승선 단계에서 요구 시 제시 필요</p></td><td data-label="대체 가능한 신분증"><p class="id-guide-note">* 발권 창구 모니터 및 승선 시 스캐너의 사진정보와 대조</p></td></tr>
+      </tbody>
+    </table>
+  </div></section>
+`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script>
+    (function () {
+      function initIdentityFilter() {
+        const buttons = Array.from(document.querySelectorAll('[data-identity-filter]'));
+        const rows = Array.from(document.querySelectorAll('[data-identity-row]'));
+        if (!buttons.length || !rows.length) return;
+        buttons.forEach(function (button) {
+          button.addEventListener('click', function () {
+            const target = button.dataset.identityFilter;
+            buttons.forEach(function (item) { item.setAttribute('aria-pressed', String(item === button)); });
+            rows.forEach(function (row) { row.hidden = target !== 'all' && row.dataset.identityRow !== target; });
+          });
+        });
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initIdentityFilter);
+      else initIdentityFilter();
+    }());
+  </script>
+
+</body>
+</html>
+
+
+
+
+

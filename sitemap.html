@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="전국 여객선터미널 홈페이지 전체 메뉴를 안내합니다.">
+  <title>사이트맵 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="common/locales/ko.js"></script>
+  <script src="common/locales/en.js"></script>
+  <script src="common/i18n.js"></script>
+  <script src="common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'customer/sitemap',
+      rootPrefix: '',
+      title: '사이트맵',
+      description: '전국 여객선터미널 홈페이지의 주요 메뉴를 한눈에 확인하세요.',
+      content: `
+<section class="portal-content-block" aria-labelledby="sitemap-content-title">
+  <div class="portal-content-heading">
+    <h2 id="sitemap-content-title">전체 메뉴</h2>
+    <p>찾으시는 메뉴를 선택하면 해당 안내 페이지로 이동합니다.</p>
+  </div>
+  <div class="portal-sitemap-grid">
+    <section class="portal-sitemap-group"><h3>터미널 안내</h3><ul><li><a href="terminal/terminal-list.html">전국 터미널 안내</a></li><li><a href="terminal/map.html">지도로 찾기</a></li></ul></section>
+    <section class="portal-sitemap-group"><h3>운항 정보</h3><ul><li><a href="schedule/operation.html">운항 정보</a></li><li><a href="schedule/weather.html">기상·특보 안내</a></li></ul></section>
+    <section class="portal-sitemap-group"><h3>예매 안내</h3><ul><li><a href="https://island.theksa.co.kr/" target="_blank" rel="noopener noreferrer">여객선 예매</a></li></ul></section>
+    <section class="portal-sitemap-group"><h3>승선 안내</h3><ul><li><a href="boarding/procedure.html">승선 절차</a></li><li><a href="boarding/id.html">신분증 안내</a></li><li><a href="boarding/vehicle.html">차량 선적 안내</a></li><li><a href="boarding/safety.html">안전 수칙</a></li></ul></section>
+    <section class="portal-sitemap-group"><h3>고객센터</h3><ul><li><a href="customer/notice.html">공지사항</a></li><li><a href="customer/faq.html">자주 묻는 질문</a></li><li><a href="customer/lost-found.html">유실물 안내</a></li></ul></section>
+  </div>
+</section>`
+    };
+  </script>
+  <script src="common/dom-utils.js"></script>
+  <script src="common/layout.js"></script>
+</body>
+</html>

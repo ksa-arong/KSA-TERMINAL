@@ -72,33 +72,39 @@ KSA-TERMINAL/
 사이트의 모든 글자 크기, 굵기, 줄간격은 `common/style.css`의 `:root`에 정의된 다음 변수를 사용합니다.
 
 ```css
+--font-hero: clamp(38px, 4.2vw, 52px); /* 메인 히어로 제목 */
 --font-display: 32px;    /* 페이지·큰 섹션 대제목 */
+--font-h1: clamp(40px, 3.2vw, 44px);   /* 섹션 대제목 */
 --font-h2: 24px;         /* 메인 배너 문구·큰 블록 제목 */
 --font-h3: 20px;         /* 카드·블록 제목 */
---font-body-lg: 16px;    /* 본문·표 데이터 */
---font-body: 14px;       /* 보조 설명·메뉴·필터 */
---font-small: 12px;      /* 날짜·카테고리·안내 문구 */
---font-xs: 11px;         /* 오버라인·태그 */
+--font-body-lg: 18px;    /* 본문·표 데이터 */
+--font-body: 16px;       /* 보조 설명·메뉴·필터 */
+--font-small: 13px;      /* 날짜·카테고리·상태 배지 */
+--font-caption: 11px;    /* 오버라인·작은 태그 */
 
---weight-regular: 400;
---weight-medium: 500;
---weight-semibold: 600;
+--global-font-weight-regular: 400;
+--global-font-weight-medium: 500;
+--global-font-weight-semibold: 600;
+--global-font-weight-bold: 700;
+--global-font-weight-extrabold: 800;
 
---line-height-tight: 1.3;
---line-height-normal: 1.5;
+--global-line-height-tight: 1.3;
+--global-line-height-normal: 1.5;
 ```
 
 | 용도 | 크기 | 굵기 | 줄간격 | 대표 사용처 |
 |---|---:|---:|---:|---|
-| Display | `--font-display` | `--weight-semibold` | `--line-height-tight` | 실시간 운항정보, 승선 안내, 공지사항 |
-| H2 | `--font-h2` | `--weight-semibold` | `--line-height-tight` | 메인 배너 문구, 큰 블록 제목 |
-| H3 | `--font-h3` | `--weight-semibold` | `--line-height-tight` | 승선 안내 카드, 고객센터 제목 |
-| Body Large | `--font-body-lg` | `--weight-regular` | `--line-height-normal` | 본문, 공지 제목, 표 데이터 |
-| Body | `--font-body` | `--weight-medium` | `--line-height-normal` | GNB, 카드 부제, 필터 버튼 |
-| Small | `--font-small` | `--weight-regular` | `--line-height-normal` | 날짜, 카테고리, 하단 안내 문구 |
-| XSmall | `--font-xs` | `--weight-medium` | `--line-height-normal` | 영문 오버라인, 작은 태그 |
+| Hero | `--font-hero` | `--global-font-weight-semibold` | `--global-line-height-tight` | 메인 히어로 제목 |
+| Display | `--font-display` | `--global-font-weight-semibold` | `--global-line-height-tight` | 실시간 운항정보, 승선 안내, 공지사항 |
+| H1 | `--font-h1` | `--global-font-weight-bold` | `--global-line-height-tight` | 섹션 대제목 |
+| H2 | `--font-h2` | `--global-font-weight-semibold` | `--global-line-height-tight` | 메인 배너 문구, 큰 블록 제목 |
+| H3 | `--font-h3` | `--global-font-weight-semibold` | `--global-line-height-tight` | 승선 안내 카드, 고객센터 제목 |
+| Body Large | `--font-body-lg` | `--global-font-weight-regular` | `--global-line-height-normal` | 본문, 공지 제목, 표 데이터 |
+| Body | `--font-body` | `--global-font-weight-medium` | `--global-line-height-normal` | GNB, 카드 부제, 필터 버튼 |
+| Small | `--font-small` | `--global-font-weight-regular` | `--global-line-height-normal` | 날짜, 카테고리, 하단 안내 문구 |
+| Caption | `--font-caption` | `--global-font-weight-medium` | `--global-line-height-normal` | 영문 오버라인, 작은 태그 |
 
-운항 현황 표는 데이터 셀에 Body Large/Regular, 헤더에 Body/Medium, 상태 배지에 13px/Medium을 적용합니다. 상태 배지의 13px은 가독성을 위한 유일한 크기 예외입니다.
+운항 현황 표는 데이터 셀에 Body Large/Regular, 헤더에 Body/Medium, 상태 배지에 `--font-small`/Medium을 적용합니다.
 
 **코딩 규칙:** 새 요소를 포함한 모든 `font-size`, `font-weight`, `line-height` 변경은 반드시 위 CSS 변수를 통해서만 적용합니다.
 

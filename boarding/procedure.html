@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="출발 전 준비부터 안전한 승선까지 꼭 필요한 내용을 한눈에 확인하세요.">
+  <title>승선 절차 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'boarding/process',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.process' },
+      content: `
+<section class="portal-content-block" aria-labelledby="process-title">
+<div class="portal-content-heading">
+  <h2 id="process-title">여객 승선 절차</h2>
+  <p>발권과 신분 확인에 시간이 소요될 수 있으므로 신분증을 지참하고 여유 있게 터미널에 도착해 주세요.</p>
+</div>
+<ol class="portal-step-grid portal-step-grid-four portal-step-flow">
+  <li><span>STEP 01</span><h3>예약 및 예매</h3><p>예약자와 승선자의 이름, 성별, 생년월일, 연락처를 정확히 입력합니다.</p></li>
+  <li><span>STEP 02</span><h3>여객 발권</h3><p>모든 승선자의 신분증을 제시하고 승선권을 발권합니다.</p></li>
+  <li><span>STEP 03</span><h3>여객 개찰</h3><p>개찰 시 승선권과 신분증을 함께 제시합니다.</p></li>
+  <li><span>STEP 04</span><h3>여객 승선</h3><p>선박 입구에서 승선권과 신분증을 다시 확인한 후 승선합니다.</p></li>
+</ol>
+</section>
+`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+
+</body>
+</html>
+

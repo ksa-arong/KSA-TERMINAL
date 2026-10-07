@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="여객선터미널 이용 문의를 등록합니다.">
+  <title>문의 등록 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'customer/inquiry',
+      rootPrefix: '../',
+      title: '문의 등록',
+      description: '문의 내용과 답변에 필요한 정보를 정확히 입력해 주세요.',
+      content: `
+<div class="portal-inquiry-write-page">
+  <div class="portal-inquiry-write-guide" role="note">
+    <strong>등록 전 확인해 주세요</strong>
+    <ul><li>당일 운항 여부와 예매·환불은 이용 선사 또는 예매처로 문의해 주세요.</li><li><span aria-hidden="true">*</span> 표시는 필수 입력 항목입니다.</li><li>현재 등록 내용과 첨부파일명은 이 브라우저에만 임시 저장됩니다.</li></ul>
+  </div>
+
+  <form class="portal-inquiry-form portal-inquiry-write-form" id="inquiry-write-form">
+    <section class="portal-inquiry-form-section" aria-labelledby="inquiry-contact-title">
+      <div class="portal-inquiry-form-section-head"><span>01</span><div><h2 id="inquiry-contact-title">신청인 정보</h2></div></div>
+      <div class="portal-inquiry-form-grid">
+        <label><span>작성자 <em>*</em></span><input class="portal-form-control" name="author" type="text" maxlength="20" autocomplete="name" required placeholder="이름을 입력해 주세요"></label>
+        <label><span>휴대전화번호 <em>*</em></span><input class="portal-form-control" name="phone" type="tel" maxlength="13" autocomplete="tel" required placeholder="010-0000-0000" pattern="01[016789]-?[0-9]{3,4}-?[0-9]{4}"></label>
+        <label><span>이메일 <em>*</em></span><input class="portal-form-control" name="email" type="email" maxlength="80" autocomplete="email" required pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[.][A-Za-z]{2,}" placeholder="example@email.com"></label>
+      </div>
+    </section>
+
+    <section class="portal-inquiry-form-section" aria-labelledby="inquiry-content-title">
+      <div class="portal-inquiry-form-section-head"><span>02</span><div><h2 id="inquiry-content-title">문의 내용</h2></div></div>
+      <div class="portal-inquiry-form-grid">
+        <label><span>문의 분류 <em>*</em></span><select class="portal-form-control" name="category" required><option value="">선택해 주세요</option><option>터미널</option><option>운항 정보</option><option>예매·환불</option><option>차량 선적</option><option>수하물</option><option>분실물</option><option>기타</option></select></label>
+        <label class="portal-inquiry-form-wide"><span>제목 <em>*</em></span><input class="portal-form-control" name="title" type="text" maxlength="80" required placeholder="문의 제목을 입력해 주세요"></label>
+        <label class="portal-inquiry-form-wide"><span>문의 내용 <em>*</em></span><textarea class="portal-form-control" name="content" rows="8" maxlength="2000" required placeholder="문의 내용을 구체적으로 입력해 주세요"></textarea></label>
+        <label class="portal-inquiry-form-wide"><span>첨부파일</span><input class="portal-form-control portal-inquiry-file" name="attachment" type="file" accept=".jpg,.jpeg,.png,.pdf,.hwp,.hwpx,.doc,.docx"></label>
+      </div>
+    </section>
+
+    <section class="portal-inquiry-form-section" aria-labelledby="inquiry-use-title">
+      <div class="portal-inquiry-form-section-head"><span>03</span><div><h2 id="inquiry-use-title">이용 정보</h2></div></div>
+      <div class="portal-inquiry-form-grid">
+        <label><span>이용 터미널</span><select class="portal-form-control" name="terminal"><option value="">선택해 주세요</option><option>인천항</option><option>군산항</option><option>제주항</option><option>목포항</option><option>부산항</option><option>대천항</option><option>완도항</option><option>여수항</option><option>통영항</option><option>동해항</option><option>포항항</option><option>기타 터미널</option></select></label>
+        <div class="portal-inquiry-form-field">
+          <label for="inquiry-travel-date">이용일</label>
+          <div class="portal-date-picker" id="inquiry-travel-date-picker">
+            <input class="portal-form-control" id="inquiry-travel-date" name="travelDate" type="text" inputmode="none" placeholder="연도-월-일" autocomplete="off" readonly>
+            <button class="portal-date-picker-trigger" type="button" aria-label="이용일 달력 열기" aria-controls="inquiry-travel-date-calendar" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"></rect><path d="M8 3v5M16 3v5M3.5 10h17"></path></svg></button>
+            <div class="portal-date-picker-calendar" id="inquiry-travel-date-calendar" role="dialog" aria-label="이용일 선택" hidden>
+              <div class="portal-date-picker-header"><button type="button" data-calendar-action="prev" aria-label="이전 달">‹</button><strong class="portal-date-picker-title"></strong><button type="button" data-calendar-action="next" aria-label="다음 달">›</button></div>
+              <div class="portal-date-picker-weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+              <div class="portal-date-picker-days"></div>
+              <div class="portal-date-picker-footer"><button type="button" data-calendar-action="today">오늘</button><button type="button" data-calendar-action="clear">선택 해제</button></div>
+            </div>
+          </div>
+        </div>
+        <label><span>출발지</span><input class="portal-form-control" name="departure" type="text" maxlength="40" placeholder="예: 제주항"></label>
+        <label><span>도착지</span><input class="portal-form-control" name="arrival" type="text" maxlength="40" placeholder="예: 완도항"></label>
+        <label class="portal-inquiry-form-wide"><span>선박 이용 정보</span><input class="portal-form-control" name="vesselInfo" type="text" maxlength="100" placeholder="선사명, 선박명, 출항시각 또는 예약번호 등을 입력해 주세요"></label>
+      </div>
+    </section>
+
+    <section class="portal-inquiry-form-section portal-inquiry-password-section" aria-label="게시글 비밀번호">
+      <div class="portal-inquiry-form-grid">
+        <label><span>비밀번호 <em>*</em></span><input class="portal-form-control" name="password" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" required pattern="[0-9]{4}" placeholder="숫자 4자리"></label>
+      </div>
+    </section>
+
+    <section class="portal-inquiry-form-section portal-inquiry-agreement" aria-label="개인정보 수집·이용 동의">
+      <label class="portal-inquiry-consent portal-inquiry-consent-all"><input id="inquiry-consent-all" type="checkbox"><span>아래 항목에 모두 동의합니다.</span></label>
+      <div class="portal-inquiry-consent-list">
+        <label class="portal-inquiry-consent"><input class="inquiry-required-consent" name="privacyConsent" type="checkbox" required><span><strong>개인정보 수집·이용 동의</strong> — 이름, 휴대전화번호, 이메일을 문의 접수 및 답변 목적으로 이용하는 데 동의합니다. <em>*</em></span></label>
+        <label class="portal-inquiry-consent"><input class="inquiry-required-consent" name="sharingConsent" type="checkbox" required><span><strong>문의 처리기관 정보 제공 동의</strong> — 문의 처리를 위해 선택한 터미널 또는 이용 선사에 내용을 전달하는 데 동의합니다. <em>*</em></span></label>
+        <label class="portal-inquiry-consent"><input class="inquiry-optional-consent" name="notificationConsent" type="checkbox"><span><strong>답변 등록 알림 수신 동의</strong> — 입력한 연락처로 답변 등록 안내를 받는 데 동의합니다. (선택)</span></label>
+      </div>
+    </section>
+
+    <div class="portal-inquiry-form-actions"><a class="btn btn--md btn--outline" href="inquiry.html">취소</a><button class="btn btn--md btn--solid" type="submit">문의 등록</button></div>
+  </form>
+</div>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script>
+    (function initializeInquiryWritePage() {
+      const storageKey = 'ksa-terminal-inquiries';
+      const form = document.getElementById('inquiry-write-form');
+      const consentAll = document.getElementById('inquiry-consent-all');
+      const consentItems = [...form.querySelectorAll('.portal-inquiry-consent-list input[type="checkbox"]')];
+      const formControls = [...form.querySelectorAll('.portal-form-control')];
+      const editId = new URLSearchParams(window.location.search).get('edit');
+      let editingItem = null;
+
+      const datePicker = document.getElementById('inquiry-travel-date-picker');
+      const dateInput = document.getElementById('inquiry-travel-date');
+      const dateTrigger = datePicker?.querySelector('.portal-date-picker-trigger');
+      const dateCalendar = datePicker?.querySelector('.portal-date-picker-calendar');
+      const dateTitle = datePicker?.querySelector('.portal-date-picker-title');
+      const dateDays = datePicker?.querySelector('.portal-date-picker-days');
+      let calendarView = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+      function parseDateValue(value) {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '');
+        if (!match) return null;
+        const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        return Number.isNaN(date.getTime()) ? null : date;
+      }
+
+      function formatDateValue(date) {
+        return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+      }
+
+      function renderDateCalendar() {
+        if (!dateTitle || !dateDays) return;
+        const year = calendarView.getFullYear();
+        const month = calendarView.getMonth();
+        const selectedValue = dateInput.value;
+        const todayValue = formatDateValue(new Date());
+        const firstWeekday = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        dateTitle.textContent = `${year}년 ${month + 1}월`;
+        dateDays.replaceChildren();
+        for (let cell = 0; cell < 42; cell += 1) {
+          const day = cell - firstWeekday + 1;
+          if (day < 1 || day > daysInMonth) {
+            const blank = document.createElement('span');
+            blank.setAttribute('aria-hidden', 'true');
+            dateDays.appendChild(blank);
+            continue;
+          }
+          const value = formatDateValue(new Date(year, month, day));
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = String(day);
+          button.dataset.date = value;
+          button.setAttribute('aria-label', `${year}년 ${month + 1}월 ${day}일`);
+          if (value === selectedValue) {
+            button.classList.add('is-selected');
+            button.setAttribute('aria-current', 'date');
+          }
+          if (value === todayValue) button.classList.add('is-today');
+          dateDays.appendChild(button);
+        }
+      }
+
+      function setDateCalendarOpen(open) {
+        if (!dateCalendar || !dateTrigger) return;
+        dateCalendar.hidden = !open;
+        dateTrigger.setAttribute('aria-expanded', String(open));
+        if (!open) return;
+        const selectedDate = parseDateValue(dateInput.value);
+        if (selectedDate) calendarView = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+        renderDateCalendar();
+        requestAnimationFrame(() => dateDays.querySelector('.is-selected, button')?.focus());
+      }
+
+      if (datePicker && dateInput && dateTrigger && dateCalendar && dateDays) {
+        dateInput.addEventListener('click', () => setDateCalendarOpen(true));
+        dateTrigger.addEventListener('click', () => setDateCalendarOpen(dateCalendar.hidden));
+        dateCalendar.addEventListener('click', (event) => {
+          const dateButton = event.target.closest('[data-date]');
+          if (dateButton) {
+            dateInput.value = dateButton.dataset.date;
+            dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            setDateCalendarOpen(false);
+            dateInput.focus();
+            return;
+          }
+          const action = event.target.closest('[data-calendar-action]')?.dataset.calendarAction;
+          if (action === 'prev' || action === 'next') {
+            calendarView = new Date(calendarView.getFullYear(), calendarView.getMonth() + (action === 'prev' ? -1 : 1), 1);
+            renderDateCalendar();
+          } else if (action === 'today') {
+            const today = new Date();
+            dateInput.value = formatDateValue(today);
+            dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            setDateCalendarOpen(false);
+            dateInput.focus();
+          } else if (action === 'clear') {
+            dateInput.value = '';
+            dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            setDateCalendarOpen(false);
+            dateInput.focus();
+          }
+        });
+        datePicker.addEventListener('keydown', (event) => {
+          if (event.key !== 'Escape' || dateCalendar.hidden) return;
+          event.preventDefault();
+          setDateCalendarOpen(false);
+          dateInput.focus();
+        });
+        document.addEventListener('click', (event) => {
+          if (!datePicker.contains(event.target)) setDateCalendarOpen(false);
+        });
+      }
+
+      const requiredMessages = {
+        author: '작성자를 입력해 주세요.',
+        phone: '휴대전화번호를 입력해 주세요.',
+        email: '이메일 주소를 입력해 주세요.',
+        password: '게시글 비밀번호를 입력해 주세요.',
+        category: '문의 분류를 선택해 주세요.',
+        title: '문의 제목을 입력해 주세요.',
+        content: '문의 내용을 입력해 주세요.'
+      };
+
+      function getValidationMessage(control) {
+        if (control.validity.valueMissing) return requiredMessages[control.name] || '필수 항목을 입력해 주세요.';
+        if (control.name === 'phone' && control.validity.patternMismatch) return '휴대전화번호를 010-1234-5678 형식 또는 숫자만 입력해 주세요.';
+        if (control.name === 'email' && (control.validity.typeMismatch || control.validity.patternMismatch)) return '이메일 주소를 example@email.com 형식으로 입력해 주세요.';
+        if (control.name === 'password' && control.validity.patternMismatch) return '비밀번호는 숫자 4자리로 입력해 주세요.';
+        return '입력 내용을 다시 확인해 주세요.';
+      }
+
+      function clearValidationMessage(control) {
+        const errorId = `${control.name}-validation-error`;
+        document.getElementById(errorId)?.remove();
+        control.removeAttribute('aria-invalid');
+        if (control.getAttribute('aria-describedby') === errorId) control.removeAttribute('aria-describedby');
+      }
+
+      function showValidationMessage(control) {
+        const errorId = `${control.name}-validation-error`;
+        let error = document.getElementById(errorId);
+        if (!error) {
+          error = document.createElement('span');
+          error.id = errorId;
+          error.className = 'portal-form-error';
+          error.setAttribute('role', 'alert');
+          control.insertAdjacentElement('afterend', error);
+        }
+        error.textContent = getValidationMessage(control);
+        control.setAttribute('aria-invalid', 'true');
+        control.setAttribute('aria-describedby', errorId);
+      }
+
+      function loadLocalItems() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          return Array.isArray(saved) ? saved : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function maskName(name) {
+        const value = String(name).trim();
+        if (value.length <= 1) return `${value}*`;
+        return `${value.slice(0, 1)}${'*'.repeat(Math.min(value.length - 1, 2))}`;
+      }
+
+      function getTravelDetail(item, key, fallback = '') {
+        if (item[key]) return item[key];
+        const labels = { travelDate: '이용일: ', departure: '출발지: ', arrival: '도착지: ', vesselInfo: '선박 정보: ' };
+        const prefix = labels[key];
+        if (!prefix) return fallback;
+        const line = String(item.travelDetails || '').split('\n').find((entry) => entry.startsWith(prefix));
+        return line ? line.slice(prefix.length) : fallback;
+      }
+
+      function initializeEditMode() {
+        if (!editId) return true;
+        const localItems = loadLocalItems();
+        editingItem = localItems.find((item) => String(item.id) === String(editId)) || null;
+        if (!editingItem) {
+          window.location.replace('inquiry.html');
+          return false;
+        }
+        if (sessionStorage.getItem('ksa-inquiry-authorized-id') !== String(editId)) {
+          window.location.replace(`inquiry.html?unlock=${encodeURIComponent(editId)}`);
+          return false;
+        }
+
+        document.title = '문의 수정 | 전국 여객선터미널';
+        const pageTitle = document.querySelector('.portal-subhero-title h1');
+        if (pageTitle) pageTitle.textContent = '문의 수정';
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) submitButton.textContent = '수정 완료';
+        const cancelLink = form.querySelector('.portal-inquiry-form-actions a');
+        if (cancelLink) cancelLink.href = `inquiry-detail.html?id=${encodeURIComponent(editId)}`;
+
+        form.elements.author.value = editingItem.authorName || editingItem.author || '';
+        form.elements.phone.value = editingItem.phone || '';
+        form.elements.email.value = editingItem.email || '';
+        form.elements.password.value = editingItem.password || '0000';
+        form.elements.terminal.value = editingItem.terminal || '';
+        form.elements.travelDate.value = getTravelDetail(editingItem, 'travelDate');
+        form.elements.departure.value = getTravelDetail(editingItem, 'departure');
+        form.elements.arrival.value = getTravelDetail(editingItem, 'arrival');
+        form.elements.vesselInfo.value = getTravelDetail(editingItem, 'vesselInfo');
+        form.elements.category.value = editingItem.category === '터미널 이용' ? '터미널' : editingItem.category || '';
+        form.elements.title.value = editingItem.title || '';
+        form.elements.content.value = editingItem.content || '';
+        form.elements.privacyConsent.checked = true;
+        form.elements.sharingConsent.checked = true;
+        form.elements.notificationConsent.checked = Boolean(editingItem.notificationConsent);
+        syncConsentAll();
+        return true;
+      }
+
+      function syncConsentAll() {
+        const checkedCount = consentItems.filter((item) => item.checked).length;
+        consentAll.checked = checkedCount === consentItems.length;
+        consentAll.indeterminate = checkedCount > 0 && checkedCount < consentItems.length;
+      }
+
+      consentAll.addEventListener('change', () => {
+        consentItems.forEach((item) => { item.checked = consentAll.checked; });
+        consentAll.indeterminate = false;
+      });
+      consentItems.forEach((item) => item.addEventListener('change', syncConsentAll));
+
+      if (!initializeEditMode()) return;
+
+      formControls.forEach((control) => {
+        control.addEventListener('invalid', () => showValidationMessage(control));
+        const updateValidation = () => {
+          if (control.validity.valid) clearValidationMessage(control);
+          else if (document.getElementById(`${control.name}-validation-error`)) showValidationMessage(control);
+        };
+        control.addEventListener('input', updateValidation);
+        control.addEventListener('change', updateValidation);
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const values = new FormData(form);
+        const now = new Date();
+        const attachment = form.elements.attachment.files[0];
+        const travelDetails = [
+          values.get('travelDate') && `이용일: ${values.get('travelDate')}`,
+          values.get('departure') && `출발지: ${values.get('departure')}`,
+          values.get('arrival') && `도착지: ${values.get('arrival')}`,
+          values.get('vesselInfo') && `선박 정보: ${values.get('vesselInfo')}`
+        ].filter(Boolean).join('\n');
+        const savedItem = {
+          ...(editingItem || {}),
+          id: editingItem ? editingItem.id : `local-${now.getTime()}`,
+          category: values.get('category'),
+          title: values.get('title').trim(),
+          content: values.get('content').trim(),
+          authorName: values.get('author').trim(),
+          author: maskName(values.get('author')),
+          phone: values.get('phone'),
+          email: values.get('email'),
+          password: values.get('password'),
+          terminal: values.get('terminal'),
+          travelDate: values.get('travelDate'),
+          departure: values.get('departure'),
+          arrival: values.get('arrival'),
+          vesselInfo: values.get('vesselInfo'),
+          travelDetails,
+          attachmentName: attachment ? attachment.name : (editingItem?.attachmentName || ''),
+          notificationConsent: values.get('notificationConsent') === 'on',
+          date: editingItem?.date || [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('.'),
+          status: editingItem?.status || '답변대기'
+        };
+        try {
+          const localItems = loadLocalItems();
+          const nextItems = editingItem
+            ? localItems.map((item) => String(item.id) === String(editingItem.id) ? savedItem : item)
+            : [savedItem, ...localItems];
+          localStorage.setItem(storageKey, JSON.stringify(nextItems));
+          window.location.href = editingItem
+            ? `inquiry-detail.html?id=${encodeURIComponent(savedItem.id)}`
+            : 'inquiry.html?submitted=1';
+        } catch (error) {
+          window.alert('브라우저 저장 공간을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.');
+        }
+      });
+    }());
+  </script>
+</body>
+</html>

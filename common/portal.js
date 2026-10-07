@@ -1,184 +1,450 @@
-(function () {
-  'use strict';
+(function() {
+    'use strict';
 
-  const hero = document.querySelector('.portal-hero');
-  const heroSlides = [...document.querySelectorAll('.portal-hero-slide')];
-  const heroButtons = [...document.querySelectorAll('[data-hero-slide]')];
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const t = window.i18n.t;
-  const localize = window.i18n.localize;
-  let currentHeroSlide = 0;
-  let heroTimer = null;
+    const hero = document.querySelector('.portal-hero');
+    const heroSlides = [...document.querySelectorAll('.portal-hero-slide')];
+    const heroPlaybackButton = document.querySelector('[data-hero-playback]');
+    const heroPreviousButton = document.querySelector('[data-hero-previous]');
+    const heroNextButton = document.querySelector('[data-hero-next]');
+    const heroCurrent = document.querySelector('[data-hero-current]');
+    const heroTotal = document.querySelector('[data-hero-total]');
+    const heroProgress = document.querySelector('[data-hero-progress]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const t = window.i18n.t;
+    const localize = window.i18n.localize;
+    let currentHeroSlide = 0;
+    let heroTimer = null;
+    let heroRotationPaused = reducedMotion.matches;
+    let heroMotionOverride = false;
 
-  function showHeroSlide(index) {
-    if (!heroSlides.length) return;
-    currentHeroSlide = (index + heroSlides.length) % heroSlides.length;
-    heroSlides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === currentHeroSlide));
-    heroButtons.forEach((button, buttonIndex) => {
-      const selected = buttonIndex === currentHeroSlide;
-      button.classList.toggle('active', selected);
-      button.setAttribute('aria-pressed', String(selected));
-    });
-  }
-
-  function stopHeroRotation() {
-    if (heroTimer) window.clearInterval(heroTimer);
-    heroTimer = null;
-  }
-
-  function startHeroRotation() {
-    stopHeroRotation();
-    if (reducedMotion.matches || heroSlides.length < 2 || document.hidden) return;
-    heroTimer = window.setInterval(() => showHeroSlide(currentHeroSlide + 1), 6500);
-  }
-
-  if (hero && heroSlides.length) {
-    heroButtons.forEach((button) => button.addEventListener('click', () => {
-      showHeroSlide(Number(button.dataset.heroSlide));
-      startHeroRotation();
-    }));
-    hero.addEventListener('mouseenter', stopHeroRotation);
-    hero.addEventListener('mouseleave', startHeroRotation);
-    hero.addEventListener('focusin', stopHeroRotation);
-    hero.addEventListener('focusout', () => window.setTimeout(() => {
-      if (!hero.contains(document.activeElement)) startHeroRotation();
-    }, 0));
-    document.addEventListener('visibilitychange', startHeroRotation);
-    reducedMotion.addEventListener('change', startHeroRotation);
-    showHeroSlide(0);
-    startHeroRotation();
-  }
-
-  const terminals = {
-    incheon: {
-      markerName: { ko: '인천', en: '' }, region: { ko: '인천광역시', en: '' }, name: { ko: '인천항 연안여객터미널', en: '' }, shortName: { ko: '인천항', en: '' },
-      description: { ko: '서해 5도와 수도권을 잇는 섬 여행의 출발점입니다.', en: '' }, address: { ko: '인천광역시 중구 연안부두로 70', en: '' }, routes: { ko: ['백령도', '덕적도', '대연평도'], en: [] }, hours: { ko: '운항일 기준 06:00–21:00 · 기상에 따라 변동', en: '' },
-      folder: 'incheon'
-    },
-    boryeong: {
-      markerName: { ko: '보령', en: '' }, region: { ko: '충청남도', en: '' }, name: { ko: '대천항여객선터미널', en: '' }, shortName: { ko: '대천항', en: '' },
-      description: { ko: '', en: '' }, address: { ko: '', en: '' }, routes: { ko: ['원산도', '삽시도', '장고도', '외연도'], en: [] }, hours: { ko: '', en: '' }, // TODO: 정보 확인 필요
-      folder: 'boryeong'
-    },
-    gunsan: {
-      markerName: { ko: '군산', en: '' }, region: { ko: '전북특별자치도', en: '' }, name: { ko: '군산항여객터미널', en: '' }, shortName: { ko: '군산항', en: '' },
-      description: { ko: '고군산군도와 서해 섬을 연결하는 군산의 해상교통 거점입니다.', en: '' }, address: { ko: '전북특별자치도 군산시 군산항 일대', en: '' }, routes: { ko: ['어청도', '개야도', '선유도'], en: [] }, hours: { ko: '운항일 기준 06:00–20:00 · 노선별 상이', en: '' },
-      folder: 'gunsan'
-    },
-    mokpo: {
-      markerName: { ko: '목포', en: '' }, region: { ko: '전라남도', en: '' }, name: { ko: '목포연안여객선터미널', en: '' }, shortName: { ko: '목포항', en: '' },
-      description: { ko: '', en: '' }, address: { ko: '', en: '' }, routes: { ko: ['제주', '홍도·흑산도', '비금·도초'], en: [] }, hours: { ko: '', en: '' }, // TODO: 정보 확인 필요
-      folder: 'mokpo'
-    },
-    wando: {
-      markerName: { ko: '완도', en: '' }, region: { ko: '전라남도', en: '' }, name: { ko: '완도항여객터미널', en: '' }, shortName: { ko: '완도항', en: '' },
-      description: { ko: '청정 다도해와 제주를 잇는 전남 서남해안의 여객 관문입니다.', en: '' }, address: { ko: '전라남도 완도군 완도항 일대', en: '' }, routes: { ko: ['제주', '청산도', '노화도'], en: [] }, hours: { ko: '운항일 기준 05:30–20:00 · 노선별 상이', en: '' },
-      folder: 'wando'
-    },
-    yeosu: {
-      markerName: { ko: '여수', en: '' }, region: { ko: '전라남도', en: '' }, name: { ko: '여수항여객터미널', en: '' }, shortName: { ko: '여수항', en: '' },
-      description: { ko: '아름다운 다도해 섬을 연결하는 남해안의 여객 관문입니다.', en: '' }, address: { ko: '전라남도 여수시 여수항 일대', en: '' }, routes: { ko: ['거문도', '금오도', '개도'], en: [] }, hours: { ko: '운항일 기준 06:00–20:00 · 노선별 상이', en: '' },
-      folder: 'yeosu'
-    },
-    tongyeong: {
-      markerName: { ko: '통영', en: '' }, region: { ko: '경상남도', en: '' }, name: { ko: '통영항여객터미널', en: '' }, shortName: { ko: '통영항', en: '' },
-      description: { ko: '한려수도의 여러 섬으로 향하는 통영의 대표 여객터미널입니다.', en: '' }, address: { ko: '경상남도 통영시 통영항 일대', en: '' }, routes: { ko: ['욕지도', '한산도', '사량도'], en: [] }, hours: { ko: '운항일 기준 06:00–20:00 · 노선별 상이', en: '' },
-      folder: 'tongyeong'
-    },
-    busan: {
-      markerName: { ko: '부산', en: '' }, region: { ko: '부산광역시', en: '' }, name: { ko: '부산항연안여객터미널', en: '' }, shortName: { ko: '부산항', en: '' },
-      description: { ko: '', en: '' }, address: { ko: '', en: '' }, routes: { ko: ['제주'], en: [] }, hours: { ko: '', en: '' }, // TODO: 정보 확인 필요
-      folder: 'busan'
-    },
-    pohang: {
-      markerName: { ko: '포항', en: '' }, region: { ko: '경상북도', en: '' }, name: { ko: '포항항여객터미널', en: '' }, shortName: { ko: '포항항', en: '' },
-      description: { ko: '동해와 울릉도를 연결하는 경북 동해안의 바닷길 관문입니다.', en: '' }, address: { ko: '경상북도 포항시 포항항 일대', en: '' }, routes: { ko: ['울릉도'], en: [] }, hours: { ko: '운항일 기준 06:00–21:00 · 기상에 따라 변동', en: '' },
-      folder: 'pohang'
-    },
-    jeju: {
-      markerName: { ko: '제주', en: '' }, region: { ko: '제주특별자치도', en: '' }, name: { ko: '제주항여객터미널', en: '' }, shortName: { ko: '제주항', en: '' },
-      description: { ko: '제주와 육지를 연결하는 대표적인 해상교통 관문입니다.', en: '' }, address: { ko: '제주특별자치도 제주시 임항로 111', en: '' }, routes: { ko: ['목포', '완도', '추자', '녹동'], en: [] }, hours: { ko: '매일 05:30–21:00 · 운항 일정에 따라 변동', en: '' },
-      folder: 'jeju'
+    function updateHeroPlaybackButton() {
+        if (!heroPlaybackButton) return;
+        const label = t(heroRotationPaused ? 'portal.heroPlay' : 'portal.heroPause');
+        heroPlaybackButton.setAttribute('aria-pressed', String(heroRotationPaused));
+        heroPlaybackButton.setAttribute('aria-label', label);
+        heroPlaybackButton.title = label;
     }
-  };
 
-  const markers = [...document.querySelectorAll('.terminal-marker[data-terminal]')];
-  if (!markers.length) return;
+    function showHeroSlide(index) {
+        if (!heroSlides.length) return;
+        currentHeroSlide = (index + heroSlides.length) % heroSlides.length;
+        heroSlides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === currentHeroSlide));
+        if (heroCurrent) heroCurrent.textContent = String(currentHeroSlide + 1).padStart(2, '0');
+        if (heroTotal) heroTotal.textContent = String(heroSlides.length).padStart(2, '0');
+        if (heroProgress) heroProgress.style.setProperty('--hero-progress', (((currentHeroSlide + 1) / heroSlides.length) * 100) + '%');
+    }
 
-  const fields = {
-    summary: document.getElementById('terminal-summary'),
-    region: document.getElementById('terminal-region'),
-    name: document.getElementById('terminal-name'),
-    description: document.getElementById('terminal-description'),
-    address: document.getElementById('terminal-address'),
-    routes: document.getElementById('terminal-routes'),
-    hours: document.getElementById('terminal-hours'),
-    select: document.getElementById('terminal-select'),
-    detail: document.getElementById('terminal-detail-link'),
-    detailText: document.getElementById('terminal-detail-text'),
-    schedule: document.getElementById('terminal-schedule-link'),
-    guide: document.getElementById('terminal-guide-link'),
-    directions: document.getElementById('terminal-directions-link'),
-    facilities: document.getElementById('terminal-facilities-link')
-  };
+    function stopHeroRotation() {
+        if (heroTimer) window.clearInterval(heroTimer);
+        heroTimer = null;
+    }
 
-  function renderTerminalControls() {
-    fields.select.replaceChildren();
-    Object.entries(terminals).forEach(([id, terminal]) => {
-      const option = document.createElement('option');
-      option.value = id;
-      option.textContent = localize(terminal.shortName);
-      option.selected = id === 'jeju';
-      fields.select.append(option);
-    });
+    function startHeroRotation() {
+        stopHeroRotation();
+        if (heroRotationPaused || (reducedMotion.matches && !heroMotionOverride) || heroSlides.length < 2 || document.hidden) return;
+        heroTimer = window.setInterval(() => showHeroSlide(currentHeroSlide + 1), 6500);
+    }
+
+    if (hero && heroSlides.length) {
+        if (heroPreviousButton) heroPreviousButton.addEventListener('click', () => {
+            showHeroSlide(currentHeroSlide - 1);
+            startHeroRotation();
+        });
+        if (heroNextButton) heroNextButton.addEventListener('click', () => {
+            showHeroSlide(currentHeroSlide + 1);
+            startHeroRotation();
+        });
+        if (heroPlaybackButton) heroPlaybackButton.addEventListener('click', () => {
+            heroRotationPaused = !heroRotationPaused;
+            heroMotionOverride = !heroRotationPaused;
+            updateHeroPlaybackButton();
+            if (heroRotationPaused) stopHeroRotation();
+            else {
+                showHeroSlide(currentHeroSlide + 1);
+                startHeroRotation();
+            }
+        });
+        hero.addEventListener('mouseenter', stopHeroRotation);
+        hero.addEventListener('mouseleave', startHeroRotation);
+        hero.addEventListener('focusin', stopHeroRotation);
+        hero.addEventListener('focusout', () => window.setTimeout(() => {
+            if (!hero.contains(document.activeElement)) startHeroRotation();
+        }, 0));
+        document.addEventListener('visibilitychange', startHeroRotation);
+        reducedMotion.addEventListener('change', () => {
+            heroMotionOverride = false;
+            heroRotationPaused = reducedMotion.matches;
+            updateHeroPlaybackButton();
+            startHeroRotation();
+        });
+        showHeroSlide(0);
+        updateHeroPlaybackButton();
+        startHeroRotation();
+    }
+
+    const portalData = window.PORTAL_DATA || {};
+    const regions = portalData.regions || {};
+    const mapRoot = document.querySelector('[data-portal-map-root]');
+    const portalRootPrefix = mapRoot ? (mapRoot.dataset.rootPrefix || '') : '';
+
+    const markers = [...document.querySelectorAll('.terminal-marker[data-region]')];
+    const nearbyTerminalMarkers = [...document.querySelectorAll('.terminal-nearby-marker[data-terminal-type]')];
+    if (!markers.length) return;
+
+    const fields = {
+        summary: document.getElementById('terminal-summary'),
+        region: document.getElementById('terminal-region'),
+        filters: document.getElementById('terminal-type-filters'),
+        cards: document.getElementById('terminal-card-list'),
+        homepage: document.getElementById('region-home-link'),
+        map: document.getElementById('terminal-map')
+    };
+    const mobileMapMedia = window.matchMedia('(max-width: 700px)');
+    const mobileMapMarkerReturnDelay = 480;
+    let mapZoomResetTimer = null;
+
+
+    function renderRegionControls() {
+        markers.forEach((marker) => {
+            const region = regions[marker.dataset.region];
+            if (region) {
+                marker.classList.add(region.cssPos);
+                marker.querySelector('span').textContent = localize(region.label);
+                marker.setAttribute('role', 'button');
+                marker.setAttribute('aria-label', `${localize(region.label)} 터미널 선택`);
+            }
+        });
+    }
+
+    function syncPrimaryMapMarkerLabel() {
+        if (!fields.map) return;
+        const isZoomed = fields.map.classList.contains('is-region-zoomed');
+        const zoomRegion = isZoomed ? fields.map.dataset.zoomRegion : '';
+
+        markers.forEach((marker) => {
+            const region = regions[marker.dataset.region];
+            if (!region) return;
+            const isZoomedPrimary = isZoomed && marker.dataset.region === zoomRegion;
+            const label = marker.querySelector('span');
+            if (label) {
+                label.textContent = isZoomedPrimary && marker.dataset.zoomLabel ?
+                    marker.dataset.zoomLabel :
+                    localize(region.label);
+            }
+
+            if (isZoomedPrimary && marker.dataset.terminalType) {
+                const terminal = region.terminals.find((item) => item.type === marker.dataset.terminalType);
+                const terminalName = localize(terminal && terminal.name) || marker.dataset.zoomLabel;
+                marker.setAttribute('aria-label', `${terminalName} 정보 보기`);
+            } else {
+                marker.setAttribute('aria-label', `${localize(region.label)} 터미널 선택`);
+            }
+        });
+    }
+
+    function formatDestination(value) {
+        const text = String(value || '').trim();
+        if (!text) return '-';
+        const parts = text.split('→').map((part) => part.trim()).filter(Boolean);
+        return parts.at(-1) || text;
+    }
+
+
+    function createRouteList(terminal) {
+        const routes = terminal.routes || [];
+        const list = document.createElement('ul');
+        list.className = 'terminal-route-list';
+        routes.forEach((route) => {
+            const item = document.createElement('li');
+            item.textContent = formatDestination(localize(route.name));
+            list.append(item);
+        });
+        return list;
+    }
+
+    function createTerminalCard(terminal, region) {
+        const card = document.createElement('section');
+        const content = document.createElement('div');
+
+        card.className = 'terminal-card';
+        card.setAttribute('aria-label', localize(terminal.name));
+        content.className = 'terminal-card-content';
+
+        const address = document.createElement('div');
+        address.className = 'terminal-card-row terminal-card-address';
+        address.innerHTML = `<strong>${t('portal.location')}</strong><span></span>`;
+        address.querySelector('span').textContent = localize(terminal.address) || '-';
+
+        const phoneRow = document.createElement('div');
+        const phoneLink = document.createElement('a');
+        phoneRow.className = 'terminal-card-row terminal-card-phone';
+        phoneRow.innerHTML = `<strong>${t('portal.phone')}</strong>`;
+        phoneLink.textContent = region.phone || '-';
+        if (region.phone) phoneLink.href = `tel:${region.phone.replace(/[^\d+]/g, '')}`;
+        phoneRow.append(phoneLink);
+
+        const routes = document.createElement('div');
+        const routesTitle = document.createElement('strong');
+        routes.className = 'terminal-card-row terminal-card-routes';
+        routesTitle.textContent = t('portal.routes');
+        routes.append(routesTitle, createRouteList(terminal));
+
+        const hours = document.createElement('div');
+        const hoursText = document.createElement('span');
+        hours.className = 'terminal-card-row terminal-card-hours';
+        hours.innerHTML = `<strong>${t('portal.operatingHours')}</strong>`;
+        hoursText.textContent = localize(terminal.hours) || '-';
+        hours.append(hoursText);
+
+
+
+        content.append(address, phoneRow, hours, routes);
+        card.append(content);
+        return card;
+    }
+
+    function renderTerminalCards(region, type = 'all') {
+        const terminals = type === 'all' ?
+            region.terminals :
+            region.terminals.filter((terminal) => terminal.type === type);
+
+        if (!terminals.length) {
+            const empty = document.createElement('p');
+            empty.className = 'terminal-card-empty';
+            empty.setAttribute('role', 'status');
+            empty.textContent = type === 'international' ?
+                '현재 운항 중인 국제 항로가 없습니다.' :
+                '현재 운항 중인 항로가 없습니다.';
+            fields.cards.replaceChildren(empty);
+            return;
+        }
+
+        fields.cards.replaceChildren(...terminals.map((terminal) => (
+            createTerminalCard(terminal, region)
+        )));
+    }
+
+    function selectTerminalType(region, type) {
+        fields.filters.querySelectorAll('.terminal-type-filter').forEach((filter) => {
+            filter.setAttribute('aria-pressed', String(filter.dataset.type === type));
+        });
+        let hasNearbySelection = false;
+        nearbyTerminalMarkers.forEach((marker) => {
+            const selected = marker.dataset.region === region.id && marker.dataset.terminalType === type;
+            marker.classList.toggle('is-active', selected);
+            marker.setAttribute('aria-pressed', String(selected));
+            if (selected) hasNearbySelection = true;
+        });
+        if (fields.map) fields.map.classList.toggle('has-nearby-selection', hasNearbySelection);
+        markers.forEach((marker) => {
+            if (marker.dataset.region === region.id) {
+                marker.setAttribute('aria-pressed', String(!hasNearbySelection));
+            }
+        });
+        renderTerminalCards(region, type);
+    }
+
+    function renderTypeFilters(region, preferredType = '') {
+        const availableTypes = [...new Set(region.terminals.map((terminal) => terminal.type))];
+        const standardTypes = ['coastal', 'international'];
+        const types = [...standardTypes, ...availableTypes.filter((type) => !standardTypes.includes(type))];
+        const initialType = availableTypes.includes(preferredType) ? preferredType : (availableTypes[0] || 'all');
+        fields.filters.replaceChildren();
+        fields.filters.hidden = false;
+
+        types.forEach((type) => {
+            const available = availableTypes.includes(type);
+            const button = document.createElement('button');
+            button.className = 'terminal-type-filter';
+            button.type = 'button';
+            button.dataset.type = type;
+            button.disabled = !available;
+            button.setAttribute('aria-disabled', String(!available));
+            button.setAttribute('aria-pressed', String(available && type === initialType));
+            button.textContent = t(`portal.type.${type}`);
+            if (!available) {
+                const unavailableMessage = type === 'international' ?
+                    '현재 운항 중인 국제 항로가 없습니다.' :
+                    '현재 운항 중인 연안 항로가 없습니다.';
+                button.title = unavailableMessage;
+                button.setAttribute('aria-label', `${button.textContent}. ${unavailableMessage}`);
+            } else {
+                button.addEventListener('click', () => selectTerminalType(region, type));
+            }
+            fields.filters.append(button);
+        });
+        return initialType;
+    }
+
+    function renderRegion(id) {
+        const region = regions[id];
+        if (!region) return;
+
+        markers.forEach((marker) => {
+            const selected = marker.dataset.region === id;
+            marker.classList.toggle('active', selected);
+            marker.setAttribute('aria-pressed', String(selected));
+        });
+
+        // region-quick-select 버튼들도 업데이트
+        const quickSelectButtons = document.querySelectorAll('.region-quick-btn[data-region]');
+        quickSelectButtons.forEach((btn) => {
+            const selected = btn.dataset.region === id;
+            btn.classList.toggle('active', selected);
+            btn.setAttribute('aria-pressed', String(selected));
+        });
+
+        const representative = region.terminals[0];
+        const regionLabel = localize(region.label) ||
+            localize(region.region) ||
+            localize(representative.name);
+        fields.region.textContent = localize(region.summaryName) || `${regionLabel}항 여객선 터미널`;
+        fields.homepage.hidden = !representative.folder;
+        if (representative.folder) fields.homepage.href = `${portalRootPrefix}${representative.folder}/index.html`;
+        else fields.homepage.removeAttribute('href');
+        const primaryMarker = [...markers].find((marker) => marker.dataset.region === id);
+        const initialType = renderTypeFilters(region, primaryMarker?.dataset.terminalType);
+        selectTerminalType(region, initialType);
+        fields.summary.hidden = false;
+        fields.summary.setAttribute('aria-busy', 'false');
+    }
+
+    function initializeLatestNotices() {
+        const list = document.getElementById('portal-latest-notice-list');
+        const terminals = window.PORTAL_NOTICE_DATA?.terminals || [];
+        if (!list || !terminals.length) return;
+
+        const escapeHtml = window.PortalDomUtils.escapeHtml;
+        const notices = terminals.flatMap((terminal) => terminal.notices.map((notice, index) => ({
+            ...notice,
+            terminalId: terminal.id,
+            terminalLabel: terminal.label,
+            noticeId: notice.id || `${terminal.id}-${index + 1}`
+        }))).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
+
+        list.innerHTML = notices.map((notice) => `<li><a href="customer/notice-detail.html?id=${encodeURIComponent(notice.noticeId)}"><span><span class="portal-content-badge${notice.terminalId === 'common' ? ' portal-content-badge--common' : ' portal-content-badge--terminal'}">${escapeHtml(notice.terminalLabel)}</span><b>${escapeHtml(notice.title)}</b></span><time datetime="${escapeHtml(notice.date.replaceAll('.', '-'))}">${escapeHtml(notice.date)}</time></a></li>`).join('');
+    }
+
+    function syncZoomedMapMarkers() {
+        if (!fields.map) return;
+        const isZoomed = fields.map.classList.contains('is-region-zoomed');
+        const zoomRegion = isZoomed ? fields.map.dataset.zoomRegion : '';
+
+        markers.forEach((marker) => {
+            const visible = !isZoomed || marker.dataset.region === zoomRegion;
+            marker.classList.toggle('is-region-visible', isZoomed && visible);
+            if (visible) marker.removeAttribute('aria-hidden');
+            else marker.setAttribute('aria-hidden', 'true');
+        });
+
+        nearbyTerminalMarkers.forEach((marker) => {
+            const visible = isZoomed && marker.dataset.region === zoomRegion;
+            marker.classList.toggle('is-region-visible', visible);
+            if (visible) marker.removeAttribute('aria-hidden');
+            else marker.setAttribute('aria-hidden', 'true');
+        });
+    }
+
+    function resetMapZoom() {
+        if (!fields.map || !fields.map.classList.contains('is-region-zoomed')) return;
+
+        if (mapZoomResetTimer) window.clearTimeout(mapZoomResetTimer);
+
+        const sequenceMobileMarkers = mobileMapMedia.matches && !reducedMotion.matches;
+        fields.map.classList.toggle('is-region-unzooming', sequenceMobileMarkers);
+        fields.map.classList.remove('is-region-zoomed');
+        fields.map.removeAttribute('data-zoom-region');
+        syncPrimaryMapMarkerLabel();
+
+        if (!sequenceMobileMarkers) {
+            syncZoomedMapMarkers();
+            return;
+        }
+
+        mapZoomResetTimer = window.setTimeout(() => {
+            fields.map.classList.remove('is-region-unzooming');
+            syncZoomedMapMarkers();
+            mapZoomResetTimer = null;
+        }, mobileMapMarkerReturnDelay);
+    }
+
+    function selectRegionFromControl(id) {
+        if (mapZoomResetTimer) {
+            window.clearTimeout(mapZoomResetTimer);
+            mapZoomResetTimer = null;
+            fields.map?.classList.remove('is-region-unzooming');
+        }
+
+        const isSameZoomedRegion = Boolean(
+            fields.map &&
+            fields.map.classList.contains('is-region-zoomed') &&
+            fields.map.dataset.zoomRegion === id
+        );
+
+        renderRegion(id);
+
+        if (!fields.map) return;
+
+        if (isSameZoomedRegion) {
+            resetMapZoom();
+            return;
+        }
+
+        fields.map.dataset.zoomRegion = id;
+
+        // Commit the selected nationwide-map state before starting the zoom transition.
+        void fields.map.offsetWidth;
+
+        fields.map.classList.add('is-region-zoomed');
+        syncZoomedMapMarkers();
+        syncPrimaryMapMarkerLabel();
+    }
+
     markers.forEach((marker) => {
-      const terminal = terminals[marker.dataset.terminal];
-      if (terminal) marker.querySelector('span').textContent = localize(terminal.markerName);
-    });
-  }
-
-  function renderRoutes(routes) {
-    fields.routes.replaceChildren();
-    (localize(routes) || []).forEach((route) => {
-      const item = document.createElement('li');
-      item.textContent = route;
-      fields.routes.append(item);
-    });
-  }
-
-  function selectTerminal(id) {
-    const terminal = terminals[id];
-    if (!terminal) return;
-
-    markers.forEach((marker) => {
-      const selected = marker.dataset.terminal === id;
-      marker.classList.toggle('active', selected);
-      marker.setAttribute('aria-pressed', String(selected));
+        marker.addEventListener('click', () => {
+            const region = regions[marker.dataset.region];
+            const isZoomedPrimaryMarker = Boolean(
+                region &&
+                fields.map &&
+                fields.map.classList.contains('is-region-zoomed') &&
+                fields.map.dataset.zoomRegion === marker.dataset.region
+            );
+            const terminalType = marker.dataset.terminalType;
+            const hasTerminalType = region && region.terminals.some((terminal) => terminal.type === terminalType);
+            if (isZoomedPrimaryMarker && terminalType && hasTerminalType) {
+                selectTerminalType(region, terminalType);
+                return;
+            }
+            selectRegionFromControl(marker.dataset.region);
+        });
     });
 
-    fields.select.value = id;
-    fields.region.textContent = localize(terminal.region);
-    fields.name.textContent = localize(terminal.name);
-    fields.description.textContent = localize(terminal.description);
-    fields.address.textContent = localize(terminal.address);
-    fields.hours.textContent = localize(terminal.hours);
-    renderRoutes(terminal.routes);
+    nearbyTerminalMarkers.forEach((marker) => {
+        marker.addEventListener('click', () => {
+            const region = regions[marker.dataset.region];
+            if (!region) return;
+            const terminalType = marker.dataset.terminalType;
+            const hasTerminalType = region.terminals.some((terminal) => terminal.type === terminalType);
+            if (!hasTerminalType) return;
+            selectTerminalType(region, terminalType);
+        });
+    });
 
-    const base = terminal.folder;
-    fields.detail.href = base + '/index.html';
-    fields.detailText.textContent = t('portal.homepage', { name: localize(terminal.shortName) });
-    fields.schedule.href = base + '/index.html#schedule';
-    fields.guide.href = base + '/guide.html';
-    fields.directions.href = base + '/guide.html#directions';
-    fields.facilities.href = base + '/guide.html#facilities';
-    fields.summary.hidden = false;
-    fields.summary.setAttribute('aria-busy', 'false');
-  }
+    if (fields.map) {
+        fields.map.addEventListener('click', (event) => {
+            if (event.target.closest('button')) return;
+            resetMapZoom();
+        });
+    }
+    // region-quick-select 버튼들에 이벤트 리스너 추가
+    const quickSelectButtons = document.querySelectorAll('.region-quick-btn[data-region]');
+    quickSelectButtons.forEach((button) => {
+        button.addEventListener('click', () => selectRegionFromControl(button.dataset.region));
+    });
 
-  markers.forEach((marker) => {
-    marker.addEventListener('click', () => selectTerminal(marker.dataset.terminal));
-  });
-  renderTerminalControls();
-  fields.select.addEventListener('change', () => selectTerminal(fields.select.value));
-  selectTerminal(fields.select.value || 'jeju');
+    renderRegionControls();
+    renderRegion(portalData.initialRegionId || 'incheon');
+    syncZoomedMapMarkers();
+    syncPrimaryMapMarkerLabel();
+    initializeLatestNotices();
 }());

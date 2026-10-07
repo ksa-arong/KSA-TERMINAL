@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="전국 여객선터미널을 명칭과 주소로 검색해 위치와 연락처를 확인하세요.">
+  <title>전국 터미널 안내 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'terminal/terminal-list',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.terminal' },
+      content: `
+<div class="portal-terminal-directory-page">
+  <div class="portal-terminal-directory-toolbar portal-list-toolbar">
+    <p class="portal-list-count">총 <strong id="terminal-directory-count">0</strong>건</p>
+    <div class="portal-list-select portal-terminal-directory-region-select">
+      <label class="sr-only" for="terminal-region-select">지역 구분</label>
+      <select id="terminal-region-select"></select>
+    </div>
+    <form class="portal-terminal-directory-search portal-list-search" role="search">
+      <label class="sr-only" for="terminal-query-search">터미널명과 주소 검색</label>
+      <input id="terminal-query-search" type="search" placeholder="터미널명, 주소로 검색해 보세요." autocomplete="off">
+      <button class="btn btn--icon btn--md btn--ghost" type="submit" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg></button>
+    </form>
+  </div>
+  <div class="portal-table-wrap portal-terminal-directory-table-wrap">
+    <table class="portal-data-table mobile-table--list">
+      <caption class="sr-only">전국 여객선터미널 검색 결과</caption>
+      <colgroup>
+        <col style="width: 8%;">
+        <col style="width: 21%;">
+        <col style="width: 44%;">
+        <col style="width: 13.5%;">
+        <col style="width: 13.5%;">
+      </colgroup>
+      <thead class="portal-terminal-directory-head">
+        <tr>
+          <th scope="col">지역</th>
+          <th scope="col">터미널 명</th>
+          <th scope="col">주소</th>
+          <th scope="col">위치안내</th>
+          <th scope="col">홈페이지</th>
+        </tr>
+      </thead>
+      <tbody id="terminal-directory-results"></tbody>
+    </table>
+  </div>
+  <nav class="portal-pagination" aria-label="터미널 목록 페이지" hidden></nav>
+  <p class="portal-terminal-directory-empty" role="status" hidden>검색 조건에 맞는 터미널이 없습니다.</p>
+</div>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script src="../common/terminal-regions.js"></script>
+  <script src="../common/pagination.js"></script>
+  <script src="../common/terminal-directory.js"></script>
+</body>
+</html>

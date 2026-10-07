@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="차량 선적 전 확인해야 할 준비사항을 안내합니다.">
+  <title>차량 선적 안내 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'boarding/vehicle',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.vehicle' },
+      content: `
+<section class="portal-content-block" aria-labelledby="vehicle-title">
+  <div class="portal-content-heading">
+    <h2 id="vehicle-title">차량 선적 절차</h2>
+    <p>차량 접수 장소와 마감시간은 항로·선박·터미널마다 다르므로 이용 선사의 최신 안내를 먼저 확인해 주세요.</p>
+  </div>
+  <ol class="portal-step-grid portal-step-grid-four portal-step-flow" aria-label="차량 선적 4단계">
+    <li><span>STEP 01</span><h3>차량 사전 예약</h3><p>선적 가능 차종과 요금을 확인하고 차종·차량번호를 정확하게 등록합니다. 차량은 여객 승선권과 별도로 예약이 필요할 수 있습니다.</p></li>
+    <li><span>STEP 02</span><h3>터미널 도착·접수</h3><p>선사가 안내한 차량 접수 마감시간보다 여유 있게 도착합니다. 현장 안내에 따라 동승자는 먼저 하차하고 운전자가 차량 선적 장소로 이동합니다.</p></li>
+    <li><span>STEP 03</span><h3>차량 선적</h3><p>직원의 유도에 따라 차량갑판의 지정 위치에 주차합니다. 주차 위치를 확인하고 차량 선적 확인서 등 현장에서 받은 서류를 챙겨 주세요.</p></li>
+    <li><span>STEP 04</span><h3>발권·승선 및 하선</h3><p>신분증과 승선권을 준비해 여객 승선 절차를 진행합니다. 도착 후에는 안내방송과 직원의 지시에 따라 차량으로 이동해 순서대로 하선합니다.</p></li>
+  </ol>
+</section>
+
+<section class="portal-content-block" aria-labelledby="vehicle-check-title">
+  <div class="portal-content-heading">
+    <h2 id="vehicle-check-title">선적 전 확인사항</h2>
+    <p>세부 기준은 선사별로 다를 수 있습니다. 예약 전에 이용할 선박의 차량 운송 조건을 확인해 주세요.</p>
+  </div>
+  <div class="portal-safety-list portal-vehicle-checklist">
+    <section>
+      <header><span>01</span><h3>차량 이용객 체크리스트</h3></header>
+      <ul>
+        <li><strong class="portal-content-item-title">등록 정보 확인</strong><p class="portal-content-item-description">차종·차량번호와 차량 높이 등 등록 정보를 확인해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">접수 장소·마감시간 확인</strong><p class="portal-content-item-description">차량 접수 장소와 마감시간을 출발 전에 다시 확인해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">신분증·승선권 준비</strong><p class="portal-content-item-description">운전자와 동승자 모두 신분증과 승선권을 준비해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">위험물·귀중품 점검</strong><p class="portal-content-item-description">차량 안의 위험물과 귀중품, 파손되기 쉬운 물품을 확인해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">특수 차량 제한 확인</strong><p class="portal-content-item-description">개조 차량·저상 차량·화물차 등은 선적 제한 여부를 선사에 문의해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">현장 직원 안내 준수</strong><p class="portal-content-item-description">차량갑판에서는 반드시 현장 직원의 안내에 따라 이동해 주세요.</p></li>
+      </ul>
+    </section>
+  </div>
+</section>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+
+</body>
+</html>

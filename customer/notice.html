@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="안전하고 원활한 승선을 위해 출발 전에 확인해 주세요.">
+  <title>공지사항 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script src="../common/notice-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'customer/notices',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.notices' },
+      content: `
+<div class="portal-notice-page">
+  <div class="portal-list-toolbar">
+    <p class="portal-list-count" id="notice-result-status" aria-live="polite" aria-atomic="true">총 <strong id="notice-result-count">0</strong>건</p>
+    <div class="portal-list-select">
+      <label class="sr-only" for="notice-category-select">공지 구분 선택</label>
+      <select id="notice-category-select">
+        <option value="all">전체</option>
+      </select>
+    </div>
+    <form class="portal-list-search" role="search">
+      <label class="sr-only" for="notice-search-input">공지사항 검색</label>
+      <input id="notice-search-input" type="search" placeholder="제목, 내용으로 검색해 보세요." autocomplete="off">
+      <button class="btn btn--icon btn--md btn--ghost" type="submit" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg></button>
+    </form>
+  </div>
+
+  <div class="portal-table-wrap portal-notice-table-wrap">
+    <table class="portal-data-table mobile-table--list">
+      <caption class="sr-only">구분별 공지사항 목록</caption>
+      <colgroup><col style="width: 14%;"><col style="width: 51%;"><col style="width: 17%;"><col style="width: 18%;"></colgroup>
+      <thead><tr><th scope="col">구분</th><th scope="col">제목</th><th scope="col">담당부서</th><th scope="col">등록일</th></tr></thead>
+      <tbody class="portal-notice-table-body"></tbody>
+    </table>
+  </div>
+  <nav class="portal-pagination" aria-label="공지사항 페이지" hidden></nav>
+  <p class="portal-notice-empty" role="status" hidden>검색 결과가 없습니다.</p>
+</div>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script src="../common/pagination.js"></script>
+  <script>
+    (function initializeNoticePage() {
+      const form = document.querySelector('.portal-list-search');
+      const input = document.getElementById('notice-search-input');
+      const categorySelect = document.getElementById('notice-category-select');
+      const count = document.getElementById('notice-result-count');
+      const countStatus = document.getElementById('notice-result-status');
+      const list = document.querySelector('.portal-notice-table-body');
+      const pagination = document.querySelector('.portal-pagination');
+      const emptyMessage = document.querySelector('.portal-notice-empty');
+      const terminals = window.PORTAL_NOTICE_DATA && Array.isArray(window.PORTAL_NOTICE_DATA.terminals)
+        ? window.PORTAL_NOTICE_DATA.terminals
+        : [];
+      const sortedTerminals = [...terminals]
+        .sort((a, b) => {
+          if (a.id === 'common') return -1;
+          if (b.id === 'common') return 1;
+          return a.label.localeCompare(b.label, 'ko-KR');
+        });
+      const pageSize = 10;
+      let currentPage = 1;
+      if (!form || !input || !categorySelect || !count || !list || !pagination || !emptyMessage || !terminals.length) return;
+
+      const escapeHtml = window.PortalDomUtils.escapeHtml;
+      const notices = terminals.flatMap((terminal) => terminal.notices.map((notice, noticeIndex) => ({
+        ...notice,
+        terminalId: terminal.id,
+        terminalLabel: terminal.label,
+        terminalName: terminal.name,
+        author: notice.author || terminal.team,
+        noticeId: notice.id || `${terminal.id}-${noticeIndex + 1}`
+      }))).sort((a, b) => b.date.localeCompare(a.date));
+
+      categorySelect.insertAdjacentHTML('beforeend', sortedTerminals.map((terminal) =>
+        `<option value="${escapeHtml(terminal.id)}">${escapeHtml(terminal.label)}</option>`).join(''));
+      list.innerHTML = notices.map((notice) => {
+        const datetime = notice.date.replaceAll('.', '-');
+        const badgeClass = notice.terminalId === 'common' ? ' portal-content-badge--common' : ' portal-content-badge--terminal';
+        return `<tr data-notice-terminal="${escapeHtml(notice.terminalId)}"><td><span class="portal-content-badge${badgeClass}">${escapeHtml(notice.terminalLabel)}</span></td><td class="portal-notice-table-title"><a href="notice-detail.html?id=${encodeURIComponent(notice.noticeId)}">${escapeHtml(notice.title)}</a><span class="sr-only">${escapeHtml(notice.terminalName)} ${escapeHtml(notice.category)} 공지사항</span></td><td class="portal-notice-author">${escapeHtml(notice.author)}</td><td><time datetime="${escapeHtml(datetime)}">${escapeHtml(notice.date)}</time></td></tr>`;
+      }).join('');
+      const items = [...list.querySelectorAll('tr')];
+
+      function filterNotices(resetPage = false) {
+        if (resetPage) currentPage = 1;
+        const terminalId = categorySelect.value;
+        const query = input.value.trim().toLocaleLowerCase('ko-KR');
+        const matches = items.filter((item) => {
+          const terminalMatch = terminalId === 'all' || item.dataset.noticeTerminal === terminalId;
+          return terminalMatch && (!query || item.textContent.toLocaleLowerCase('ko-KR').includes(query));
+        });
+        const totalPages = Math.ceil(matches.length / pageSize);
+        currentPage = Math.min(Math.max(currentPage, 1), Math.max(totalPages, 1));
+        const pageStart = (currentPage - 1) * pageSize;
+        const visibleItems = new Set(matches.slice(pageStart, pageStart + pageSize));
+        items.forEach((item) => { item.hidden = !visibleItems.has(item); });
+        count.textContent = String(matches.length);
+        countStatus?.setAttribute('aria-live', matches.length ? 'polite' : 'off');
+        emptyMessage.hidden = matches.length !== 0;
+        window.PortalPagination.renderPagination(pagination, currentPage, totalPages, (page) => {
+          currentPage = page;
+          filterNotices();
+          list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        filterNotices(true);
+      });
+      input.addEventListener('input', () => filterNotices(true));
+      categorySelect.addEventListener('change', () => filterNotices(true));
+      filterNotices(true);
+    }());
+  </script>
+
+</body>
+</html>

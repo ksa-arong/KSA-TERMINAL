@@ -1,12 +1,7 @@
 (function () {
   'use strict';
 
-  const escapeHtml = (value = '') => String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+  const escapeHtml = window.PortalDomUtils.escapeHtml;
 
   function render({
     align = 'center',

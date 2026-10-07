@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="환불 규정은 예매처와 이용 선사의 최신 안내를 확인해 주세요.">
+  <title>환불 규정 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'booking/refund',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.refund' },
+      // TODO: 예매처 및 선사별 공식 환불 규정 확인 후 확정 콘텐츠로 교체
+      emptyState: {
+        label: { key: 'portalSubpage.preparing' },
+        title: { key: 'portalSubpage.refundPending' },
+        href: 'https://island.theksa.co.kr/',
+        external: true,
+        linkLabel: { key: 'portalSubpage.refundAlternative' }
+      }
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+
+</body>
+</html>

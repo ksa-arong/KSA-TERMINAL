@@ -28,7 +28,7 @@
 
   function icon(name, className = '') {
     const extraClass = className ? ` ${className}` : '';
-    return `<svg class="terminal-guide-icon${extraClass}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.facilities}</svg>`;
+    return `<svg class="line-icon terminal-guide-icon${extraClass}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.facilities}</svg>`;
   }
 
   window.TerminalGuideIcons = {

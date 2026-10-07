@@ -75,14 +75,14 @@
           <button class="movement-tab" id="arrival-tab" type="button" role="tab" aria-selected="false" aria-controls="arrival-panel" tabindex="-1">${t('schedule.arrival')}</button>
         </div>
         <div class="terminal-tabs" id="terminal-filters" aria-label="${t('schedule.terminalFilterAria')}">
-          <button class="terminal-tab" type="button" data-filter="all" aria-pressed="true">${t('schedule.all')}</button>
-          ${filters.map((filter) => `<button class="terminal-tab" type="button" data-filter="${filter.id}" aria-pressed="false">${filter.label}</button>`).join('')}
+          <button class="tab-pill terminal-tab" type="button" data-filter="all" aria-pressed="true">${t('schedule.all')}</button>
+          ${filters.map((filter) => `<button class="tab-pill terminal-tab" type="button" data-filter="${filter.id}" aria-pressed="false">${filter.label}</button>`).join('')}
         </div>
       </div>
       ${hasRouteType ? `<div class="route-type-filters" id="route-type-filters" aria-label="${t('schedule.routeFilterAria')}" hidden>
         <span>${t('schedule.routeType')}</span>
-        <button class="route-type-filter" type="button" data-route-type="편도" aria-pressed="false">${t('schedule.oneWay')}</button>
-        <button class="route-type-filter" type="button" data-route-type="순환" aria-pressed="false">${t('schedule.circular')}</button>
+        <button class="tab-pill route-type-filter" type="button" data-route-type="편도" aria-pressed="false">${t('schedule.oneWay')}</button>
+        <button class="tab-pill route-type-filter" type="button" data-route-type="순환" aria-pressed="false">${t('schedule.circular')}</button>
       </div>` : ''}
       <div class="movement-panel" id="departure-panel" role="tabpanel" aria-labelledby="departure-tab">
         ${table('departure')}
@@ -92,7 +92,7 @@
         ${table('arrival')}
         ${legend()}
       </div>
-      <button class="schedule-toggle" id="schedule-toggle" type="button" aria-expanded="false">${t('schedule.expand')}</button>
+      <button class="btn btn--sm btn--outline schedule-toggle" id="schedule-toggle" type="button" aria-expanded="false">${t('schedule.expand')}</button>
     </div>`;
 
   function legend() {
@@ -100,7 +100,7 @@
   }
 
   function table(type) {
-    return `<div class="status-table-wrap"><table class="schedule-table"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">출항시간 기준 운항 현황</caption>
+    return `<div class="status-table-wrap"><table class="schedule-table mobile-table--stacked"><caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">출항시간 기준 운항 현황</caption>
       <thead><tr><th scope="col">출항시간</th><th scope="col">소요시간</th><th scope="col">항로</th><th scope="col">선사(선명)</th><th scope="col">터미널</th><th scope="col">운항상태</th></tr></thead>
       <tbody id="${type}-body"></tbody></table></div>`;
   }
@@ -150,7 +150,7 @@
 
   function rows(items, type) {
     const columnCount = 6;
-    if (!items.length) return `<tr><td colspan="${columnCount}"><div class="empty-state">표시할 운항편이 없습니다.</div></td></tr>`;
+    if (!items.length) return `<tr><td colspan="${columnCount}"><div class="empty-state" role="status">표시할 운항편이 없습니다.</div></td></tr>`;
     return items.map((item, index) => {
       const status = displayStatus(item.status);
       const pastClass = minutes(item.time) < referenceTime ? 'past-row' : '';

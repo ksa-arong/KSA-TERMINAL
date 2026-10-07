@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="해역별 기상특보와 오늘·내일·모레 및 주간 해상예보를 확인하세요.">
+  <title>기상·특보 안내 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'schedule/weather',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.weather' },
+      content: `
+<div class="portal-weather-page" data-weather-root aria-busy="false">
+<section class="portal-content-block" aria-labelledby="terminal-weather-title">
+<div class="portal-content-heading">
+  <h2 id="terminal-weather-title">터미널별 기상 안내</h2>
+</div>
+<div class="portal-list-toolbar portal-operation-toolbar portal-weather-filter-toolbar" aria-label="기상·특보 안내 조회 조건">
+  <div class="portal-operation-result-meta">
+    <p class="portal-operation-updated"><strong>기준시간</strong> <time data-weather-update aria-live="polite">-</time></p>
+  </div>
+  <div class="portal-operation-controls">
+    <div class="portal-weather-region-field">
+      <label for="weather-region-select">지역 선택</label>
+      <div class="portal-list-select">
+        <select id="weather-region-select" data-weather-area></select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="portal-weather-dashboard">
+  <section class="portal-weather-overview portal-weather-summary-card" aria-labelledby="weather-dashboard-title">
+    <h2 class="sr-only" id="weather-dashboard-title">현재 기상 요약</h2>
+    <div class="portal-weather-metric-grid portal-weather-metric-grid--summary">
+      <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--direction" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="m38 10-9 28-6-12-12-6 27-10Z"/></svg></span><span><small>풍향</small><strong data-weather-current-direction>-</strong></span></div>
+      <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--temperature" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M21 13a3 3 0 0 1 6 0v17.5a7 7 0 1 1-6 0V13Z"/><path d="M24 20v15"/></svg></span><span><small>기온</small><strong><b data-weather-current-temperature>-</b><em>℃</em></strong></span></div>
+      <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--wind" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 19h22c6 0 6-8 0-8-3 0-5 2-5 4M9 25h28c6 0 6 9 0 9-3 0-5-2-5-4M9 31h15"/></svg></span><span><small>풍속</small><strong><b data-weather-current-wind>-</b><em>m/s</em></strong></span></div>
+      <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--rain" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 8S13 23 13 31a11 11 0 0 0 22 0C35 23 24 8 24 8Z"/></svg></span><span><small>강수량</small><strong><b data-weather-current-rainfall>-</b><em>mm</em></strong></span></div>
+    </div>
+  </section>
+
+  <div class="portal-weather-feature-grid">
+    <section class="portal-weather-feature-card portal-weather-marine-card" aria-labelledby="weather-marine-title">
+      <div class="portal-weather-feature-head">
+        <div><h2 class="portal-weather-feature-title" id="weather-marine-title">해양기상</h2></div>
+      </div>
+      <div class="portal-weather-metric-grid">
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--direction" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="m38 10-9 28-6-12-12-6 27-10Z"/></svg></span><span><small>풍향</small><strong data-weather-marine-direction>-</strong></span></div>
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--wind" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 19h22c6 0 6-8 0-8-3 0-5 2-5 4M9 25h28c6 0 6 9 0 9-3 0-5-2-5-4M9 31h15"/></svg></span><span><small>풍속</small><strong><b data-weather-marine-wind>-</b><em>m/s</em></strong></span></div>
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--wave" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 18c3-3 6-3 9 0s6 3 9 0 6-3 9 0 6 3 9 0M7 25c3-3 6-3 9 0s6 3 9 0 6-3 9 0 6 3 9 0M7 32c3-3 6-3 9 0s6 3 9 0 6-3 9 0 6 3 9 0"/></svg></span><span><small>최대파고</small><strong><b data-weather-marine-max-wave>-</b><em>m</em></strong></span></div>
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--swell" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 18c3-3 6-3 9 0s6 3 9 0 6-3 9 0 6 3 9 0M7 25c3-3 6-3 9 0s6 3 9 0 6-3 9 0 6 3 9 0M7 32c3-3 6-3 9 0s6 3 9 0 6-3 9 0 6 3 9 0"/></svg></span><span><small>유의파고</small><strong><b data-weather-marine-wave>-</b><em>m</em></strong></span></div>
+      </div>
+    </section>
+
+    <section class="portal-weather-feature-card portal-weather-observation-card" aria-labelledby="weather-observation-title">
+      <div class="portal-weather-feature-head"><div><h2 class="portal-weather-feature-title" id="weather-observation-title">해무기상 관측정보</h2></div></div>
+      <div class="portal-weather-metric-grid">
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--visibility" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 30h32M12 36h24M18 24h12M24 10v10M19 14h10M17 20h14"/></svg></span><span><small>시정</small><strong><b data-weather-visibility>-</b><em>m</em></strong></span></div>
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--wind" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 19h22c6 0 6-8 0-8-3 0-5 2-5 4M9 25h28c6 0 6 9 0 9-3 0-5-2-5-4M9 31h15"/></svg></span><span><small>풍속</small><strong><b data-weather-observation-wind>-</b><em>m/s</em></strong></span></div>
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--temperature" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M21 13a3 3 0 0 1 6 0v17.5a7 7 0 1 1-6 0V13Z"/><path d="M24 20v15"/></svg></span><span><small>기온</small><strong><b data-weather-observation-temperature>-</b><em>℃</em></strong></span></div>
+        <div class="portal-weather-metric"><span class="portal-weather-metric-icon portal-weather-metric-icon--pressure" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="15"/><path d="M24 24 31 18"/></svg></span><span><small>기압</small><strong><b data-weather-pressure>-</b><em>hPa</em></strong></span></div>
+      </div>
+    </section>
+  </div>
+
+</div>
+</section>
+
+<section class="portal-content-block" aria-labelledby="weather-advisory-title">
+  <div class="portal-content-heading">
+    <h2 id="weather-advisory-title">기상특보</h2>
+  </div>
+  <div class="portal-weather-advisory-list" data-weather-advisory-list aria-live="polite"></div>
+</section>
+</div>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script src="../common/weather-data.js"></script>
+  <script src="../common/portal-weather.js"></script>
+</body>
+</html>

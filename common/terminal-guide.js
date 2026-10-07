@@ -40,12 +40,7 @@
     return;
   }
 
-  const escapeHtml = (value = '') => String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+  const escapeHtml = window.PortalDomUtils.escapeHtml;
 
   const iconPaths = {
     pin: '<path d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/>',
@@ -74,7 +69,7 @@
   };
 
   function icon(name, className = '') {
-    return `<svg class="terminal-guide-icon ${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name] || iconPaths.facilities}</svg>`;
+    return `<svg class="line-icon terminal-guide-icon ${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name] || iconPaths.facilities}</svg>`;
   }
 
   const parkingRows = [
@@ -108,11 +103,11 @@
             <div><dt>대중교통</dt><dd>${escapeHtml(guide.transit.bus)}</dd></div>
             <div><dt>자가용</dt><dd>${escapeHtml(guide.transit.car)}</dd></div>
           </dl>
-          <a class="terminal-map-link" href="${mapUrl}" target="_blank" rel="noopener noreferrer">지도 보기 <span aria-hidden="true">→</span></a>
+          <a class="btn btn--md btn--outline terminal-map-link" href="${mapUrl}" target="_blank" rel="noopener noreferrer">지도 보기 <span aria-hidden="true">→</span></a>
         </article>
         <article class="terminal-guide-card" id="terminal-guide-parking">
           <div class="terminal-guide-card-title">${icon('parking')}<h3>주차 안내</h3></div>
-          <div class="terminal-parking-table-wrap"><table class="terminal-parking-table"><caption class="sr-only">주차 요금 안내</caption><tbody>${parkingRows}</tbody></table></div>
+          <div class="terminal-parking-table-wrap"><table class="terminal-parking-table mobile-table--default"><caption class="sr-only">주차 요금 안내</caption><tbody>${parkingRows}</tbody></table></div>
           <dl class="terminal-guide-details terminal-guide-details-inline">
             <div><dt>주차 규모</dt><dd>${escapeHtml(guide.parking.capacity)}</dd></div>
             <div><dt>이용 시간</dt><dd>${escapeHtml(guide.parking.hours)}</dd></div>

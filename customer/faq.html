@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="터미널·예약·승선·유실물 관련 자주 묻는 질문을 확인하세요.">
+  <title>자주 묻는 질문 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'customer/faq',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.faq' },
+      content: `
+<div class="portal-faq-page">
+  <div class="portal-list-content">
+    <form class="portal-list-search" role="search">
+      <label class="sr-only" for="faq-search-input">자주 묻는 질문 검색</label>
+      <input id="faq-search-input" type="search" placeholder="궁금하신 내용을 검색해보세요" autocomplete="off">
+      <button class="btn btn--icon btn--md btn--ghost" type="submit" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg></button>
+    </form>
+
+    <div class="portal-faq-categories" role="tablist" aria-label="자주 묻는 질문 카테고리">
+      <button class="tab-pill portal-faq-category" id="faq-tab-all" type="button" role="tab" aria-selected="true" aria-controls="faq-panel-all" data-faq-category="all">전체</button>
+      <button class="tab-pill portal-faq-category" id="faq-tab-terminal" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-terminal" data-faq-category="terminal" tabindex="-1">터미널</button>
+      <button class="tab-pill portal-faq-category" id="faq-tab-booking" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-booking" data-faq-category="booking" tabindex="-1">예약</button>
+      <button class="tab-pill portal-faq-category" id="faq-tab-boarding" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-boarding" data-faq-category="boarding" tabindex="-1">승선</button>
+      <button class="tab-pill portal-faq-category" id="faq-tab-lost-found" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-lost-found" data-faq-category="lost-found" tabindex="-1">유실물</button>
+    </div>
+
+    <section class="portal-faq-panel" id="faq-panel-all" role="tabpanel" aria-labelledby="faq-tab-all">
+      <div class="portal-faq-list"></div>
+    </section>
+
+    <section class="portal-faq-panel" id="faq-panel-terminal" role="tabpanel" aria-labelledby="faq-tab-terminal" hidden>
+      <div class="portal-faq-list">
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>터미널 이용 시 주의사항이 있나요?</span></summary>
+          <p>기상 상황, 조석, 선박 사정에 따라 출항 여부와 시간이 예고 없이 변경될 수 있으니 터미널 방문 전 여객선사나 포털의 실시간 안내를 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>터미널 위치와 주차 정보는 어디에서 확인하나요?</span></summary>
+          <p>전국 주요 터미널 지도에서 지역과 터미널을 선택하면 위치와 기본 정보를 확인할 수 있습니다. 주차 운영과 요금은 이용 전에 해당 터미널로 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>터미널 운영시간은 모두 같은가요?</span></summary>
+          <p>터미널과 운항 일정에 따라 운영시간이 다를 수 있습니다. 이용할 터미널의 안내와 당일 선사 운항정보를 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>터미널 안의 편의시설은 어디에서 확인하나요?</span></summary>
+          <p>각 터미널 홈페이지의 시설 안내에서 대합실과 편의시설 정보를 확인해 주세요. 운영 여부는 현장 사정에 따라 달라질 수 있습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>교통약자 이용 지원을 받을 수 있나요?</span></summary>
+          <p>지원 시설과 이용 방법은 터미널마다 다를 수 있습니다. 필요한 지원이 있다면 방문 전에 터미널 또는 이용 선사에 문의해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>대중교통으로 터미널에 가는 방법은 어디에서 확인하나요?</span></summary>
+          <p>터미널별 오시는 길에서 주소와 교통 안내를 확인해 주세요. 출발 전 최신 노선과 운행시간도 함께 확인하는 것이 좋습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">터미널</span><span>운항이 지연되면 어디에서 기다려야 하나요?</span></summary>
+          <p>터미널 현장 안내방송과 여객선사의 안내를 따라 주세요. 변경된 탑승 장소와 출항 예정 시각도 함께 확인해 주세요.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="portal-faq-panel" id="faq-panel-booking" role="tabpanel" aria-labelledby="faq-tab-booking" hidden>
+      <div class="portal-faq-list">
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>예매 변경이나 환불은 어디에 문의하나요?</span></summary>
+          <p>예매를 진행한 여객선사 또는 예매처로 직접 문의해 주셔야 합니다. 터미널 포털은 예매 업무를 대행하지 않습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>여객선 승선권은 어디에서 예매하나요?</span></summary>
+          <p>포털의 여객선 예매 메뉴 또는 이용하려는 여객선사의 공식 예매처에서 항로와 일정을 확인한 뒤 예매해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>운임과 할인 기준은 어디에서 확인하나요?</span></summary>
+          <p>운임과 할인 기준은 항로·선박·이용 조건에 따라 다를 수 있습니다. 예매처 또는 여객선사의 최신 안내를 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>예매가 정상적으로 완료됐는지 어떻게 확인하나요?</span></summary>
+          <p>이용한 예매처의 예약 조회와 결제 내역을 확인해 주세요. 확인이 어렵다면 예매처 또는 여객선사에 문의해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>승선자 정보를 잘못 입력했어요.</span></summary>
+          <p>승선자 정보 변경 가능 여부는 예매처와 선사 기준에 따라 다릅니다. 출발 전에 예매처 또는 여객선사에 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>출발 당일에도 예매할 수 있나요?</span></summary>
+          <p>잔여 좌석과 예매 마감시간에 따라 가능 여부가 달라집니다. 이용할 항로의 예매 화면과 여객선사 안내를 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>단체 승선권은 어떻게 예약하나요?</span></summary>
+          <p>단체 예약 기준과 접수 방법은 여객선사마다 다를 수 있으므로 이용하려는 선사에 직접 문의해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">예약</span><span>차량도 함께 실을 수 있나요?</span></summary>
+          <p>차량을 선적할 수 있는 차도선에서만 가능합니다. 차종별 선적 제한과 요금이 다르므로 예약 전에 해당 선사에 문의해 주세요.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="portal-faq-panel" id="faq-panel-boarding" role="tabpanel" aria-labelledby="faq-tab-boarding" hidden>
+      <div class="portal-faq-list">
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>출항 몇 분 전까지 도착해야 하나요?</span></summary>
+          <p>노선과 선박, 차량 선적 여부에 따라 접수 및 개찰 마감 시간이 달라집니다. 승선권과 선사 안내의 마감 시간을 확인하고 여유 있게 도착해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>당일 운항 여부는 어떻게 확인하나요?</span></summary>
+          <p>이용 터미널의 실시간 운항정보와 해당 여객선사의 안내를 함께 확인해 주세요. 기상이나 선박 사정으로 예고 없이 변경될 수 있습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>운항 상태 용어의 뜻은 무엇인가요?</span></summary>
+          <ul class="portal-faq-term-list">
+            <li><strong>통제</strong><span>기상 악화 등으로 운항하지 않는 상태</span></li>
+            <li><strong>결항</strong><span>예정된 운항이 선박 사정이나 점검 등으로 취소된 상태</span></li>
+            <li><strong>휴항</strong><span>운항 일정상 해당 날짜에 운항하지 않는 상태</span></li>
+            <li><strong>안개대기</strong><span>안개로 인해 대기 중이며 안개가 걷힌 뒤 출항 여부를 확인하는 상태</span></li>
+            <li><strong>추후결정</strong><span>기상 상황을 더 지켜본 뒤 출항 여부를 결정하는 상태</span></li>
+          </ul>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>신분증은 꼭 지참해야 하나요?</span></summary>
+          <p>네. 승선자 전원의 신분 확인 수단을 지참해야 합니다. 연령과 이용 선사에 따라 요구사항이 다를 수 있으므로 출발 전에 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>수하물은 얼마나 가져갈 수 있나요?</span></summary>
+          <p>수하물 허용 기준은 선박과 여객선사에 따라 다를 수 있습니다. 크기·무게 제한과 별도 요금 여부를 출발 전에 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>미성년자는 어떤 확인 서류가 필요한가요?</span></summary>
+          <p>연령과 이용 선사에 따라 인정되는 신분 확인 서류가 다를 수 있습니다. 예매처와 선사의 최신 안내를 확인해 준비해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>승선권을 출력해서 가져가야 하나요?</span></summary>
+          <p>모바일 승선권과 현장 발권 이용 여부는 항로와 선사에 따라 다릅니다. 예매 완료 안내에 표시된 발권 방법을 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">승선</span><span>반려동물과 함께 승선할 수 있나요?</span></summary>
+          <p>반려동물 동반 기준과 이동장 사용 여부는 선박과 선사별로 다릅니다. 예약 전에 이용 선사에 확인해 주세요.</p>
+        </details>
+
+      </div>
+    </section>
+
+    <section class="portal-faq-panel" id="faq-panel-lost-found" role="tabpanel" aria-labelledby="faq-tab-lost-found" hidden>
+      <div class="portal-faq-list">
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>터미널에서 물건을 잃어버리면 어디에 문의하나요?</span></summary>
+          <p>이용한 터미널의 고객안내센터 또는 유실물센터에 문의해 주세요. 터미널별 위치와 연락처는 <a href="lost-found.html">유실물 안내</a>에서 확인할 수 있습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>선박 안에서 잃어버린 물건도 터미널에 문의하나요?</span></summary>
+          <p>선박 안에서 분실한 경우에는 이용한 여객선사에 먼저 문의해 주세요. 선박에서 습득된 물품이 터미널로 전달되었을 수 있으므로 터미널 고객안내센터에도 함께 확인하는 것이 좋습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>유실물을 문의할 때 어떤 정보를 알려야 하나요?</span></summary>
+          <p>이용 날짜와 시간, 터미널명, 항로와 선박명, 분실 장소, 물품의 종류·색상·특징을 가능한 한 자세히 알려 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>보관 중인 물건을 찾으려면 무엇이 필요한가요?</span></summary>
+          <p>본인 확인이 가능한 신분증을 준비해 주세요. 물품의 특징이나 분실 당시 상황 등 소유자 확인에 필요한 추가 정보를 요청받을 수 있습니다.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>가족이나 대리인이 대신 수령할 수 있나요?</span></summary>
+          <p>대리 수령 가능 여부와 필요한 서류는 보관 기관마다 다릅니다. 방문 전에 해당 터미널 유실물센터에 문의해 위임장과 신분증 등 준비 서류를 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>유실물은 얼마나 오래 보관하나요?</span></summary>
+          <p>보관기간과 이후 처리 절차는 물품 종류와 관리기관 기준에 따라 다릅니다. 귀중품은 일정 기간 후 경찰서로 인계될 수 있으므로 해당 터미널에 보관 상태를 확인해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>음식물이나 부패하기 쉬운 물품도 보관하나요?</span></summary>
+          <p>음식물처럼 부패·악취·해충 우려가 있는 물품은 일반 물품보다 짧게 보관한 뒤 폐기될 수 있습니다. 발견 즉시 터미널에 문의해 주세요.</p>
+        </details>
+        <details>
+          <summary><span class="portal-content-badge">유실물</span><span>습득한 물건은 어디에 맡기면 되나요?</span></summary>
+          <p>가까운 터미널 안내데스크나 고객안내센터에 전달해 주세요. 장소와 시간을 함께 알려 주면 접수와 소유자 확인에 도움이 됩니다.</p>
+        </details>
+      </div>
+    </section>
+
+    <nav class="portal-pagination" aria-label="자주 묻는 질문 페이지" hidden></nav>
+    <p class="portal-faq-empty" role="status" hidden>검색 결과가 없습니다.</p>
+  </div>
+</div>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script src="../common/pagination.js"></script>
+  <script>
+    (function initializeFaqCategories() {
+      const form = document.querySelector('.portal-list-search');
+      const input = document.getElementById('faq-search-input');
+      const emptyMessage = document.querySelector('.portal-faq-empty');
+      const pagination = document.querySelector('.portal-pagination');
+      const allList = document.querySelector('#faq-panel-all .portal-faq-list');
+      const sourceQuestions = document.querySelectorAll('.portal-faq-panel:not(#faq-panel-all) details');
+      const tabs = [...document.querySelectorAll('.portal-faq-category')];
+      const pageSize = 10;
+      let currentPage = 1;
+      if (!form || !input || !allList || !pagination || !tabs.length) return;
+
+      function decorateAnswer(question) {
+        const answerNodes = [...question.children].filter((node) => node.matches('p, .portal-faq-term-list'));
+        if (!answerNodes.length) return;
+        const answerBox = document.createElement('div');
+        const answerContent = document.createElement('div');
+        answerBox.className = 'portal-answer-box portal-faq-answer';
+        answerContent.className = 'portal-answer-content';
+        answerNodes.forEach((node) => answerContent.appendChild(node));
+        answerBox.appendChild(answerContent);
+        question.appendChild(answerBox);
+      }
+
+      sourceQuestions.forEach((question) => {
+        decorateAnswer(question);
+        allList.appendChild(question.cloneNode(true));
+      });
+
+      function activePanel() {
+        const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+        return activeTab ? document.getElementById(activeTab.getAttribute('aria-controls')) : null;
+      }
+
+      function filterQuestions(resetPage = false) {
+        if (resetPage) currentPage = 1;
+        const query = input.value.trim().toLocaleLowerCase('ko-KR');
+        const panel = activePanel();
+        if (!panel) return;
+        const questions = [...panel.querySelectorAll('details')];
+        const matches = questions.filter((item) => {
+          const searchableText = [...item.querySelectorAll('summary, .portal-answer-content')]
+            .map((node) => node.textContent)
+            .join(' ')
+            .toLocaleLowerCase('ko-KR');
+          return !query || searchableText.includes(query);
+        });
+        const totalPages = Math.ceil(matches.length / pageSize);
+        currentPage = Math.min(Math.max(currentPage, 1), Math.max(totalPages, 1));
+        const pageStart = (currentPage - 1) * pageSize;
+        const visibleQuestions = new Set(matches.slice(pageStart, pageStart + pageSize));
+
+        questions.forEach((item) => {
+          item.hidden = !visibleQuestions.has(item);
+          if (item.hidden) item.open = false;
+        });
+        emptyMessage.hidden = matches.length !== 0;
+        window.PortalPagination.renderPagination(pagination, currentPage, totalPages, (page) => {
+          currentPage = page;
+          filterQuestions();
+          activePanel()?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
+      function activateTab(activeTab, focusTab) {
+        tabs.forEach((tab) => {
+          const selected = tab === activeTab;
+          const panel = document.getElementById(tab.getAttribute('aria-controls'));
+          tab.setAttribute('aria-selected', String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          if (panel) panel.hidden = !selected;
+        });
+        filterQuestions(true);
+        if (focusTab) activeTab.focus();
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activateTab(tab, false));
+        tab.addEventListener('keydown', (event) => {
+          let nextIndex = index;
+          if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') nextIndex = 0;
+          else if (event.key === 'End') nextIndex = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          activateTab(tabs[nextIndex], true);
+        });
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        filterQuestions(true);
+      });
+      input.addEventListener('input', () => filterQuestions(true));
+      filterQuestions(true);
+    }());
+  </script>
+</body>
+</html>

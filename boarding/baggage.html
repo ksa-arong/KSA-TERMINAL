@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="수하물 허용 기준과 반입 제한 품목 확인 방법을 안내합니다.">
+  <title>수하물 규정 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'boarding/baggage',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.baggage' },
+      content: `
+<section class="portal-content-block" aria-labelledby="baggage-title">
+<div class="portal-content-heading">
+          <h2 id="baggage-title">수하물 안내</h2>
+          <p>수하물 허용 크기와 무게, 반입 제한 품목은 선박과 선사별로 다를 수 있습니다.</p>
+        </div>
+        <div class="portal-guide-card-grid">
+          <article class="portal-guide-card"><span>01</span><h3>휴대 수하물</h3><p>통행과 비상 대피에 방해되지 않도록 지정된 장소에 보관해 주세요.</p></article>
+          <article class="portal-guide-card"><span>02</span><h3>대형 수하물</h3><p>자전거, 낚시 장비 등 대형 물품은 예약 전 선적 가능 여부와 비용을 확인해 주세요.</p></article>
+          <article class="portal-guide-card"><span>03</span><h3>반입 제한 품목</h3><p>위험물과 인화성 물질 등은 반입이 제한됩니다. 불확실한 품목은 선사에 문의해 주세요.</p></article>
+        </div>
+</section>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+
+</body>
+</html>

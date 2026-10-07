@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="지도에서 지역을 선택해 터미널 정보를 확인하세요.">
+  <title>지도로 찾기 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'terminal/map-search',
+      rootPrefix: '../',
+      description: { key: 'portalSubpage.description.map' },
+      content: `
+<section class="portal-content-block portal-map-page" aria-labelledby="map-page-content-title">
+  <div class="portal-content-heading">
+    <h2 id="map-page-content-title">지역별 터미널 찾기</h2>
+  </div>
+  <div data-portal-map-root data-root-prefix="../"></div>
+</section>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script src="../common/portal-data.js"></script>
+  <script src="../common/portal-map.js"></script>
+  <script src="../common/portal.js"></script>
+</body>
+</html>

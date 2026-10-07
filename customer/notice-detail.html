@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="전국 여객선터미널 공지사항 상세 내용입니다.">
+  <title>공지사항 상세 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script src="../common/notice-data.js"></script>
+  <script>
+    (function () {
+      const id = new URLSearchParams(location.search).get('id') || '';
+      const terminals = window.PORTAL_NOTICE_DATA?.terminals || [];
+      const all = terminals.flatMap((terminal) => terminal.notices.map((notice, index) => ({
+        ...notice, id: notice.id || `${terminal.id}-${index + 1}`, terminalId: terminal.id, terminalLabel: terminal.label,
+        terminalName: terminal.name, author: notice.author || terminal.team, views: notice.views || 120 + index * 17
+      }))).sort((a, b) => b.date.localeCompare(a.date));
+      const notice = all.find((item) => item.id === id) || all[0];
+      const esc = (value = '') => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+      const currentIndex = notice ? all.findIndex((item) => item.id === notice.id) : -1;
+      const previousNotice = currentIndex > 0 ? all[currentIndex - 1] : null;
+      const nextNotice = currentIndex >= 0 && currentIndex < all.length - 1 ? all[currentIndex + 1] : null;
+      const siblingLink = (label, item) => item
+        ? `<a href="notice-detail.html?id=${encodeURIComponent(item.id)}"><span>${label}</span><strong>${esc(item.title)}</strong></a>`
+        : `<span class="is-disabled" aria-disabled="true"><span>${label}</span><strong>게시글이 없습니다.</strong></span>`;
+      window.PORTAL_SUBPAGE_DATA = {
+        menuId: 'customer/notices', rootPrefix: '../', title: '공지사항',
+        description: '전국 여객선터미널 공지사항입니다.',
+        content: notice ? `<article class="portal-notice-detail"><header><span class="portal-content-badge${notice.terminalId === 'common' ? ' portal-content-badge--common' : ' portal-content-badge--terminal'}">${esc(notice.terminalLabel)}</span><h2>${esc(notice.title)}</h2><dl><div><dt>작성자</dt><dd>${esc(notice.author)}</dd></div><div><dt>날짜</dt><dd>${esc(notice.date)}</dd></div><div><dt>조회수</dt><dd>${esc(notice.views)}</dd></div></dl></header><div class="portal-notice-detail-body"><p>${esc(notice.title)} 관련 안내입니다.</p><p>세부 내용은 해당 터미널 또는 작성 부서에 확인해 주세요.</p></div><nav class="portal-notice-detail-nav" aria-label="이전글과 다음글">${siblingLink('이전글', previousNotice)}${siblingLink('다음글', nextNotice)}</nav><div class="portal-notice-detail-actions"><a class="btn btn--md btn--outline" href="notice.html">목록으로</a></div></article>` : '<p class="portal-notice-detail-empty" role="status">공지사항을 찾을 수 없습니다.</p>'
+      };
+    }());
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+</body>
+</html>

@@ -6,12 +6,7 @@
   const icons = window.TerminalGuideIcons;
   if (!data || !root || !icons) return;
 
-  const escapeHtml = (value = '') => String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+  const escapeHtml = window.PortalDomUtils.escapeHtml;
 
   const items = [
     ['directions', '오시는 길', 'directions'],
@@ -28,10 +23,10 @@
   if (!guide) {
     root.innerHTML = `
       <section class="guide-page-hero"><div class="container">
-        <nav class="guide-breadcrumb" aria-label="현재 위치"><a href="./index.html">홈</a><span aria-hidden="true">›</span><span>터미널 이용안내</span></nav>
+        <nav class="guide-breadcrumb" aria-label="현재 위치"><a href="./index.html" aria-label="홈">홈</a><span aria-hidden="true">›</span><span aria-current="page">터미널 이용안내</span></nav>
         <p class="section-kicker">TERMINAL GUIDE</p><h1>터미널 이용안내</h1>
       </div></section>
-      <div class="container guide-empty"><p>현재 준비된 터미널 이용안내가 없습니다.</p><a class="guide-back-link" href="./index.html">메인으로 돌아가기</a></div>`;
+      <div class="container guide-empty" role="status"><p>현재 준비된 터미널 이용안내가 없습니다.</p><a class="btn btn--md btn--outline guide-back-link" href="./index.html">메인으로 돌아가기</a></div>`;
     return;
   }
 
@@ -68,7 +63,7 @@
   root.innerHTML = `
     <section class="guide-page-hero" aria-labelledby="guide-page-title">
       <div class="container">
-        <nav class="guide-breadcrumb" aria-label="현재 위치"><a href="./index.html">홈</a><span aria-hidden="true">›</span><span>터미널 이용안내</span></nav>
+        <nav class="guide-breadcrumb" aria-label="현재 위치"><a href="./index.html" aria-label="홈">홈</a><span aria-hidden="true">›</span><span aria-current="page">터미널 이용안내</span></nav>
         <p class="section-kicker">TERMINAL GUIDE</p>
         <h1 id="guide-page-title">터미널 이용안내</h1>
         <p>${escapeHtml(data.name)} 방문 전에 필요한 이용 정보를 확인하세요.</p>
@@ -85,7 +80,7 @@
           ${heading('directions', '오시는 길', 'directions')}
           <div class="guide-directions-summary">
             <div><span>터미널 주소</span><strong>${escapeHtml(guide.address || data.address)}</strong></div>
-            <a class="terminal-map-link" href="${mapUrl}" target="_blank" rel="noopener noreferrer">카카오맵에서 보기 <span aria-hidden="true">↗</span></a>
+            <a class="btn btn--md btn--outline terminal-map-link" href="${mapUrl}" target="_blank" rel="noopener noreferrer">카카오맵에서 보기 <span aria-hidden="true">↗</span></a>
           </div>
           <div class="guide-transit-grid">
             <article class="guide-transit-block">
@@ -103,7 +98,7 @@
         </section>
         <section class="guide-detail-section" id="parking">
           ${heading('parking', '주차 안내', 'parking')}
-          <div class="terminal-parking-table-wrap"><table class="terminal-parking-table"><caption class="sr-only">주차 요금 안내</caption><tbody>${parkingRows}</tbody></table></div>
+          <div class="terminal-parking-table-wrap"><table class="terminal-parking-table mobile-table--default"><caption class="sr-only">주차 요금 안내</caption><tbody>${parkingRows}</tbody></table></div>
           <dl class="terminal-guide-details terminal-guide-details-inline">
             <div><dt>주차 규모</dt><dd>${escapeHtml(guide.parking?.capacity || '안내 준비 중')}</dd></div>
             <div><dt>이용 시간</dt><dd>${escapeHtml(guide.parking?.hours || '안내 준비 중')}</dd></div>
@@ -139,7 +134,7 @@
           ${heading('faq', '자주 묻는 질문', 'faq')}
           <div class="guide-faq-list">${faqMarkup}</div>
         </section>
-        <a class="guide-back-link" href="./index.html"><span aria-hidden="true">←</span> 메인으로 돌아가기</a>
+        <a class="btn btn--md btn--outline guide-back-link" href="./index.html"><span aria-hidden="true">←</span> 메인으로 돌아가기</a>
       </div>
     </div>`;
 })();

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="문의게시판 작성글을 확인합니다.">
+  <title>문의글 확인 | 전국 여객선터미널</title>
+  <link rel="stylesheet" href="../common/style.css">
+</head>
+<body class="portal-page portal-subpage">
+  <div id="app"></div>
+  <script src="../common/locales/ko.js"></script>
+  <script src="../common/locales/en.js"></script>
+  <script src="../common/i18n.js"></script>
+  <script src="../common/menu-data.js"></script>
+  <script src="../common/inquiry-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      menuId: 'customer/inquiry',
+      rootPrefix: '../',
+      title: '문의글 확인',
+      description: '등록된 문의 내용과 답변 상태를 확인할 수 있습니다.',
+      content: `
+<div class="portal-inquiry-detail-page">
+  <section class="portal-inquiry-detail" id="inquiry-detail" aria-live="polite"></section>
+  <section class="portal-inquiry-missing" id="inquiry-missing" role="status" hidden>
+    <h2>문의글을 찾을 수 없습니다.</h2>
+    <p>삭제되었거나 잘못된 주소로 접근했습니다.</p>
+    <a class="btn btn--md btn--outline" href="inquiry.html">목록으로</a>
+  </section>
+</div>`
+    };
+  </script>
+  <script src="../common/dom-utils.js"></script>
+  <script src="../common/layout.js"></script>
+  <script>
+    (function initializeInquiryDetail() {
+      const storageKey = 'ksa-terminal-inquiries';
+      const detail = document.getElementById('inquiry-detail');
+      const missing = document.getElementById('inquiry-missing');
+      const inquiryId = new URLSearchParams(window.location.search).get('id');
+      const escapeHtml = window.PortalDomUtils.escapeHtml;
+
+      function loadLocalItems() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          return Array.isArray(saved) ? saved : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      const localInquiries = loadLocalItems();
+      const inquiries = [...localInquiries, ...(window.PORTAL_INQUIRY_DATA || [])];
+      const inquiry = inquiries.find((item) => String(item.id) === String(inquiryId));
+      const isEditable = localInquiries.some((item) => String(item.id) === String(inquiryId));
+      if (!inquiry) {
+        detail.hidden = true;
+        missing.hidden = false;
+        return;
+      }
+
+      if (sessionStorage.getItem('ksa-inquiry-authorized-id') !== String(inquiryId)) {
+        window.location.replace(`inquiry.html?unlock=${encodeURIComponent(inquiryId)}`);
+        return;
+      }
+
+      function renderDetail() {
+        const statusClass = inquiry.status === '답변완료' ? ' is-complete' : ' is-waiting';
+        const categoryLabel = inquiry.category === '터미널 이용' ? '터미널' : inquiry.category;
+        const useInformation = [
+          inquiry.terminal && `<div><dt>이용 터미널</dt><dd>${escapeHtml(inquiry.terminal)}</dd></div>`,
+          inquiry.travelDetails && `<div><dt>선박 이용 정보</dt><dd>${escapeHtml(inquiry.travelDetails)}</dd></div>`
+        ].filter(Boolean).join('');
+        const attachment = inquiry.attachmentName
+          ? `<div class="portal-inquiry-detail-attachment"><strong>첨부파일</strong><span>${escapeHtml(inquiry.attachmentName)}</span></div>`
+          : '';
+        const answer = inquiry.answer
+          ? `<section class="portal-answer-box portal-inquiry-answer"><div class="portal-answer-label">답변</div><div class="portal-answer-content"><h3>문의하신 내용에 답변드립니다.</h3><p>${escapeHtml(inquiry.answer)}</p></div></section>`
+          : `<section class="portal-answer-box portal-inquiry-answer is-waiting"><div class="portal-answer-label">대기</div><div class="portal-answer-content"><h3>답변을 준비하고 있습니다.</h3><p>담당자가 문의 내용을 확인한 뒤 답변을 등록할 예정입니다.</p></div></section>`;
+        detail.innerHTML = `<article>
+          <header>
+            <div class="portal-inquiry-detail-meta-top"><span class="portal-content-badge portal-inquiry-category-badge">${escapeHtml(categoryLabel)}</span><span class="portal-inquiry-status-text${statusClass}">${escapeHtml(inquiry.status)}</span></div>
+            <h2 tabindex="-1">${escapeHtml(inquiry.title)}</h2>
+            <dl><div><dt>작성자</dt><dd>${escapeHtml(inquiry.author)}</dd></div><div><dt>등록일</dt><dd>${escapeHtml(inquiry.date)}</dd></div></dl>
+          </header>
+          ${useInformation ? `<dl class="portal-inquiry-use-summary">${useInformation}</dl>` : ''}
+          <div class="portal-inquiry-detail-body"><p>${escapeHtml(inquiry.content || '문의 내용이 등록되어 있습니다.')}</p>${attachment}</div>
+          ${answer}
+          <div class="portal-inquiry-detail-actions"><a class="btn btn--md btn--outline" href="inquiry.html">목록으로</a>${isEditable ? `<a class="btn btn--md btn--solid" href="inquiry-write.html?edit=${encodeURIComponent(inquiry.id)}">수정</a>` : ''}</div>
+        </article>`;
+        detail.querySelector('h2').focus({ preventScroll: true });
+      }
+      renderDetail();
+    }());
+  </script>
+</body>
+</html>
