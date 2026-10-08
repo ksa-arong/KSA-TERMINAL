@@ -781,11 +781,6 @@ section {
     flex-direction: column;
 }
 
-.section-title--center {
-    align-items: center;
-    text-align: center;
-}
-
 .section-title--left {
     align-items: flex-start;
     text-align: left;
