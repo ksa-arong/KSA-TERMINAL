@@ -38,7 +38,7 @@
         { region: '포항', name: '울릉(사동)항 여객선터미널', address: '경북 울릉군 울릉읍 울릉순환로 785-25' },
         { region: '동해', name: '속초항 여객선터미널', address: '강원특별자치도 속초시 설악금강대교로 230' },
         { region: '동해', name: '동해항 국제여객터미널', address: '강원특별자치도 속초시 설악금강대교로 136-58' }
-    ].sort((a, b) => a.region.localeCompare(b.region, 'ko-KR'));
+    ];
     const homepageByRegion = {
         '보령': 'https://www.shinhanhewoon.com/',
         '군산': 'http://www.shidaoferry.com/',
@@ -50,23 +50,23 @@
         '포항': 'https://www.daezer.com/',
         '동해': 'https://www.dwship.co.kr/'
     };
-    const regionFolderByName = {
-        '군산': 'gunsan',
-        '목포': 'mokpo',
-        '완도': 'wando',
-        '여수': 'yeosu',
-        '제주': 'jeju',
-        '통영': 'tongyeong',
-        '포항': 'pohang'
-    };
-    const regionStatusByName = Object.fromEntries(
-        Object.entries(regionFolderByName).map(([region, folder]) => [
-            region,
-            window.getPortalRegionStatus?.(folder)
-        ])
+    const registry = window.PORTAL_REGION_REGISTRY || [];
+    const regionByNameKo = window.PORTAL_REGION_BY_NAME_KO || {};
+    window.validatePortalRegionKeys?.(
+        'common/terminal-directory.js homepageByRegion',
+        Object.keys(homepageByRegion).map((name) => regionByNameKo[name]?.key || name)
     );
+    const terminalRegionKeys = terminals.map((terminal) => regionByNameKo[terminal.region]?.key || terminal.region);
+    window.validatePortalRegionKeys?.('common/terminal-directory.js terminals', terminalRegionKeys);
     terminals.forEach((terminal) => {
-        if (regionStatusByName[terminal.region] === 'preparing') terminal.verified = false;
+        const definition = regionByNameKo[terminal.region];
+        terminal.regionKey = definition?.key || '';
+        if (definition?.status === 'preparing') terminal.verified = false;
+    });
+    terminals.sort((a, b) => {
+        const orderDifference = (regionByNameKo[a.region]?.order || Number.MAX_SAFE_INTEGER)
+            - (regionByNameKo[b.region]?.order || Number.MAX_SAFE_INTEGER);
+        return orderDifference || a.name.localeCompare(b.name, 'ko-KR');
     });
     const normalize = (value) => String(value || '').trim().toLocaleLowerCase('ko-KR').replace(/\s+/g, ' ');
 
@@ -76,10 +76,8 @@
     regionSelect.append(allOption);
     const terminalRegions = Array.isArray(window.PORTAL_TERMINAL_REGIONS)
         ? window.PORTAL_TERMINAL_REGIONS
-        : [...new Set(terminals.map((terminal) => terminal.region))];
-    [...terminalRegions]
-      .sort((a, b) => a.localeCompare(b, 'ko-KR'))
-      .forEach((region) => {
+        : registry.map((region) => region.nameKo);
+    [...terminalRegions].forEach((region) => {
         const option = document.createElement('option');
         option.value = region;
         option.textContent = region;
@@ -127,8 +125,9 @@
     }
 
     function terminalHomepage(terminal) {
-        if (regionStatusByName[terminal.region] === 'preparing') {
-            return `../${regionFolderByName[terminal.region]}/index.html`;
+        const definition = regionByNameKo[terminal.region];
+        if (definition?.status === 'preparing') {
+            return definition.hasPage && definition.folder ? `../${definition.folder}/index.html` : '';
         }
         if (terminal.region === '포항' && terminal.name.includes('울릉')) return 'https://www.ulcruise.co.kr/';
         return homepageByRegion[terminal.region];
@@ -147,15 +146,20 @@
         const name = document.createElement('strong');
         name.textContent = terminal.name;
         const address = document.createElement('p');
-        const preparing = regionStatusByName[terminal.region] === 'preparing';
+        const definition = regionByNameKo[terminal.region];
+        const preparing = definition?.status === 'preparing';
         address.textContent = preparing ? '검증된 정보 준비 중' : terminal.address;
         heading.append(region, name);
         info.append(heading, address);
 
         const actions = document.createElement('div');
         actions.className = 'portal-terminal-directory-mobile-actions';
-        if (preparing) {
+        if (preparing && definition.hasPage) {
             actions.append(createActionLink(terminal, '지역 안내', terminalHomepage(terminal)));
+        } else if (preparing) {
+            const unavailable = document.createElement('span');
+            unavailable.textContent = '페이지 준비 중';
+            actions.append(unavailable);
         } else {
             actions.append(
                 createActionLink(terminal, '홈페이지', terminalHomepage(terminal)),
@@ -170,7 +174,8 @@
         const row = document.createElement('tr');
         const nameCell = createCell('', 'portal-terminal-directory-name');
         const name = document.createElement('strong');
-        const preparing = regionStatusByName[terminal.region] === 'preparing';
+        const definition = regionByNameKo[terminal.region];
+        const preparing = definition?.status === 'preparing';
 
         name.textContent = terminal.name;
         nameCell.append(name, createMobileEntry(terminal));
@@ -179,7 +184,9 @@
             nameCell,
             createCell(preparing ? '검증된 정보 준비 중' : terminal.address, 'portal-terminal-directory-address'),
             preparing ? createCell('준비 중', 'portal-terminal-directory-action') : createLinkCell(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`),
-            createLinkCell(terminal, preparing ? '지역 안내' : '홈페이지', terminalHomepage(terminal))
+            preparing && !definition.hasPage
+                ? createCell('준비 중', 'portal-terminal-directory-action')
+                : createLinkCell(terminal, preparing ? '지역 안내' : '홈페이지', terminalHomepage(terminal))
         );
         return row;
     }
@@ -189,7 +196,7 @@
         const selectedRegion = regionSelect.value;
         const query = normalize(queryInput.value);
         const matches = terminals.filter((terminal) => {
-            const searchableAddress = regionStatusByName[terminal.region] === 'preparing' ? '' : terminal.address;
+            const searchableAddress = regionByNameKo[terminal.region]?.status === 'preparing' ? '' : terminal.address;
             const searchableText = normalize(`${terminal.name} ${searchableAddress} ${terminal.region}`);
             return (selectedRegion === 'all' || terminal.region === selectedRegion) &&
                 (!query || searchableText.includes(query));

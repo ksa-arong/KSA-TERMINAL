@@ -18,6 +18,12 @@ function renderSharedLayout() {
     if (!rootPrefix || href.startsWith('#') || /^[a-z][a-z\d+.-]*:/i.test(href)) return href;
     return `${rootPrefix}${href}`;
   };
+  const resolveTerminalLogoSrc = (regionId, rootPrefix = '../') => {
+    const logoFile = window.getPortalRegionDefinition?.(regionId)?.logo;
+    return logoFile
+      ? withRootPrefix(`common/images/logo/${encodeURIComponent(logoFile)}`, rootPrefix)
+      : withRootPrefix('common/images/logo.png', rootPrefix);
+  };
 
   const portalQuickIconPaths = {
     terminal: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
@@ -34,11 +40,14 @@ function renderSharedLayout() {
   }
 
   function sharedHeader(options) {
-    const { brandName, portal = false, guidePage = false, portalSection = '', rootPrefix = '' } = options;
+    const { brandName, brandLogoSrc = '', portal = false, guidePage = false, portalSection = '', rootPrefix = '', menuMode = portal ? 'portal' : 'terminal' } = options;
+    const terminalMenu = menuMode === 'terminal';
     const currentLanguage = window.i18n?.language === 'en' ? 'en' : 'ko';
     const currentLanguageCode = currentLanguage === 'en' ? 'ENG' : 'KOR';
     const currentLanguageName = t(`header.${currentLanguage === 'en' ? 'english' : 'korean'}`);
-    const homeLink = portal ? withRootPrefix('index.html', rootPrefix) : guidePage ? './index.html' : '#home';
+    const homeLink = terminalMenu
+      ? (guidePage ? './index.html' : '#home')
+      : withRootPrefix('index.html', rootPrefix);
     const terminalRoot = portal ? rootPrefix : '../';
     const currentClass = (section) => {
       if (portal) {
@@ -49,9 +58,9 @@ function renderSharedLayout() {
       if (section === 'terminal' && guidePage) return ' current';
       return '';
     };
-    const menuItems = menuData.map((item) => portal ? item : item.terminal).filter((item) => item && !item.hidden);
+    const menuItems = menuData.map((item) => terminalMenu ? item.terminal : item).filter((item) => item && !item.hidden);
     const resolveMenuHref = (href) => {
-      if (portal) return withRootPrefix(href, rootPrefix);
+      if (!terminalMenu) return withRootPrefix(href, rootPrefix);
       if (!href.startsWith('{terminal}/')) return href;
       const relative = href.slice('{terminal}/'.length);
       if (relative.startsWith('index.html#')) return guidePage ? `./${relative}` : `#${relative.split('#')[1]}`;
@@ -88,21 +97,18 @@ function renderSharedLayout() {
       <div class="container mega-menu-inner ${portal ? 'portal-mega-menu-inner' : 'terminal-mega-menu-inner'}">
         ${menuItems.map((item) => `<div class="mega-column" role="group" aria-label="${escapeHtml(t(item.labelKey))}">${item.children.filter((child) => !child.hidden).map((child) => `<a${child.external ? ' class="mega-menu-external-link"' : ''} href="${resolveMenuHref(child.href)}"${externalAttributes(child)}><span>${t(child.labelKey)}</span>${child.external ? externalLinkIcon : ''}</a>`).join('')}</div>`).join('')}
       </div>`;
+    const headerLogoSrc = brandLogoSrc || withRootPrefix('common/images/logo.png', rootPrefix);
     const brandContent = portal
-      ? `<span class="portal-header-brand-assets" aria-hidden="true"><img class="portal-header-brand-image" src="${withRootPrefix('common/images/logo.png', rootPrefix)}" alt="" width="954" height="196"></span>`
+      ? `<span class="portal-header-brand-assets" aria-hidden="true"><img class="portal-header-brand-image" src="${headerLogoSrc}" alt="" width="954" height="196"></span>`
       : escapeHtml(brandName);
-    const mobileMenuLogoSrc = portal ? withRootPrefix('common/images/logo.png', rootPrefix) : '../common/images/logo.png';
-    const terminalMenuItems = `
-      <a href="${terminalRoot}incheon/index.html"><span>인천항</span><i aria-hidden="true">→</i></a>
-      <span class="terminal-switcher-disabled" aria-disabled="true"><span>보령(대천항)</span><small>${t('common.ready')}</small></span>
-      <a href="${terminalRoot}gunsan/index.html"><span>군산항</span><i aria-hidden="true">→</i></a>
-      <a href="${terminalRoot}mokpo/index.html"><span>목포항</span><i aria-hidden="true">→</i></a>
-      <a href="${terminalRoot}wando/index.html"><span>완도항</span><i aria-hidden="true">→</i></a>
-      <a href="${terminalRoot}yeosu/index.html"><span>여수항</span><i aria-hidden="true">→</i></a>
-      <a href="${terminalRoot}tongyeong/index.html"><span>통영항</span><i aria-hidden="true">→</i></a>
-      <span class="terminal-switcher-disabled" aria-disabled="true"><span>부산항</span><small>${t('common.ready')}</small></span>
-      <a href="${terminalRoot}pohang/index.html"><span>포항항</span><i aria-hidden="true">→</i></a>
-      <a href="${terminalRoot}jeju/index.html"><span>제주항</span><i aria-hidden="true">→</i></a>`;
+    const mobileMenuLogoSrc = brandLogoSrc || (portal ? withRootPrefix('common/images/logo.png', rootPrefix) : '../common/images/logo.png');
+    const terminalMenuItems = (window.PORTAL_REGION_REGISTRY || []).map((region) => {
+      const label = escapeHtml(region.gnbLabelKo || region.nameKo);
+      if (!region.hasPage || !region.folder) {
+        return `<span class="terminal-switcher-disabled" aria-disabled="true"><span>${label}</span><small>${t('common.ready')}</small></span>`;
+      }
+      return `<a href="${terminalRoot}${encodeURIComponent(region.folder)}/index.html"><span>${label}</span><i aria-hidden="true">→</i></a>`;
+    }).join('');
 
     const gnbItems = renderGnbItems();
     const mobileMenuGroups = renderMobileMenuGroups();
@@ -754,7 +760,7 @@ function renderSharedLayout() {
 
     app.innerHTML = `
       <a class="skip-link" href="#main">${t('common.skip')}</a>
-      ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
+      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, portalSection: 'terminal', rootPrefix: '../', menuMode: 'terminal' })}
       <main id="main">
         <section class="portal-hero region-hero" id="home" aria-labelledby="region-hero-title">
           <div class="portal-hero-media" aria-hidden="true"><span class="portal-hero-slide portal-hero-slide--${heroSlide} active"></span></div>
@@ -804,7 +810,7 @@ function renderSharedLayout() {
       : `<a class="btn btn--outline" href="${escapeHtml(guideBackHref)}">${escapeHtml(guideBackLabel)}</a>`;
     app.innerHTML = `
       <a class="skip-link" href="#main">${t('common.skip')}</a>
-      ${sharedHeader({ brandName: terminalName, portal: true, portalSection: 'terminal', rootPrefix: '../' })}
+      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, guidePage: true, portalSection: 'terminal', rootPrefix: '../', menuMode: 'terminal' })}
       <main id="main" class="region-guide-main">
         <section class="region-guide-placeholder" aria-labelledby="region-guide-title">
           <div class="container">

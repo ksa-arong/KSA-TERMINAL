@@ -1,19 +1,11 @@
 (function defineTerminalRegions() {
   'use strict';
 
-  window.PORTAL_TERMINAL_REGIONS = Object.freeze([
-    '보령',
-    '군산',
-    '목포',
-    '완도',
-    '여수',
-    '제주',
-    '통영',
-    '포항',
-    '동해'
-  ].sort((a, b) => a.localeCompare(b, 'ko-KR')));
-
+  const registry = window.PORTAL_REGION_REGISTRY || [];
+  window.PORTAL_TERMINAL_REGIONS = Object.freeze(
+    registry.map((region) => region.nameKo)
+  );
   window.PORTAL_ACTIVE_TERMINAL_FOLDERS = Object.freeze(
-    Object.keys(window.PORTAL_REGION_STATUSES || {})
+    registry.filter((region) => region.hasPage && region.folder).map((region) => region.folder)
   );
 }());

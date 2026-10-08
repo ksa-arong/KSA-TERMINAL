@@ -340,8 +340,8 @@
             localize(region.region) ||
             localize(representative.name);
         fields.region.textContent = localize(region.summaryName) || `${regionLabel}항 여객선 터미널`;
-        fields.homepage.hidden = !representative.folder;
-        if (representative.folder) fields.homepage.href = `${portalRootPrefix}${representative.folder}/index.html`;
+        fields.homepage.hidden = !region.folder;
+        if (region.folder) fields.homepage.href = `${portalRootPrefix}${region.folder}/index.html`;
         else fields.homepage.removeAttribute('href');
         const primaryMarker = [...markers].find((marker) => marker.dataset.region === id);
         const initialType = renderTypeFilters(region, primaryMarker?.dataset.terminalType);
@@ -479,12 +479,16 @@
     }
     // region-quick-select 버튼들에 이벤트 리스너 추가
     const quickSelectButtons = document.querySelectorAll('.region-quick-btn[data-region]');
+    window.validatePortalRegionKeys?.(
+        'portal DOM [data-region]',
+        [...document.querySelectorAll('[data-region]')].map((element) => element.dataset.region)
+    );
     quickSelectButtons.forEach((button) => {
         button.addEventListener('click', () => selectRegionFromControl(button.dataset.region));
     });
 
     renderRegionControls();
-    renderRegion(portalData.initialRegionId || 'incheon');
+    renderRegion(portalData.initialRegionId || window.PORTAL_REGION_REGISTRY?.[0]?.key);
     syncZoomedMapMarkers();
     syncPrimaryMapMarkerLabel();
     initializeLatestNotices();

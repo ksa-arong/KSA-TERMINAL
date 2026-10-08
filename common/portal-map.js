@@ -1,79 +1,23 @@
 (function definePortalTerminalMap() {
     'use strict';
 
+    const escapeHtml = window.PortalDomUtils?.escapeHtml || ((value) => String(value || ''));
+    const defaultRegionKey = (window.PORTAL_REGION_REGISTRY || []).find((region) => region.isDefault)?.key;
+    const regionQuickButtons = (window.PORTAL_REGION_REGISTRY || []).map((region) => `
+                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn${region.key === defaultRegionKey ? ' active' : ''}" data-region="${escapeHtml(region.key)}" aria-pressed="${String(region.key === defaultRegionKey)}">
+                        ${escapeHtml(region.portalLabelKo || region.nameKo)}
+                        <span class="arr">
+                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                        </span>
+                    </button>`).join('');
+
     const markup = String.raw `<div class="terminal-explorer">
                     <div class="portal-section-heading section-title section-title--light section-title--left">
                         <span class="section-title__eyebrow">TERMINAL NETWORK</span>
                         <h2 class="portal-terminal-section-title terminal-main-title" id="terminal-list-title" data-i18n="portal.networkTitle">전국 주요 터미널</h2>
                     </div>
                     <div class="terminal-explorer-content">
-                        <div class="region-quick-select">
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn active" data-region="incheon" aria-pressed="true">
-                        인천
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="boryeong" aria-pressed="false">
-                        대천
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="gunsan" aria-pressed="false">
-                        군산
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="mokpo" aria-pressed="false">
-                        목포
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="wando" aria-pressed="false">
-                        완도
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="jeju" aria-pressed="false">
-                        제주
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="yeosu" aria-pressed="false">
-                        여수
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="tongyeong" aria-pressed="false">
-                        통영
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="busan" aria-pressed="false">
-                        부산
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="pohang" aria-pressed="false">
-                        포항
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
-                            <button type="button" class="btn btn--region btn--pill btn--outline region-quick-btn" data-region="donghae" aria-pressed="false">
-                        동해
-                        <span class="arr">
-                            <svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-                        </span>
-                    </button>
+                        <div class="region-quick-select">${regionQuickButtons}
                         </div>
                         <article class="terminal-summary" id="terminal-summary" aria-live="polite" aria-busy="true" hidden>
                             <div class="terminal-summary-head">
@@ -146,19 +90,20 @@
                     </div>
                 </div>`;
 
-    function sortRegionQuickButtons(root) {
+    function applyCanonicalRegionOrder(root) {
         const container = root.querySelector('.region-quick-select');
         if (!container) return;
-        const collator = new Intl.Collator('ko-KR');
+        const orderByKey = new Map((window.PORTAL_REGION_REGISTRY || []).map((region) => [region.key, region.order]));
         [...container.querySelectorAll('.region-quick-btn')]
-            .sort((a, b) => collator.compare(a.textContent.trim(), b.textContent.trim()))
+            .sort((a, b) => (orderByKey.get(a.dataset.region) || Number.MAX_SAFE_INTEGER)
+                - (orderByKey.get(b.dataset.region) || Number.MAX_SAFE_INTEGER))
             .forEach((button) => container.append(button));
     }
 
     function render(root) {
         if (!root) return;
         root.innerHTML = markup;
-        sortRegionQuickButtons(root);
+        applyCanonicalRegionOrder(root);
         if (window.i18n) window.i18n.translateDocument(root);
     }
 
@@ -166,6 +111,10 @@
         document.querySelectorAll('[data-portal-map-root]').forEach(render);
     }
 
+    window.validatePortalRegionKeys?.(
+        'common/portal-map.js [data-region]',
+        [...markup.matchAll(/data-region="([^"]+)"/g)].map((match) => match[1])
+    );
     window.PortalTerminalMap = { render, renderAll };
     renderAll();
 }());

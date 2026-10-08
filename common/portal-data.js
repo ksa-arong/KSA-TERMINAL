@@ -2,7 +2,7 @@
     'use strict';
 
     window.PORTAL_DATA = {
-        "initialRegionId": "incheon",
+        "initialRegionId": null,
         "regions": {
             "incheon": {
                 "id": "incheon",
@@ -1476,6 +1476,7 @@
             )
         ]
     };
+    window.validatePortalRegionKeys?.('common/portal-data.js supplementalTerminals', Object.keys(supplementalTerminals));
 
     Object.entries(supplementalTerminals).forEach(([regionId, terminals]) => {
         const region = window.PORTAL_DATA.regions[regionId];
@@ -1523,6 +1524,7 @@
             { name: { ko: '한일고속', en: '' }, url: 'https://www.hanilexpress.co.kr/' }
         ]
     };
+    window.validatePortalRegionKeys?.('common/portal-data.js regionalOperators', Object.keys(regionalOperators));
 
     Object.entries(regionalOperators).forEach(([regionId, operators]) => {
         const region = window.PORTAL_DATA.regions[regionId];
@@ -1542,14 +1544,29 @@
         ));
     }
 
-    Object.entries(window.PORTAL_DATA.regions).forEach(([regionId, region]) => {
-        const status = window.getPortalRegionStatus?.(regionId);
-        if (!status) return;
-        region.status = status;
-        if (status === 'preparing') {
+    const sourceRegions = window.PORTAL_DATA.regions;
+    const canonicalRegions = {};
+    const registry = window.PORTAL_REGION_REGISTRY || [];
+    window.validatePortalRegionKeys?.('common/portal-data.js regions', Object.keys(sourceRegions));
+    registry.forEach((definition) => {
+        const region = sourceRegions[definition.key];
+        if (!region) {
+            console.warn(`[지역 레지스트리] common/portal-data.js에 ${definition.key} 콘텐츠가 없습니다.`);
+            return;
+        }
+        region.id = definition.key;
+        region.label = { ...(region.label || {}), ko: definition.portalLabelKo || definition.nameKo };
+        region.folder = definition.folder;
+        region.status = definition.status;
+        if (definition.status === 'preparing') {
             region.terminals.forEach((terminal) => {
                 terminal.verified = false;
             });
         }
+        canonicalRegions[definition.key] = region;
     });
+    window.PORTAL_DATA.regions = canonicalRegions;
+    window.PORTAL_DATA.initialRegionId = registry.find((definition) => definition.isDefault)?.key
+        || registry.find((definition) => canonicalRegions[definition.key])?.key
+        || null;
 }());
