@@ -169,13 +169,6 @@ function renderSharedLayout() {
       </aside>`;
   }
 
-  function sharedTerminalFooter(data, guidePage = false) {
-    const directionsLink = guidePage ? '#directions' : './guide.html#directions';
-    const name = localize(data.name);
-    return `
-      <footer class="terminal-footer"><div class="container terminal-footer-inner"><div><div class="terminal-footer-logo">${escapeHtml(name)}</div><div>${t('footer.phone')} ${escapeHtml(data.phone)}</div><div>© ${currentYear} ${escapeHtml(data.englishName)}. All Rights Reserved.</div></div><div class="terminal-footer-links"><a href="../privacy.html">${t('footer.privacy')}</a><a href="../terms.html">${t('footer.terms')}</a><a href="../sitemap.html">${t('footer.sitemap')}</a><a href="${directionsLink}">${t('footer.directions')}</a><a href="../index.html">${t('footer.allTerminals')}</a></div></div></footer>`;
-  }
-
   function sharedSiteFooter(rootPrefix = '') {
     const relatedOptions = [
       ['https://www.theksa.or.kr/', '한국해운조합'],
@@ -865,69 +858,6 @@ function renderSharedLayout() {
     }
     return;
   }
-
-  const terminalName = localize(data.name);
-
-  if (document.body.classList.contains('guide-page')) {
-    // guide.js is intentionally outside the first i18n migration scope.
-    data.name = terminalName;
-    document.title = `터미널 이용안내 | ${terminalName}`;
-    const description = document.querySelector('meta[name="description"]');
-    if (description) description.content = `${terminalName} 오시는 길, 주차, 발권, 편의시설 등 터미널 이용안내입니다.`;
-    app.innerHTML = `
-      <a class="skip-link" href="#main">${t('common.skip')}</a>
-      ${sharedHeader({ brandName: terminalName, guidePage: true })}
-      <main id="main"><div id="terminal-guide-page"></div></main>
-      ${sharedTerminalFooter(data, true)}`;
-    initializeHeader();
-    initializeFloatingQuick();
-    return;
-  }
-
-  const boardingCards = data.boardingCards.map((card, index) => `
-    <article class="guide-card"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(localize(card.title))}</h3><p>${escapeHtml(localize(card.description))}</p></article>`).join('');
-  const notices = data.notices.map((notice, index) => `
-    <li><a href="#notice"><span class="portal-content-badge">${escapeHtml(localize(notice.category))}</span><span class="news-title">${escapeHtml(localize(notice.title))}</span><time class="news-date" datetime="${escapeHtml(notice.date.replaceAll('.', '-'))}">${escapeHtml(notice.date)}</time></a></li>`).join('');
-
-  document.title = terminalName;
-  const description = document.querySelector('meta[name="description"]');
-  if (description) description.content = `${terminalName} 운항 정보, 승선 안내, 터미널 이용 정보를 확인하세요.`;
-
-  app.innerHTML = `
-    <a class="skip-link" href="#main">${t('common.skip')}</a>
-    ${sharedHeader({ brandName: terminalName })}
-    <main id="main">
-      <section class="hero" id="home" aria-labelledby="hero-title"><div class="container"><div class="hero-content">
-        <span class="eyebrow">WELCOME TO ${escapeHtml(data.englishName)}</span><h1 id="hero-title">${escapeHtml(localize(data.heroTitle)).replaceAll('\n', '<br>')}</h1>
-        <p>${escapeHtml(localize(data.heroDescription)).replaceAll('\n', '<br>')}</p><a class="btn btn--lg btn--solid btn--arrow" href="#schedule">${t('terminalPage.heroButton')}</a>
-      </div></div></section>
-      <div class="quick-wrap" aria-label="${t('terminalPage.quickAria')}"><div class="container quick-grid">
-        <a class="quick-card" href="#schedule"><span class="quick-icon" aria-hidden="true">◷</span><span><strong>${t('terminalPage.timetable')}</strong><small>${t('terminalPage.timetableDesc')}</small></span></a>
-        <a class="quick-card" href="#fare"><span class="quick-icon" aria-hidden="true">₩</span><span><strong>${t('terminalPage.fare')}</strong><small>${t('terminalPage.fareDesc')}</small></span></a>
-        <a class="quick-card" href="#boarding"><span class="quick-icon" aria-hidden="true">✓</span><span><strong>${t('terminalPage.boarding')}</strong><small>${t('terminalPage.boardingDesc')}</small></span></a>
-        <a class="quick-card" href="./guide.html#directions"><span class="quick-icon" aria-hidden="true">⌖</span><span><strong>${t('terminalPage.directions')}</strong><small>${t('terminalPage.directionsDesc')}</small></span></a>
-      </div></div>
-      <section id="schedule" class="section-soft" aria-labelledby="schedule-title"></section>
-      ${data.terminalGuide ? '<section id="terminal-guide" aria-labelledby="terminal-guide-title"></section>' : ''}
-      <section id="boarding" aria-labelledby="boarding-title"><div class="container guide-layout">
-        <div class="guide-intro"><p class="section-kicker">BOARDING GUIDE</p><h2 id="boarding-title">${t('terminalPage.boardingTitle').replaceAll('\n', '<br>')}</h2><p>${escapeHtml(localize(data.boardingIntro))}</p><a class="btn btn--lg btn--outline" href="#boarding-detail">${t('terminalPage.boardingMore')}</a></div>
-        <div class="guide-grid" id="boarding-detail">${boardingCards}</div>
-      </div></section>
-      <section id="notice" class="section-soft" aria-labelledby="notice-title"><div class="container">
-        <div class="section-head"><div><p class="section-kicker">NEWS & NOTICE</p><h2 id="notice-title">${t('terminalPage.notices')}</h2></div><a href="#notice" aria-label="${t('terminalPage.noticeAll')}">${t('terminalPage.allView')}</a></div>
-        <div class="news-layout"><ul class="news-list">${notices}</ul><aside class="contact-card" id="contact" aria-labelledby="contact-title">
-          <span class="label">CUSTOMER CENTER</span><h3 id="contact-title">${t('terminalPage.customer')}</h3><p class="contact-number">${escapeHtml(data.phone)}</p><p>${t('terminalPage.customerHelp')}</p><hr><p><strong>${t('terminalPage.counselingHours')}</strong><br>${escapeHtml(localize(data.hours))}</p>
-        </aside></div>
-      </div></section>
-      <section class="terminal" id="terminal" aria-labelledby="terminal-title"><div class="container terminal-grid">
-        <div><p class="section-kicker">TERMINAL INFO</p><h2 id="terminal-title">${escapeHtml(terminalName)} ${t('terminalPage.infoSuffix')}</h2>${data.routeIntro ? `<p class="section-desc">${escapeHtml(localize(data.routeIntro))}</p>` : ''}</div>
-        <div class="info-block"><strong>${t('terminalPage.address')}</strong><p>${escapeHtml(localize(data.address)).replaceAll('\n', '<br>')}</p></div><div class="info-block"><strong>${t('terminalPage.hours')}</strong><p>${escapeHtml(localize(data.hours)).replaceAll('\n', '<br>')}</p></div><div class="info-block" id="fare"><strong>${t('terminalPage.parking')}</strong><p>${escapeHtml(localize(data.parking)).replaceAll('\n', '<br>')}</p></div>
-      </div></section>
-    </main>
-    ${sharedTerminalFooter(data)}`;
-
-  initializeHeader();
-  initializeFloatingQuick();
 }
 
 if (window.i18n) renderSharedLayout();
