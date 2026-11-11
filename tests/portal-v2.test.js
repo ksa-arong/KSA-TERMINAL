@@ -280,6 +280,20 @@ test('지역별 대표 해역은 서로 다른 현재 날씨 상태를 제공한
   assert.ok(new Set(conditions).size > 1);
 });
 
+test('목포 대표 해역은 발효 중인 기상특보 샘플을 제공한다', () => {
+  const weatherData = loadWeatherData();
+  const mokpo = weatherData.areas.find((area) => area.id === 'mokpo');
+  const advisory = mokpo.routes[0].advisories[0];
+
+  assert.deepEqual(JSON.parse(JSON.stringify(advisory)), {
+    level: 'warning',
+    title: '풍랑주의보 발표',
+    issuedAt: '2026년 09월 02일 13시 00분',
+    area: '서해남부앞바다',
+    note: '여객선 운항 정보를 확인해 주세요.'
+  });
+});
+
 test('항로 소요시간의 시분 형식을 읽기 쉬운 한글로 표시한다', () => {
   const portalV2 = loadPortalV2();
 

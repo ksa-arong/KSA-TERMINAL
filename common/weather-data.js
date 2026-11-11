@@ -168,7 +168,16 @@
         id: 'mokpo',
         label: '목포',
         routes: [
-          sea('west-south-coast', '서해남부앞바다', '서해남부앞바다', 1.5, 8.6, '남동'),
+          {
+            ...sea('west-south-coast', '서해남부앞바다', '서해남부앞바다', 1.5, 8.6, '남동'),
+            advisories: [{
+              level: 'warning',
+              title: '풍랑주의보 발표',
+              issuedAt: '2026년 09월 02일 13시 00분',
+              area: '서해남부앞바다',
+              note: '여객선 운항 정보를 확인해 주세요.'
+            }]
+          },
           sea('west-south-offshore', '서해남부먼바다', '서해남부먼바다', 2.6, 12.3, '남동-남')
         ]
       },
