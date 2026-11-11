@@ -258,6 +258,7 @@
         advisory: {
           level: advisory.level || 'warning',
           title: advisory.title || '기상특보',
+          area: advisory.area || route.label || area.label || '',
           message: advisory.note || ''
         }
       } : {}),
@@ -353,9 +354,15 @@
     if (weatherStatus) weatherStatus.dataset.level = weather.statusLevel;
     if (weatherAdvisory) {
       const advisory = weather.advisory;
-      weatherAdvisory.textContent = advisory
-        ? [advisory.title, advisory.message].filter(Boolean).join(' · ')
-        : '';
+      const advisoryTitle = root.querySelector('[data-v2-weather-advisory-title]');
+      const advisoryMessage = root.querySelector('[data-v2-weather-advisory-message]');
+      const title = String(advisory?.title || '');
+      const area = String(advisory?.area || '');
+      const displayTitle = area && /주의보(?:·[^ ]+주의보)? 발표$/.test(title)
+        ? `${area}에 ${title.replace(/ 발표$/, '')}가 발효 중입니다.`
+        : [area, title].filter(Boolean).join(' · ');
+      if (advisoryTitle) advisoryTitle.textContent = displayTitle;
+      if (advisoryMessage) advisoryMessage.textContent = advisory?.message || '';
       weatherAdvisory.hidden = !advisory;
       if (advisory) weatherAdvisory.dataset.level = advisory.level;
       else delete weatherAdvisory.dataset.level;

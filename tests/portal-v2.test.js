@@ -549,6 +549,7 @@ test('선택 지역의 해상 날씨를 대표 항로 기준으로 제공한다'
         advisories: [{
           level: 'warning',
           title: '풍랑주의보 발표',
+          area: '서해남부앞바다',
           note: '출항 전 운항정보를 확인하세요.'
         }],
         forecast: [{ condition: '구름 많음', waveMin: 0.9, waveMax: 1.8 }]
@@ -570,6 +571,7 @@ test('선택 지역의 해상 날씨를 대표 항로 기준으로 제공한다'
     advisory: {
       level: 'warning',
       title: '풍랑주의보 발표',
+      area: '서해남부앞바다',
       message: '출항 전 운항정보를 확인하세요.'
     },
     updatedAt: '2026년 9월 2일 13:37 기준'
@@ -682,6 +684,8 @@ test('지역 변경 시 날씨 상태와 관측값을 화면에 함께 반영한
     '[data-v2-weather-visibility]': { textContent: '' },
     '[data-v2-weather-status]': { textContent: '', dataset: {} },
     '[data-v2-weather-advisory]': { textContent: '', dataset: {}, hidden: true },
+    '[data-v2-weather-advisory-title]': { textContent: '' },
+    '[data-v2-weather-advisory-message]': { textContent: '' },
     '[data-v2-weather-icon]': { src: '', alt: '' }
   };
   const rootElement = {
@@ -713,6 +717,7 @@ test('지역 변경 시 날씨 상태와 관측값을 화면에 함께 반영한
       advisory: {
         level: 'warning',
         title: '풍랑주의보 발표',
+        area: '서해남부앞바다',
         message: '출항 전 운항정보를 확인하세요.'
       },
       updatedAt: '2026년 9월 2일 13:37 기준'
@@ -728,7 +733,8 @@ test('지역 변경 시 날씨 상태와 관측값을 화면에 함께 반영한
   assert.equal(weatherFields['[data-v2-weather-visibility]'].textContent, '20km');
   assert.equal(weatherFields['[data-v2-weather-status]'].textContent, '운항 정상');
   assert.equal(weatherFields['[data-v2-weather-status]'].dataset.level, 'success');
-  assert.equal(weatherFields['[data-v2-weather-advisory]'].textContent, '풍랑주의보 발표 · 출항 전 운항정보를 확인하세요.');
+  assert.equal(weatherFields['[data-v2-weather-advisory-title]'].textContent, '서해남부앞바다에 풍랑주의보가 발효 중입니다.');
+  assert.equal(weatherFields['[data-v2-weather-advisory-message]'].textContent, '출항 전 운항정보를 확인하세요.');
   assert.equal(weatherFields['[data-v2-weather-advisory]'].dataset.level, 'warning');
   assert.equal(weatherFields['[data-v2-weather-advisory]'].hidden, false);
   assert.equal(weatherFields['[data-v2-weather-icon]'].src, 'common/images/weather/cloudy.svg');
