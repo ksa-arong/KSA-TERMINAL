@@ -20284,6 +20284,30 @@
             display: block;
             margin-top: 10px;
         }
+
+        .portal-v2-weather__advisory {
+            margin: var(--global-space-12) 0 0;
+            padding: var(--global-space-12) var(--global-space-16);
+            border-left: var(--global-space-4) solid var(--status-warning);
+            border-radius: var(--global-radius-sm);
+            background: var(--surface-subtle);
+            color: var(--text-strong);
+            font-size: var(--font-small);
+            font-weight: var(--global-font-weight-medium);
+            line-height: var(--global-line-height-normal);
+        }
+
+        .portal-v2-weather__advisory[data-level="success"] {
+            border-left-color: var(--status-success);
+        }
+
+        .portal-v2-weather__advisory[data-level="danger"] {
+            border-left-color: var(--status-danger);
+        }
+
+        .portal-v2-weather__advisory[hidden] {
+            display: none;
+        }
         
         .portal-v2-terminal-guide {
             display: grid;

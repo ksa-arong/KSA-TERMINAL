@@ -220,6 +220,7 @@
     const routeCycle = routes.length ? Math.floor(routeIndex / routes.length) : 0;
     const currentForecast = route?.forecast?.[0];
     const visibility = route?.observation?.visibility;
+    const advisory = route?.advisories?.[0];
 
     if (!route) return null;
     const baseCondition = routes[0]?.forecast?.[0]?.condition;
@@ -253,6 +254,13 @@
       visibility: Number.isFinite(variedVisibility) ? `${variedVisibility / 1000}km` : '-',
       statusLevel: route.status?.level || 'success',
       statusLabel: weatherStatusLabels[route.status?.level] || '운항 확인',
+      ...(advisory ? {
+        advisory: {
+          level: advisory.level || 'warning',
+          title: advisory.title || '기상특보',
+          message: advisory.note || ''
+        }
+      } : {}),
       updatedAt: weatherData.updatedAt || ''
     };
   }
@@ -330,6 +338,7 @@
   function applyWeatherView(root, weather) {
     if (!root || !weather) return;
     const weatherStatus = root.querySelector('[data-v2-weather-status]');
+    const weatherAdvisory = root.querySelector('[data-v2-weather-advisory]');
     const weatherIcon = root.querySelector('[data-v2-weather-icon]');
     setText(root, '[data-v2-weather-area]', weather.area);
     setText(root, '[data-v2-weather-condition]', weather.condition);
@@ -342,6 +351,15 @@
     setText(root, '[data-v2-weather-visibility]', weather.visibility);
     setText(root, '[data-v2-weather-status]', weather.statusLabel);
     if (weatherStatus) weatherStatus.dataset.level = weather.statusLevel;
+    if (weatherAdvisory) {
+      const advisory = weather.advisory;
+      weatherAdvisory.textContent = advisory
+        ? [advisory.title, advisory.message].filter(Boolean).join(' · ')
+        : '';
+      weatherAdvisory.hidden = !advisory;
+      if (advisory) weatherAdvisory.dataset.level = advisory.level;
+      else delete weatherAdvisory.dataset.level;
+    }
     if (weatherIcon) {
       weatherIcon.src = resolveWeatherIcon(weather.condition);
       weatherIcon.alt = `${weather.condition} 날씨 아이콘`;

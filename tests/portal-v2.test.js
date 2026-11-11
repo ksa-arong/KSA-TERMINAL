@@ -60,6 +60,25 @@ function loadWeatherData() {
   return context.window.PORTAL_WEATHER_FALLBACK_DATA;
 }
 
+function loadPortalData() {
+  const window = {};
+  const context = vm.createContext({ window, console });
+
+  ['menu-data.js', 'portal-data.js'].forEach((name) => {
+    const file = path.join(root, 'common', name);
+    vm.runInContext(fs.readFileSync(file, 'utf8'), context, { filename: `common/${name}` });
+  });
+
+  return context.window.PORTAL_DATA;
+}
+
+test('목포 연안여객선터미널은 포털 상세 패널에 표시할 주소를 제공한다', () => {
+  const portalData = loadPortalData();
+  const terminal = portalData.regions.mokpo.terminals.find((item) => item.id === 'mokpo-coastal');
+
+  assert.equal(terminal.address.ko, '전남광주통합특별시 목포시 해안로 182');
+});
+
 test('터미널 편의 정보 링크는 선택 지역의 공통 안내 페이지를 사용한다', () => {
   const portalV2 = loadPortalV2();
 
@@ -527,6 +546,11 @@ test('선택 지역의 해상 날씨를 대표 항로 기준으로 제공한다'
         current: { temperature: 22.7, wind: 8.6, direction: '남동' },
         observation: { visibility: 20000 },
         status: { level: 'success', label: '비교적 안정' },
+        advisories: [{
+          level: 'warning',
+          title: '풍랑주의보 발표',
+          note: '출항 전 운항정보를 확인하세요.'
+        }],
         forecast: [{ condition: '구름 많음', waveMin: 0.9, waveMax: 1.8 }]
       }]
     }]
@@ -543,6 +567,11 @@ test('선택 지역의 해상 날씨를 대표 항로 기준으로 제공한다'
     visibility: '20km',
     statusLevel: 'success',
     statusLabel: '운항 정상',
+    advisory: {
+      level: 'warning',
+      title: '풍랑주의보 발표',
+      message: '출항 전 운항정보를 확인하세요.'
+    },
     updatedAt: '2026년 9월 2일 13:37 기준'
   });
 });
@@ -652,6 +681,7 @@ test('지역 변경 시 날씨 상태와 관측값을 화면에 함께 반영한
     '[data-v2-weather-wave]': { textContent: '' },
     '[data-v2-weather-visibility]': { textContent: '' },
     '[data-v2-weather-status]': { textContent: '', dataset: {} },
+    '[data-v2-weather-advisory]': { textContent: '', dataset: {}, hidden: true },
     '[data-v2-weather-icon]': { src: '', alt: '' }
   };
   const rootElement = {
@@ -680,6 +710,11 @@ test('지역 변경 시 날씨 상태와 관측값을 화면에 함께 반영한
       visibility: '20km',
       statusLevel: 'success',
       statusLabel: '운항 정상',
+      advisory: {
+        level: 'warning',
+        title: '풍랑주의보 발표',
+        message: '출항 전 운항정보를 확인하세요.'
+      },
       updatedAt: '2026년 9월 2일 13:37 기준'
     }
   });
@@ -693,6 +728,9 @@ test('지역 변경 시 날씨 상태와 관측값을 화면에 함께 반영한
   assert.equal(weatherFields['[data-v2-weather-visibility]'].textContent, '20km');
   assert.equal(weatherFields['[data-v2-weather-status]'].textContent, '운항 정상');
   assert.equal(weatherFields['[data-v2-weather-status]'].dataset.level, 'success');
+  assert.equal(weatherFields['[data-v2-weather-advisory]'].textContent, '풍랑주의보 발표 · 출항 전 운항정보를 확인하세요.');
+  assert.equal(weatherFields['[data-v2-weather-advisory]'].dataset.level, 'warning');
+  assert.equal(weatherFields['[data-v2-weather-advisory]'].hidden, false);
   assert.equal(weatherFields['[data-v2-weather-icon]'].src, 'common/images/weather/cloudy.svg');
   assert.equal(weatherFields['[data-v2-weather-icon]'].alt, '구름 많음 날씨 아이콘');
 });
