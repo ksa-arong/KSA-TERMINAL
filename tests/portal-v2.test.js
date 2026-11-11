@@ -294,6 +294,21 @@ test('목포 대표 해역은 발효 중인 기상특보 샘플을 제공한다'
   });
 });
 
+test('제주 대표 해역은 풍랑주의보와 강한 바람·높은 파고 샘플을 제공한다', () => {
+  const weatherData = loadWeatherData();
+  const jeju = weatherData.areas.find((area) => area.id === 'jeju');
+  const route = jeju.routes[0];
+
+  assert.equal(route.current.temperature, 22.3);
+  assert.equal(route.current.wind, 11.6);
+  assert.equal(route.forecast[0].condition, '흐림');
+  assert.equal(route.forecast[0].waveMin, 1.6);
+  assert.equal(route.forecast[0].waveMax, 2.5);
+  assert.equal(route.status.level, 'warning');
+  assert.equal(route.advisories[0].level, 'warning');
+  assert.equal(route.advisories[0].title, '풍랑주의보 발표');
+});
+
 test('항로 소요시간의 시분 형식을 읽기 쉬운 한글로 표시한다', () => {
   const portalV2 = loadPortalV2();
 
