@@ -92,6 +92,20 @@ test('현재 페이지와 준비 중 페이지도 GNB에서 클릭 가능한 링
   assert.match(source, /aria-current="page"/);
 });
 
+test('전체 터미널 메뉴는 제주만 링크로 제공하고 나머지는 준비중으로 표시한다', () => {
+  const context = vm.createContext({ window: {} });
+  const menuDataSource = fs.readFileSync(path.join(root, 'common', 'menu-data.js'), 'utf8');
+  const layoutSource = fs.readFileSync(path.join(root, 'common', 'layout.js'), 'utf8');
+  vm.runInContext(menuDataSource, context, { filename: 'common/menu-data.js' });
+
+  const readyRegions = Array.from(context.window.PORTAL_REGION_REGISTRY)
+    .filter((region) => region.status === 'ready')
+    .map((region) => region.key);
+
+  assert.deepEqual(readyRegions, ['jeju']);
+  assert.match(layoutSource, /if \(region\.status !== 'ready' \|\| !region\.hasPage \|\| !region\.folder\)/);
+});
+
 test('터미널 안내 GNB는 터미널별 소개 화면으로 연결된다', () => {
   const context = loadRegionMenuContext();
   const terminalGroup = context.window.REGION_MENU.find((group) => group.id === 'terminal');

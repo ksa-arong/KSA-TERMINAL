@@ -157,7 +157,7 @@ function renderSharedLayout() {
     const mobileMenuLogoSrc = brandLogoSrc || paths.asset('images/logo.png');
     const terminalMenuItems = (window.PORTAL_REGION_REGISTRY || []).map((region) => {
       const label = escapeHtml(region.gnbLabelKo || region.nameKo);
-      if (!region.hasPage || !region.folder) {
+      if (region.status !== 'ready' || !region.hasPage || !region.folder) {
         return `<span class="terminal-switcher-disabled" aria-disabled="true"><span>${label}</span><small>${t('common.ready')}</small></span>`;
       }
       return `<a href="${paths.region(region.folder)}"><span>${label}</span><i aria-hidden="true">→</i></a>`;

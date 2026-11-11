@@ -307,6 +307,7 @@ test('제주 대표 해역은 풍랑주의보와 강한 바람·높은 파고 �
   assert.equal(route.status.level, 'warning');
   assert.equal(route.advisories[0].level, 'warning');
   assert.equal(route.advisories[0].title, '풍랑주의보 발표');
+  assert.equal(route.advisories[0].note, '여객선 운항 정보를 확인해 주세요.');
 });
 
 test('항로 소요시간의 시분 형식을 읽기 쉬운 한글로 표시한다', () => {
