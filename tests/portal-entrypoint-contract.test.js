@@ -21,6 +21,12 @@ test('루트 index.html은 portal-v2 화면과 공통 경로 Resolver를 정식 
   assert.match(html, /src="common\/portal-v2\.js/);
 });
 
+test('통합 홈페이지는 첫 진입 시 제주를 기본 지역으로 선택한다', () => {
+  const html = read('index.html');
+
+  assert.match(html, /<main[^>]+data-portal-v2[^>]+data-initial-region-id="jeju"/);
+});
+
 test('legacy-portal-index.html은 기존 포털 디자인과 기능 진입점을 보존한다', () => {
   const html = read('legacy-portal-index.html');
 
