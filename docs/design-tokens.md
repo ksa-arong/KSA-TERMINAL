@@ -81,6 +81,7 @@ Primitive → Semantic → Component → CSS property
 | `--global-color-gray-500` | `#6B7280` | 보조 텍스트 |
 | `--global-color-gray-700` | `#374151` | 본문 텍스트 |
 | `--global-color-gray-900` | `#101828` | 강한 텍스트 |
+| `--global-color-red-300` | `#FF9595` | 밝은 주의보 표면·경계 혼합 |
 | `--global-color-red-600` | `#C2333B` | 위험 상태 |
 | `--global-color-green-600` | `#1F7A45` | 성공 상태 |
 | `--global-color-orange-600` | `#B4700D` | 경고 상태 |
@@ -2042,7 +2043,7 @@ locale key는 JavaScript 함수와 달리 언어 데이터 schema 역할을 할 
 
 터미널 요약 패널의 날씨 아이콘은 화면 크기와 관계없이 `--global-space-80`을 사용한다. 아이콘 크기와 날씨 행의 높이는 분리하며, `--portal-v2-weather-current-min-height`로 세로 공간을 관리한다. 데스크톱에서는 아이콘 크기와 같은 80px로 하단 여백을 줄이고, 태블릿·모바일에서는 기존 152px을 유지한다. 날씨 섹션의 하단 패딩은 화면 높이와 관계없이 `--global-space-8`로 통일해 특보를 포함한 전체 높이를 압축한다.
 
-터미널 날씨의 기상특보는 `.portal-v2-weather__advisory`에서 제목과 안내문을 함께 표시한다. 특보 데이터가 없으면 `hidden`으로 레이아웃에서 제외하고, 데이터가 있으면 `role="status"`와 `aria-live="polite"`로 지역·터미널 변경 내용을 알린다. 단계는 `data-level`과 `--status-success`, `--status-warning`, `--status-danger` 경계선으로 구분하되 색상만 사용하지 않고 특보 제목과 안내문을 항상 유지한다. 데스크톱에서 날씨 데이터와 특보 사이는 콘텐츠 `gap`인 `--global-space-8`만 사용하고, 특보 내부 상하 패딩은 `--global-space-12`로 줄여 패널 하단 여백을 오른쪽 40px inset과 맞춘다.
+터미널 날씨의 기상특보는 `.portal-v2-weather__advisory`에서 제목과 안내문을 함께 표시한다. 특보 데이터가 없으면 `hidden`으로 레이아웃에서 제외하고, 데이터가 있으면 `role="status"`와 `aria-live="polite"`로 지역·터미널 변경 내용을 알린다. 단계는 `data-level`과 `--status-success`, `--status-warning`, `--status-danger` 경계선으로 구분하되 색상만 사용하지 않고 특보 제목과 안내문을 항상 유지한다. 주의보 배경은 `--global-color-red-300` 10%와 `--surface-base`를 혼합해 밝고 맑게 유지하고, 테두리는 같은 색을 55% 혼합하며 아이콘·제목은 대비가 충분한 `--status-danger`를 사용한다. 데스크톱에서 날씨 데이터와 특보 사이는 콘텐츠 `gap`인 `--global-space-8`만 사용하고, 특보 내부 상하 패딩은 `--global-space-12`로 줄여 패널 하단 여백을 오른쪽 40px inset과 맞춘다.
 
 높이 820px 이상인 데스크톱에서 `.portal-v2-finder__body`는 기상특보 안내 바를 포함하되 하단 여백이 과도하지 않도록 spacing 토큰 합계 560px 높이를 사용한다. 낮은 데스크톱과 태블릿·모바일에서는 기존 `height: auto` 흐름을 유지해 콘텐츠 길이에 따라 패널이 늘어나게 한다.
 

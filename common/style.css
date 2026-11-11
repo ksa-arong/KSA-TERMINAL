@@ -2749,6 +2749,7 @@
             --global-color-gray-500: #6B7280;
             --global-color-gray-700: #374151;
             --global-color-gray-900: #101828;
+            --global-color-red-300: #FF9595;
             --global-color-red-600: #C2333B;
             --global-color-green-600: #1F7A45;
             --global-color-orange-600: #B4700D;
@@ -20286,12 +20287,13 @@
         }
 
         .portal-v2-weather__advisory {
+            --portal-v2-weather-advisory-accent: var(--global-color-red-300);
             display: grid;
             margin: var(--global-space-12) 0 0;
             padding: var(--global-space-16) var(--global-space-20);
-            border: 1px solid color-mix(in srgb, var(--status-warning) 36%, var(--border-default));
+            border: 1px solid color-mix(in srgb, var(--portal-v2-weather-advisory-accent) 55%, var(--border-default));
             border-radius: var(--global-radius-sm);
-            background: color-mix(in srgb, var(--status-warning) 10%, var(--surface-base));
+            background: color-mix(in srgb, var(--portal-v2-weather-advisory-accent) 10%, var(--surface-base));
             color: var(--text-body);
             font-size: var(--font-small);
             font-weight: var(--global-font-weight-medium);
@@ -20304,8 +20306,8 @@
         .portal-v2-weather__advisory svg {
             width: var(--global-space-20);
             height: var(--global-space-20);
-            fill: color-mix(in srgb, var(--status-warning) 24%, transparent);
-            color: var(--status-warning);
+            fill: color-mix(in srgb, var(--portal-v2-weather-advisory-accent) 24%, transparent);
+            color: var(--status-danger);
             stroke: currentColor;
             stroke-width: 1.6;
             stroke-linecap: round;
@@ -20321,13 +20323,13 @@
         }
 
         .portal-v2-weather__advisory strong {
-            color: var(--status-warning);
+            color: var(--status-danger);
             font-weight: var(--global-font-weight-bold);
         }
 
         .portal-v2-weather__advisory[data-level="success"] {
             border-color: color-mix(in srgb, var(--status-success) 36%, var(--border-default));
-            background: color-mix(in srgb, var(--status-success) 8%, var(--surface-base));
+            background: color-mix(in srgb, var(--status-success) 2%, var(--surface-base));
         }
 
         .portal-v2-weather__advisory[data-level="success"] svg,
@@ -20337,7 +20339,7 @@
 
         .portal-v2-weather__advisory[data-level="danger"] {
             border-color: color-mix(in srgb, var(--status-danger) 36%, var(--border-default));
-            background: color-mix(in srgb, var(--status-danger) 8%, var(--surface-base));
+            background: color-mix(in srgb, var(--status-danger) 2%, var(--surface-base));
         }
 
         .portal-v2-weather__advisory[data-level="danger"] svg,
