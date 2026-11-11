@@ -20598,7 +20598,7 @@
         
         @media (min-width: 1024px) and (min-height: 820px) {
             .portal-v2-finder__body {
-                height: calc(var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-40));
+                height: calc(var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80) + var(--global-space-80));
                 min-height: 0;
             }
         }
