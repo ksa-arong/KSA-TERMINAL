@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="수화물 허용 기준과 반입 제한 품목 확인 방법을 안내합니다.">
+  <meta property="og:title" content="수화물 안내 | 목포항 여객터미널">
+  <meta property="og:description" content="수화물 허용 기준과 반입 제한 품목 확인 방법을 안내합니다.">
+  <meta property="og:type" content="website">
+  <title>수화물 안내 | 목포항 여객터미널</title>
+  <link rel="icon" href="../../common/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="../../common/style.css">
+</head>
+<body class="portal-page portal-subpage portal-template-page region-template-page region-subpage-page" data-region-page="baggage">
+  <div id="app"></div>
+  <script src="./terminal-data.js"></script>
+  <script src="./schedule-data.js"></script>
+  <script src="../../common/path-resolver.js"></script>
+<script src="../../common/locales/ko.js"></script>
+  <script src="../../common/locales/en.js"></script>
+  <script src="../../common/i18n.js"></script>
+  <script src="../../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_SUBPAGE_DATA = {
+      rootPrefix: '../',
+      content: `
+<section class="content-block" aria-labelledby="baggage-title">
+  <div class="content-heading">
+    <h2 id="baggage-title">수화물 안내</h2>
+    <p>수화물 허용 크기와 무게, 반입 제한 품목은 선박과 선사별로 다를 수 있습니다.</p>
+  </div>
+  <div class="portal-guide-card-grid">
+    <article class="portal-guide-card"><span>01</span><h3>휴대 수화물</h3><p>통행과 비상 대피에 방해되지 않도록 지정된 장소에 보관해 주세요.</p></article>
+    <article class="portal-guide-card"><span>02</span><h3>대형 수화물</h3><p>자전거, 낚시 장비 등 대형 물품은 예약 전 선적 가능 여부와 비용을 확인해 주세요.</p></article>
+    <article class="portal-guide-card"><span>03</span><h3>반입 제한 품목</h3><p>위험물과 인화성 물질 등은 반입이 제한됩니다. 불확실한 품목은 선사에 문의해 주세요.</p></article>
+  </div>
+</section>
+
+<section class="content-block" aria-labelledby="pet-guide-title">
+  <div class="content-heading">
+    <h2 id="pet-guide-title">반려동물 동반 이용 안내</h2>
+    <p>반려동물과 함께 터미널과 여객선을 이용할 때 필요한 준비사항과 안전수칙을 확인해 주세요.</p>
+  </div>
+  <div class="portal-safety-list">
+    <section>
+      <header><span>01</span><h3>동반 전 준비사항</h3></header>
+      <ul>
+        <li><strong class="portal-content-item-title">동물등록 및 예방접종</strong><p class="portal-content-item-description">생후 3개월 이상 반려동물은 관련 법령과 정부 정책에 따라 내장형 전자칩, 외장형 무선식별장치 또는 등록인식표 중 하나를 선택해 등록하고 광견병 예방접종을 완료해야 합니다. 예방접종 수첩을 지참해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">인식표 착용</strong><p class="portal-content-item-description">외출할 때는 보호자의 성명과 전화번호, 동물등록번호가 표시된 인식표를 착용해야 합니다.</p></li>
+        <li><strong class="portal-content-item-title">보호자 책임</strong><p class="portal-content-item-description">반려동물로 인해 다른 이용객에게 피해가 발생한 경우 보호자에게 배상 책임이 있습니다.</p></li>
+      </ul>
+    </section>
+    <section>
+      <header><span>02</span><h3>여객터미널 이용</h3></header>
+      <ul>
+        <li><strong class="portal-content-item-title">이동장비 사용</strong><p class="portal-content-item-description">터미널에서는 반려동물을 전용 케이지에 넣어 이동해 주세요. 부득이한 경우에는 유모차를 사용하거나 약 50cm 길이의 목줄을 반드시 착용해야 합니다.</p></li>
+        <li><strong class="portal-content-item-title">목줄 길이 기준</strong><p class="portal-content-item-description">약 50cm는 반려동물이 보호자 옆에 붙어서 이동할 수 있는 길이로, 다른 이용객에게 불편을 주는 행동을 예방하기 위한 기준입니다.</p></li>
+        <li><strong class="portal-content-item-title">맹견 이용 제한</strong><p class="portal-content-item-description">도사견, 아메리칸 핏불테리어, 아메리칸 스태퍼드셔 테리어, 스태퍼드셔 불 테리어, 로트와일러 및 각 품종의 잡종견은 이용할 수 없습니다.</p></li>
+        <li><strong class="portal-content-item-title">장애인 보조견</strong><p class="portal-content-item-description">장애인 보조견은 보조견 표지를 반드시 부착해야 합니다.</p></li>
+        <li><strong class="portal-content-item-title">배변 처리</strong><p class="portal-content-item-description">배변봉투와 물티슈 등을 지참하고, 배변물은 보호자가 즉시 깨끗하게 처리해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">대기의자 이용 금지</strong><p class="portal-content-item-description">터미널 대기의자는 고객용이므로 반려동물이 사용하지 않도록 해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">승강기 이용</strong><p class="portal-content-item-description">승강기 이용은 가급적 자제하고, 불가피하게 이용할 때는 보호자가 반려동물을 안고 탑승해 주세요.</p></li>
+      </ul>
+    </section>
+    <section>
+      <header><span>03</span><h3>여객선 탑승</h3></header>
+      <ul>
+        <li><strong class="portal-content-item-title">공공장소 안전조치</strong><p class="portal-content-item-description">터미널과 여객선의 공공장소에서는 반려동물에 대한 안전조치를 하고 다른 이용객에게 불편을 주지 않도록 주의해 주세요.</p></li>
+        <li><strong class="portal-content-item-title">휴게공간 이용</strong><p class="portal-content-item-description">여객선 내 휴게공간에서는 반드시 반려동물을 케이지에 넣어 다른 이용객에게 피해나 불쾌감을 주지 않도록 해 주세요.</p></li>
+      </ul>
+    </section>
+  </div>
+</section>`
+    };
+  </script>
+  <script src="../../common/dom-utils.js"></script>
+  <script src="../../common/region-page.js"></script>
+  <script src="../../common/layout.js"></script>
+</body>
+</html>

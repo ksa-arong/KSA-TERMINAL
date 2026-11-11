@@ -26,12 +26,12 @@
 | `--font-h3` | `20px` | 소제목/카드 제목 | `.portal-guide-item h3`, `--font-card-title` |
 | `--font-showcase-title` | `clamp(32px, 4vw, 50px)` | showcase 대제목 | `.portal-guide-showcase-head h2` |
 | `--font-showcase-card-title` | `clamp(19px, 1.5vw, 23px)` | showcase 카드 제목 | `.portal-guide-showcase-copy h3` |
-| `--font-subpage-title` | `clamp(38px, 3.2vw, 52px)` | 서브페이지 히어로 제목 | `.portal-template-page .portal-subhero h1` |
+| `--font-subpage-title` | `clamp(38px, 3.2vw, 52px)` | 서브페이지 히어로 제목 | `.portal-template-page .subhero h1` |
 | `--font-subpage-title-mobile` | `clamp(32px, 9vw, 40px)` | 모바일 서브페이지 제목 | mobile subhero override |
 | `--font-subhero-title-mobile` | `clamp(var(--font-h2), 8vw, var(--font-display))` | 모바일 subhero 보조 제목 | mobile subhero rules |
 | `--font-card-title-lg` | `28px` | 큰 카드 제목 | `.portal-weather-summary-card h2`, `.portal-weather-feature-head h2` |
 | `--font-display-title` | `var(--font-display)` | display 제목 alias | display title selectors |
-| `--font-page-title` | `var(--font-h1)` | 페이지 제목 alias | `.portal-template-page .portal-subhero h1` |
+| `--font-page-title` | `var(--font-h1)` | 페이지 제목 alias | `.portal-template-page .subhero h1` |
 | `--font-section-title` | `var(--font-h1)` | 섹션 제목 alias | `.section-title__title`, `.portal-guide-section h2` |
 | `--font-subsection-title` | `var(--font-h2)` | 하위 섹션 제목 alias | subsection title rules |
 | `--font-card-title` | `var(--font-h3)` | 카드 제목 alias | card title rules |
@@ -163,7 +163,7 @@ Primitive는 컴포넌트에서 직접 참조하지 않고, 아래 semantic 토�
 | `--brand-overlay-faint` | `rgba(var(--color-brand-rgb), .04)` | overlay | table hover, notice nav focus |
 | `--brand-overlay-faint-hover` | `rgba(var(--color-brand-rgb), .05)` | overlay | notice list focus |
 | `--brand-overlay-primary` | `rgba(var(--color-brand-rgb), .08)` | overlay | `.id-guide-matrix .id-guide-primary` |
-| `--brand-overlay-subtle` | `rgba(var(--color-brand-rgb), .09)` | overlay | `.id-guide-audience`, `.id-guide-card:hover` |
+| `--brand-overlay-subtle` | `rgba(var(--color-brand-rgb), .09)` | overlay | `.tab-list`, `.tab-button:hover` |
 | `--brand-overlay-pill` | `rgba(var(--color-brand-rgb), .1)` | overlay | `.portal-step-flow li > span` |
 | `--brand-overlay-hover` | `rgba(var(--color-brand-rgb), .14)` | overlay | `.portal-guide-item:hover` shadow |
 | `--brand-overlay-showcase` | `rgba(var(--color-brand-rgb), .2)` | overlay | map hover/showcase radial overlay |

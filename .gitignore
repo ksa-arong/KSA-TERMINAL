@@ -15,3 +15,5 @@ dist/
 # OS metadata
 .DS_Store
 Thumbs.db
+# Local browser API configuration
+common/map-config.local.js

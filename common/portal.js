@@ -86,6 +86,13 @@
     const regions = portalData.regions || {};
     const mapRoot = document.querySelector('[data-portal-map-root]');
     const portalRootPrefix = mapRoot ? (mapRoot.dataset.rootPrefix || '') : '';
+    const pathLocation = document.body.classList.contains('region-template-page')
+        ? 'region'
+        : portalRootPrefix ? 'portal-subpage' : 'portal-root';
+    const paths = window.KsaPathResolver.create({
+        location: pathLocation,
+        regionId: pathLocation === 'region' ? window.terminalData.regionId : undefined
+    });
 
     const markers = [...document.querySelectorAll('.terminal-marker[data-region]')];
     const nearbyTerminalMarkers = [...document.querySelectorAll('.terminal-nearby-marker[data-terminal-type]')];
@@ -341,7 +348,7 @@
             localize(representative.name);
         fields.region.textContent = localize(region.summaryName) || `${regionLabel}항 여객선 터미널`;
         fields.homepage.hidden = !region.folder;
-        if (region.folder) fields.homepage.href = `${portalRootPrefix}${region.folder}/index.html`;
+        if (region.folder) fields.homepage.href = paths.region(region.folder);
         else fields.homepage.removeAttribute('href');
         const primaryMarker = [...markers].find((marker) => marker.dataset.region === id);
         const initialType = renderTypeFilters(region, primaryMarker?.dataset.terminalType);
@@ -363,7 +370,7 @@
             noticeId: notice.id || `${terminal.id}-${index + 1}`
         }))).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
 
-        list.innerHTML = notices.map((notice) => `<li><a href="customer/notice-detail.html?id=${encodeURIComponent(notice.noticeId)}"><span><span class="portal-content-badge${notice.terminalId === 'common' ? ' portal-content-badge--common' : ' portal-content-badge--terminal'}">${escapeHtml(notice.terminalLabel)}</span><b>${escapeHtml(notice.title)}</b></span><time datetime="${escapeHtml(notice.date.replaceAll('.', '-'))}">${escapeHtml(notice.date)}</time></a></li>`).join('');
+        list.innerHTML = notices.map((notice) => `<li><a href="${portalRootPrefix}customer/notice-detail.html?id=${encodeURIComponent(notice.noticeId)}"><span><span class="portal-content-badge${notice.terminalId === 'common' ? ' portal-content-badge--common' : ' portal-content-badge--terminal'}">${escapeHtml(notice.terminalLabel)}</span><b>${escapeHtml(notice.title)}</b></span><time datetime="${escapeHtml(notice.date.replaceAll('.', '-'))}">${escapeHtml(notice.date)}</time></a></li>`).join('');
     }
 
     function syncZoomedMapMarkers() {

@@ -2,7 +2,7 @@
   'use strict';
 
   const shortTermPeriods = [
-    { label: '오늘', time: '오전', condition: '구름 많음', wave: -0.2, wind: -0.8, direction: '남동' },
+    { label: '오늘', time: '오전', condition: '맑음', wave: -0.2, wind: -0.8, direction: '남동' },
     { label: '오늘', time: '오후', condition: '흐리고 한때 비', wave: 0.3, wind: 1.2, direction: '남동' },
     { label: '내일', time: '오전', condition: '흐림', wave: 0.1, wind: 0.5, direction: '남-남서' },
     { label: '내일', time: '오후', condition: '구름 많음', wave: -0.1, wind: -0.3, direction: '남-남서' },
@@ -44,14 +44,22 @@
     };
   }
 
+  function currentConditionFor(wave, wind) {
+    if (wave >= 2.6 || wind >= 13) return '흐리고 한때 비';
+    if (wave >= 1.7 || wind >= 9.5) return '흐림';
+    if (wave >= 1.5 || wind >= 8.5) return '구름 많음';
+    if (wave >= 1.3 || wind >= 7.8) return '구름 조금';
+    return '맑음';
+  }
+
   function makeForecast(wave, wind, baseDirection) {
-    return shortTermPeriods.map((period) => {
+    return shortTermPeriods.map((period, index) => {
       const waveCenter = round(wave + period.wave);
       const windCenter = round(wind + period.wind);
       return {
         label: period.label,
         time: period.time,
-        condition: period.condition,
+        condition: index === 0 ? currentConditionFor(wave, wind) : period.condition,
         waveMin: round(waveCenter - 0.4),
         waveMax: round(waveCenter + 0.5),
         windMin: round(windCenter - 2),
@@ -133,6 +141,14 @@
     updatedAt: '2026년 9월 2일 13:37 기준',
     areas: [
       {
+        id: 'incheon',
+        label: '인천',
+        routes: [
+          sea('incheon-gyeonggi-coast', '인천·경기앞바다', '인천·경기앞바다', 1.1, 7.1, '남동'),
+          sea('west-central-offshore-incheon', '서해중부먼바다', '서해중부먼바다', 2.1, 10.8, '남동')
+        ]
+      },
+      {
         id: 'gunsan',
         label: '군산',
         routes: [
@@ -196,6 +212,14 @@
         routes: [
           sea('gyeongnam-central-coast', '경남중부남해앞바다', '경남중부남해앞바다', 1.5, 8.7, '동'),
           sea('south-east-coast', '남해동부앞바다', '남해동부앞바다', 2.0, 10.2, '동-남동')
+        ]
+      },
+      {
+        id: 'busan',
+        label: '부산',
+        routes: [
+          sea('busan-coast', '부산앞바다', '부산앞바다', 1.4, 8.4, '동'),
+          sea('south-east-offshore', '남해동부먼바다', '남해동부먼바다', 2.3, 11.6, '동-남동')
         ]
       },
       {

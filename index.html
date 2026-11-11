@@ -1,268 +1,265 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="portal-v2-scroll">
 
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="common/images/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="전국 주요 여객선터미널의 운항 정보와 이용 안내를 확인하세요." data-i18n-attr="content:portal.metaDescription">
-    <title data-i18n="portal.metaTitle">전국 여객선터미널 안내</title>
-    <link rel="stylesheet" href="common/style.css?v=20260929-1">
+    <meta name="description" content="지역을 선택해 전국 여객선터미널 정보와 운항 안내를 확인하세요.">
+    <title>전국 여객선터미널 안내</title>
+    <link rel="stylesheet" href="common/style.css?v=20261030-guide-snap-offset">
 </head>
 
-<body class="portal-page portal-home-page">
+<body class="portal-page portal-home-page portal-v2-page">
     <a class="skip-link" href="#main" data-i18n="common.skip">본문 바로가기</a>
     <div id="portal-header-root"></div>
-    <main id="main">
-        <section class="portal-hero" aria-labelledby="portal-title">
-            <div class="portal-hero-media" aria-hidden="true">
-                <span class="portal-hero-slide portal-hero-slide--jeju active"></span>
-                <span class="portal-hero-slide portal-hero-slide--pohang"></span>
-                <span class="portal-hero-slide portal-hero-slide--island-harbor"></span>
-                <span class="portal-hero-slide portal-hero-slide--hongdo"></span>
-                <span class="portal-hero-slide portal-hero-slide--gangjeong"></span>
-            </div>
-            <div class="container portal-hero-content">
-                <h1 id="portal-title"><span data-i18n="portal.heroTitle1">여행을 향한 바닷길,</span><strong data-i18n="portal.heroTitle2">전국 여객선터미널이 함께합니다.</strong></h1>
-                <p><span data-i18n="portal.heroDescription1">전국 주요 여객선터미널의 운항 정보부터 승선 안내까지</span><br><span data-i18n="portal.heroDescription2">더 편리하고 안전한 바닷길을 한곳에서 만나보세요.</span></p>
-                <div class="portal-hero-pagination" role="group" aria-label="히어로 배경 선택" data-i18n-attr="aria-label:portal.heroPicker">
-                    <div class="portal-hero-pagination-status" aria-hidden="true">
-                        <strong data-hero-current>01</strong>
-                        <span class="portal-hero-pagination-track" data-hero-progress></span>
-                        <strong data-hero-total>05</strong>
-                    </div>
-                    <button class="btn btn--icon btn--sm btn--ghost" type="button" data-hero-previous data-dir="prev" aria-label="이전 히어로 이미지" data-i18n-attr="aria-label:portal.heroPrevious">
-                        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m10 3-5 5 5 5"/></svg>
-                    </button>
-                    <button class="portal-hero-playback btn btn--icon btn--sm btn--ghost" type="button" data-hero-playback aria-label="히어로 슬라이드 일시정지" aria-pressed="false">
-                        <svg class="portal-hero-playback-icon portal-hero-playback-icon--pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 3v10M11.5 3v10"/></svg>
-                        <svg class="portal-hero-playback-icon portal-hero-playback-icon--play" viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 7 5-7 5Z"/></svg>
-                    </button>
-                    <button class="btn btn--icon btn--sm btn--ghost" type="button" data-hero-next data-dir="next" aria-label="다음 히어로 이미지" data-i18n-attr="aria-label:portal.heroNext">
-                        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg>
-                    </button>
-                </div>
-            </div>
-            <nav class="portal-hero-quick portal-hero-quick--cards" id="portal-hero-quick" aria-label="주요 서비스 바로가기" data-i18n-attr="aria-label:portal.quickAria"></nav>
-        </section>
-        <section class="portal-terminal-section" id="portal-terminals" aria-labelledby="terminal-list-title">
-            <div class="container">
-                <div data-portal-map-root data-root-prefix=""></div>
-            </div>
-        </section>
-        <section class="portal-guide-section" id="portal-guide" aria-labelledby="portal-guide-title">
-            <div class="container">
-                <div class="section-title section-title--light section-title--left">
-                    <span class="section-title__eyebrow">FERRY GUIDE</span>
-                    <h2 class="section-title__title terminal-main-title" id="portal-guide-title" data-i18n="portal.guideTitle">여객선 이용 필수 가이드</h2>
-                </div>
-                <div class="portal-guide-grid">
-                    <a class="portal-guide-item portal-guide-item--photo" href="boarding/id.html">
-                        <span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-id-v4.png" alt="" width="1536" height="1024" loading="lazy" decoding="async"></span>
-                        <div class="portal-guide-copy">
-                            <div class="portal-guide-heading">
-                                <h3 data-i18n="portal.guideIdTitle">신분증 지참</h3>
-                                <span class="portal-guide-arrow" aria-hidden="true">→</span>
-                            </div>
-                            <p>승선 가능한 신분증 종류를 확인하세요.</p>
-                        </div>
-                    </a>
 
-                    <a class="portal-guide-item portal-guide-item--photo" href="schedule/operation.html">
-                        <span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-status-v2.jpg" alt="" width="1200" height="800" loading="lazy" decoding="async"></span>
-                        <div class="portal-guide-copy">
-                            <div class="portal-guide-heading">
-                                <h3>운항 상태 확인</h3>
-                                <span class="portal-guide-arrow" aria-hidden="true">→</span>
+    <main id="main" data-portal-v2>
+        <section class="portal-v2-hero" aria-label="지역별 여객선터미널 찾기">
+            <div class="portal-v2-stage">
+                <img class="portal-v2-hero__image" data-v2-region-image src="common/images/portal-hero-jeju-coastal-wide.png" alt="제주 여객선터미널과 바다 풍경">
+                <span class="portal-v2-hero__scrim" aria-hidden="true"></span>
+                <!-- hero layout v3 -->
+                <div class="portal-v2-hero__inner">
+                    <div class="portal-v2-hero__message">
+                        <p class="portal-v2-hero__eyebrow">YOUR JOURNEY STARTS HERE</p>
+                        <h1>
+                            <span data-i18n="portal.heroTitle1">바다로 이어지는 모든 여정,</span>
+                            <strong data-i18n="portal.heroTitle2">전국 여객선터미널에서 시작됩니다.</strong>
+                        </h1>
+                    </div>
+                    <div class="portal-v2-finder" aria-label="지역별 여객선터미널 찾기">
+                        <div class="portal-v2-finder__body" id="portal-v2-map">
+                            <div class="portal-v2-region-list" role="group" aria-label="지역 목록">
+                                <div class="portal-v2-region-list__heading">
+                                    <strong>전국 여객선 터미널</strong>
+                                    <span>KSA TERMINAL</span>
+                                </div>
+                                <div class="portal-v2-region-search portal-list-search">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+                                    <label class="sr-only" for="portal-v2-region-search-input">터미널 검색</label>
+                                    <input id="portal-v2-region-search-input" type="search" placeholder="터미널명을 검색하세요" autocomplete="off" data-v2-region-search>
+                                </div>
+                                <div class="portal-v2-region-list__groups">
+                                    <div class="portal-v2-region-list__grid">
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="gunsan" aria-pressed="false">군산<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="boryeong" aria-pressed="false">대천<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="donghae" aria-pressed="false">동해<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="mokpo" aria-pressed="false">목포<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="busan" aria-pressed="false">부산<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="yeosu" aria-pressed="false">여수<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="wando" aria-pressed="false">완도<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="incheon" aria-pressed="false">인천<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="jeju" aria-pressed="false">제주<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="tongyeong" aria-pressed="false">통영<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                        <button class="btn btn--region btn--pill btn--outline region-quick-btn" type="button" data-region-id="pohang" aria-pressed="false">포항<span class="arr"><svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></span></button>
+                                    </div>
+                                    <p class="portal-v2-region-search__empty" data-v2-region-search-empty hidden>일치하는 터미널이 없습니다.</p>
+                                </div>
                             </div>
-                            <p>출발 전 결항·지연 여부를 확인하세요.</p>
-                        </div>
-                    </a>
 
-                    <a class="portal-guide-item portal-guide-item--photo" href="boarding/procedure.html">
-                        <span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-time-v2.jpg" alt="" width="1200" height="800" loading="lazy" decoding="async"></span>
-                        <div class="portal-guide-copy">
-                            <div class="portal-guide-heading">
-                                <h3>승선 마감 시간 확인</h3>
-                                <span class="portal-guide-arrow" aria-hidden="true">→</span>
+                            <div class="portal-v2-map korea-map" aria-label="전국 터미널 지역 선택 지도">
+                                <div class="portal-v2-map__header">
+                                    <button class="btn btn--outline btn--sm portal-v2-map__reset" type="button" data-v2-map-reset>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></svg>
+                                        <span>전국 보기</span>
+                                    </button>
+                                </div>
+                                <div class="portal-v2-map__canvas">
+                                    <div class="portal-v2-map__graphic">
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--incheon" type="button" data-region-id="incheon" aria-label="인천 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>인천</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--boryeong" type="button" data-region-id="boryeong" aria-label="대천 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>대천</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--gunsan" type="button" data-region-id="gunsan" aria-label="군산 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>군산</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--mokpo" type="button" data-region-id="mokpo" aria-label="목포 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>목포</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--wando" type="button" data-region-id="wando" aria-label="완도 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>완도</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--yeosu" type="button" data-region-id="yeosu" aria-label="여수 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>여수</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--tongyeong" type="button" data-region-id="tongyeong" aria-label="통영 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>통영</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--busan" type="button" data-region-id="busan" aria-label="부산 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>부산</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--pohang" type="button" data-region-id="pohang" aria-label="포항 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>포항</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--donghae" type="button" data-region-id="donghae" aria-label="동해 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>동해</span></button>
+                                        <button class="portal-v2-map__marker portal-v2-map__marker--jeju" type="button" data-region-id="jeju" aria-label="제주 지역 선택" aria-pressed="false"><i aria-hidden="true"></i><span>제주</span></button>
+                                    </div>
+                                    <div class="portal-v2-terminal-layer" data-v2-terminal-markers role="list" aria-label="선택 지역 터미널"></div>
+                                </div>
                             </div>
-                            <p>출발 1시간 전까지 터미널에 도착하세요.</p>
-                        </div>
-                    </a>
 
-                    <a class="portal-guide-item portal-guide-item--photo" href="boarding/vehicle.html">
-                        <span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-vehicle-v1.png" alt="" width="1536" height="1024" loading="lazy" decoding="async"></span>
-                        <div class="portal-guide-copy">
-                            <div class="portal-guide-heading">
-                                <h3>차량 선적 확인</h3>
-                                <span class="portal-guide-arrow" aria-hidden="true">→</span>
-                            </div>
-                            <p>차량 예약과 접수 조건을 미리 확인하세요.</p>
+                            <article class="portal-v2-summary is-route-selected" aria-live="polite">
+                                <header class="portal-v2-map__detail">
+                                    <h2 data-v2-terminal-name>제주 연안여객터미널</h2>
+
+                                    <section class="portal-v2-terminal-info" aria-label="터미널 주소">
+                                        <div class="portal-v2-terminal-info__contact">
+                                            <div class="portal-v2-terminal-info__contact-label">
+                                                <svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-13a7 7 0 1 0-14 0c0 6.8 7 13 7 13Z"/><circle cx="12" cy="8" r="2.4"/></svg>
+                                                <span>주소</span>
+                                            </div>
+                                            <span class="portal-v2-terminal-info__value" data-v2-terminal-address>제주특별자치도 제주시 임항로 111</span>
+                                        </div>
+                                    </section>
+                                    <div class="portal-v2-map__actions">
+                                        <a class="btn btn--outline btn--sm portal-v2-map__reset" data-v2-region-link href="regions/jeju/index.html">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg>
+                                            <span>터미널 홈페이지</span>
+                                        </a>
+                                    </div>
+                                </header>
+                                <section class="portal-v2-terminal-card" aria-labelledby="portal-v2-routes-title">
+                                    <header class="portal-v2-terminal-card__header">
+                                        <h3 id="portal-v2-routes-title">주요 항로</h3>
+                                    </header>
+                                    <div class="portal-v2-route-list" data-v2-terminal-routes>
+                                        <div class="portal-v2-route-destination-grid">
+                                            <article class="portal-v2-route-destination-card">
+                                                <div class="portal-v2-route-card__path"><strong class="portal-v2-route-card__origin">제주</strong><span class="portal-v2-route-card__arrow" aria-hidden="true">→</span><strong class="portal-v2-route-card__destination">목포</strong></div>
+                                                <div class="portal-v2-route-card__meta"><span class="portal-v2-route-card__duration"><span class="portal-v2-route-card__duration-label">소요시간</span><strong class="portal-v2-route-card__duration-value">4시간 30분</strong></span>
+                                                </div>
+                                                <div class="portal-v2-route-card__actions"><a class="btn btn--sm btn--outline portal-v2-route-card__operation" href="schedule/operation.html" aria-label="목포 항로 운항정보 보기">운항정보</a><a class="btn btn--sm btn--outline portal-v2-route-card__booking" href="https://island.theksa.co.kr/"
+                                                        target="_blank" rel="noopener" aria-label="목포 항로 예매 사이트 새 창 열림">예매하기</a></div>
+                                            </article>
+                                            <article class="portal-v2-route-destination-card">
+                                                <div class="portal-v2-route-card__path"><strong class="portal-v2-route-card__origin">제주</strong><span class="portal-v2-route-card__arrow" aria-hidden="true">→</span><strong class="portal-v2-route-card__destination">완도</strong></div>
+                                                <div class="portal-v2-route-card__meta"><span class="portal-v2-route-card__duration"><span class="portal-v2-route-card__duration-label">소요시간</span><strong class="portal-v2-route-card__duration-value">2시간 40분</strong></span>
+                                                </div>
+                                                <div class="portal-v2-route-card__actions"><a class="btn btn--sm btn--outline portal-v2-route-card__operation" href="schedule/operation.html" aria-label="완도 항로 운항정보 보기">운항정보</a><a class="btn btn--sm btn--outline portal-v2-route-card__booking" href="https://island.theksa.co.kr/"
+                                                        target="_blank" rel="noopener" aria-label="완도 항로 예매 사이트 새 창 열림">예매하기</a></div>
+                                            </article>
+                                            <article class="portal-v2-route-destination-card">
+                                                <div class="portal-v2-route-card__path"><strong class="portal-v2-route-card__origin">제주</strong><span class="portal-v2-route-card__arrow" aria-hidden="true">→</span><strong class="portal-v2-route-card__destination">추자</strong></div>
+                                                <div class="portal-v2-route-card__meta"><span class="portal-v2-route-card__duration"><span class="portal-v2-route-card__duration-label">소요시간</span><strong class="portal-v2-route-card__duration-value">1시간</strong></span>
+                                                </div>
+                                                <div class="portal-v2-route-card__actions"><a class="btn btn--sm btn--outline portal-v2-route-card__operation" href="schedule/operation.html" aria-label="추자 항로 운항정보 보기">운항정보</a><a class="btn btn--sm btn--outline portal-v2-route-card__booking" href="https://island.theksa.co.kr/"
+                                                        target="_blank" rel="noopener" aria-label="추자 항로 예매 사이트 새 창 열림">예매하기</a></div>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="portal-v2-weather" aria-labelledby="portal-v2-weather-title">
+                                    <header class="portal-v2-weather__header">
+                                        <h3 id="portal-v2-weather-title">터미널 날씨</h3>
+                                        <div class="portal-v2-weather__updated">
+                                            <small data-v2-weather-updated>2026년 9월 2일 13:37 기준</small>
+                                        </div>
+                                    </header>
+                                    <div class="portal-v2-weather__content">
+                                        <div class="portal-v2-weather__body">
+                                            <div class="portal-v2-weather__current">
+                                                <img data-v2-weather-icon src="common/images/weather/clear-day.svg" alt="맑음 날씨 아이콘">
+                                                <div><span data-v2-weather-condition>맑음</span><strong data-v2-weather-temperature>22.8℃</strong></div>
+                                            </div>
+                                            <div class="portal-v2-weather__metrics">
+                                                <div>
+                                                    <span>풍향</span><strong data-v2-weather-direction>남동</strong>
+                                                </div>
+                                                <div>
+                                                    <span>풍속</span><strong data-v2-weather-speed>8.2m/s</strong>
+                                                </div>
+                                                <div>
+                                                    <span>파고</span><strong data-v2-weather-wave>0.6~1.5m</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </article>
                         </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-        <!-- Alternate capsule guide style: remove this comment wrapper to restore the section.
-        <section class="portal-guide-showcase" aria-labelledby="portal-guide-showcase-title">
-            <div class="container">
-                <div class="portal-guide-showcase-head">
-                    <div>
-                        <span>FERRY TRAVEL TIPS</span>
-                        <h2 id="portal-guide-showcase-title">여객선 이용 필수 가이드</h2>
-                    </div>
-                    <p>출발 전 꼭 확인해야 할 정보를<br>사진과 함께 빠르게 살펴보세요.</p>
-                </div>
-                <div class="portal-guide-showcase-grid">
-                    <a class="portal-guide-showcase-card" href="boarding/id.html">
-                        <img src="common/images/portal-guide-id-v2.jpg" alt="" width="1200" height="800" loading="lazy" decoding="async">
-                        <span class="portal-guide-showcase-shade" aria-hidden="true"></span>
-                        <div class="portal-guide-showcase-copy">
-                            <h3>신분증 지참</h3>
-                            <p>승선 가능한 신분증 종류를 확인하세요.</p>
-                            <span class="portal-guide-showcase-arrow" aria-hidden="true">↗</span>
-                        </div>
-                    </a>
-                    <a class="portal-guide-showcase-card" href="schedule/operation.html">
-                        <img src="common/images/portal-guide-status-v2.jpg" alt="" width="1200" height="800" loading="lazy" decoding="async">
-                        <span class="portal-guide-showcase-shade" aria-hidden="true"></span>
-                        <div class="portal-guide-showcase-copy">
-                            <h3>운항 상태 확인</h3>
-                            <p>출발 전 결항·지연 여부를 확인하세요.</p>
-                            <span class="portal-guide-showcase-arrow" aria-hidden="true">↗</span>
-                        </div>
-                    </a>
-                    <a class="portal-guide-showcase-card" href="boarding/procedure.html">
-                        <img src="common/images/portal-guide-time-v2.jpg" alt="" width="1200" height="800" loading="lazy" decoding="async">
-                        <span class="portal-guide-showcase-shade" aria-hidden="true"></span>
-                        <div class="portal-guide-showcase-copy">
-                            <h3>승선 마감 시간 확인</h3>
-                            <p>출발 1시간 전까지 터미널에 도착하세요.</p>
-                            <span class="portal-guide-showcase-arrow" aria-hidden="true">↗</span>
-                        </div>
-                    </a>
-                    <a class="portal-guide-showcase-card" href="boarding/vehicle.html">
-                        <img src="common/images/portal-guide-vehicle-v1.png" alt="" width="1536" height="1024" loading="lazy" decoding="async">
-                        <span class="portal-guide-showcase-shade" aria-hidden="true"></span>
-                        <div class="portal-guide-showcase-copy">
-                            <h3>차량 선적 확인</h3>
-                            <p>차량 예약과 접수 조건을 미리 확인하세요.</p>
-                            <span class="portal-guide-showcase-arrow" aria-hidden="true">↗</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-        End alternate capsule guide style. -->
-        <section class="portal-guide-links portal-bottom-info" aria-labelledby="portal-latest-notice-title portal-quick-guide-title">
-            <div class="container portal-bottom-info-grid">
-                <div class="portal-bottom-column portal-bottom-column--notice">
-                    <div class="portal-info-card-head">
-                        <h2 class="terminal-main-title" id="portal-latest-notice-title">공지사항</h2>
-                        <a class="btn btn--md btn--outline" href="customer/notice.html">
-                            <span>전체 보기</span>
-                            <svg class="line-icon terminal-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-                        </a>
-                    </div>
-                    <div class="portal-home-notice-card">
-                        <ul class="portal-home-notice-list" id="portal-latest-notice-list" aria-label="최신 공지사항 5건"></ul>
-                    </div>
-                </div>
-                <div class="portal-bottom-column">
-                    <h2 class="terminal-main-title sr-only" id="portal-quick-guide-title">빠른 안내</h2>
-                    <div class="portal-quick-guide-list">
-                        <a class="portal-quick-guide-card portal-quick-guide-card--feature portal-quick-guide-card--booking" href="https://island.theksa.co.kr/" target="_blank" rel="noopener" aria-label="승선권 예매 사이트 새 창 열림">
-                            <span class="portal-quick-guide-copy">
-                                <span class="portal-quick-guide-title-row">
-                                    <strong>승선권 예매</strong>
-                                </span>
-                                <small>한국해운조합 승선권예매로 이동하세요</small>
-                            </span>
-                            <span class="portal-quick-guide-visual" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path class="icon-line" d="M6 13h36v7a4 4 0 0 0 0 8v7H6v-7a4 4 0 0 0 0-8v-7Z"/>
-                                    <path class="icon-detail" d="M18 13v22"/>
-                                </svg>
-                            </span>
-                        </a>
-                        <a class="portal-quick-guide-card portal-quick-guide-card--feature portal-quick-guide-card--lost" href="customer/lost-found.html">
-                            <span class="portal-quick-guide-copy">
-                                <span class="portal-quick-guide-title-row">
-                                    <strong>유실물 안내</strong>
-                                </span>
-                                <small>유실물 접수와 보관 장소를 확인하세요</small>
-                            </span>
-                            <span class="portal-quick-guide-visual" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path class="icon-line" d="M7 17h27v24H7V17Z"/>
-                                    <path class="icon-line" d="M14 17v-4a3 3 0 0 1 3-3h7a3 3 0 0 1 3 3v4"/>
-                                    <path class="icon-detail" d="M13 23v11"/>
-                                </svg>
-                            </span>
-                        </a>
-                        <a class="portal-quick-guide-card portal-quick-guide-card--feature portal-quick-guide-card--phone" href="tel:15441114" aria-label="여객선 운항안내 1544-1114 전화 연결">
-                            <span class="portal-quick-guide-copy">
-                                <span class="portal-quick-guide-title-row">
-                                    <strong>여객선 운항안내</strong>
-                                </span>
-                                <small>운항 안내 1544-1114로 문의하세요</small>
-                            </span>
-                            <span class="portal-quick-guide-visual" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path class="icon-line" d="m14 7-7 7c0 15 12 27 27 27l7-7-9-8-5 5c-4.7-2.1-7.9-5.3-10-10l5-5-8-9Z"/>
-                                    <path class="icon-detail" d="M29 10a10 10 0 0 1 9 9"/>
-                                    <path class="icon-detail" d="M29 15a5 5 0 0 1 4 4"/>
-                                </svg>
-                            </span>
-                        </a>
                     </div>
                 </div>
+                <a class="portal-v2-scroll-cue" href="#portal-v2-content" aria-label="주요 서비스로 이동">
+                    <svg viewBox="0 0 24 28" aria-hidden="true">
+                        <path class="portal-v2-scroll-cue__arrow portal-v2-scroll-cue__arrow--top" d="m6 6 6 6 6-6"/>
+                        <path class="portal-v2-scroll-cue__arrow" d="m6 14 6 6 6-6"/>
+                    </svg>
+                </a>
             </div>
         </section>
 
-    </main>
-    <aside class="portal-floating-quick" data-portal-floating-quick aria-label="빠른 메뉴">
-        <div class="portal-floating-quick__panel" id="portal-floating-quick-panel">
-            <strong class="portal-floating-quick__title">QUICK MENU</strong>
-            <nav class="portal-floating-quick__links" aria-label="주요 서비스 바로가기">
-                <a class="portal-floating-quick__link portal-floating-quick__link--booking" href="https://island.theksa.co.kr/" target="_blank" rel="noopener" aria-label="승선권 예매 사이트 새 창 열림">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v4a2.5 2.5 0 0 0 0 5v2H4v-2a2.5 2.5 0 0 0 0-5v-4Z"/><path d="M9 6.5v11"/></svg>
-                    <span>승선권 예매</span>
-                </a>
-                <a class="portal-floating-quick__link" href="schedule/operation.html">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14v12H5z"/><path d="M8 4v5M16 4v5M5 11h14"/></svg>
-                    <span>운항정보</span>
-                </a>
-                <a class="portal-floating-quick__link" href="#portal-terminals">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
-                    <span>터미널 찾기</span>
-                </a>
-                <a class="portal-floating-quick__link" href="customer.html">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13v-2a7 7 0 0 1 14 0v2"/><path d="M5 13H3v5h4v-5H5ZM19 13h2v5h-4v-5h2ZM17 18c0 2-2 3-5 3"/></svg>
-                    <span>고객지원</span>
-                </a>
-                <button class="portal-floating-quick__link portal-floating-quick__top" type="button" data-portal-quick-top aria-label="페이지 맨 위로 이동">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg>
-                    <span>TOP</span>
-                </button>
-            </nav>
+        <div class="portal-v2-content" id="portal-v2-content">
+            <section class="portal-guide-section portal-v2-guide" aria-labelledby="portal-v2-guide-title">
+                <div class="container">
+                    <section class="portal-v2-quick" aria-labelledby="portal-v2-quick-title" data-v2-quick>
+                        <div class="portal-v2-quick__heading section-title section-title--light section-title--left">
+                            <span class="section-title__eyebrow">MAIN SERVICES</span>
+                            <h2 class="section-title__title terminal-main-title" id="portal-v2-quick-title">주요 서비스</h2>
+                        </div>
+                        <div class="portal-v2-quick__viewport">
+                            <div class="portal-v2-quick__links" data-v2-quick-track>
+                                <a href="schedule/operation.html"><span class="portal-v2-quick__icon" aria-hidden="true"></span><strong>운항 정보</strong></a>
+                                <a href="terminal/map.html"><span class="portal-v2-quick__icon" aria-hidden="true"></span><strong>터미널 찾기</strong></a>
+                                <a href="https://island.theksa.co.kr/" target="_blank" rel="noopener" aria-label="승선권 예매 사이트 새 창 열림"><span class="portal-v2-quick__icon" aria-hidden="true"></span><strong>승선권 예매</strong></a>
+                                <a href="customer/inquiry.html"><span class="portal-v2-quick__icon" aria-hidden="true"></span><strong>문의하기</strong></a>
+                                <a href="customer/faq.html"><span class="portal-v2-quick__icon" aria-hidden="true"></span><strong>FAQ</strong></a>
+                            </div>
+                            <button class="portal-v2-quick__control portal-v2-quick__control--prev" type="button" data-v2-quick-prev aria-label="이전 빠른 서비스" hidden>‹</button>
+                            <button class="portal-v2-quick__control portal-v2-quick__control--next" type="button" data-v2-quick-next aria-label="다음 빠른 서비스" hidden>›</button>
+                        </div>
+                        <div class="portal-v2-quick__pagination" data-v2-quick-pagination aria-label="빠른 서비스 페이지"></div>
+                    </section>
+                    <div class="section-title section-title--light section-title--left">
+                        <span class="section-title__eyebrow">FERRY GUIDE</span>
+                        <h2 class="section-title__title terminal-main-title" id="portal-v2-guide-title">여객선 이용 필수 가이드</h2>
+                    </div>
+                    <div class="portal-guide-grid">
+                        <a class="portal-guide-item portal-guide-item--photo" href="boarding/id.html"><span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-id-v4.png" alt="" width="1536" height="1024" loading="lazy"></span><div class="portal-guide-copy"><div class="portal-guide-heading"><h3>신분증 지참</h3><span class="portal-guide-arrow" aria-hidden="true">→</span></div><p>승선 가능한 신분증 종류를 확인하세요.</p></div></a>
+                        <a class="portal-guide-item portal-guide-item--photo" href="schedule/operation.html"><span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-status-v2.jpg" alt="" width="1200" height="800" loading="lazy"></span><div class="portal-guide-copy"><div class="portal-guide-heading"><h3>운항 상태 확인</h3><span class="portal-guide-arrow" aria-hidden="true">→</span></div><p>출발 전 결항·지연 여부를 확인하세요.</p></div></a>
+                        <a class="portal-guide-item portal-guide-item--photo" href="boarding/procedure.html"><span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-time-v2.jpg" alt="" width="1200" height="800" loading="lazy"></span><div class="portal-guide-copy"><div class="portal-guide-heading"><h3>승선 마감 시간</h3><span class="portal-guide-arrow" aria-hidden="true">→</span></div><p>출발 1시간 전까지 터미널에 도착하세요.</p></div></a>
+                        <a class="portal-guide-item portal-guide-item--photo" href="boarding/vehicle.html"><span class="portal-guide-photo" aria-hidden="true"><img src="common/images/portal-guide-vehicle-v1.png" alt="" width="1536" height="1024" loading="lazy"></span><div class="portal-guide-copy"><div class="portal-guide-heading"><h3>차량 선적 확인</h3><span class="portal-guide-arrow" aria-hidden="true">→</span></div><p>차량 예약과 접수 조건을 확인하세요.</p></div></a>
+                    </div>
+                </div>
+            </section>
         </div>
-        <button class="portal-floating-quick__toggle" type="button" data-portal-quick-toggle aria-expanded="true" aria-controls="portal-floating-quick-panel">
-            <span>퀵메뉴</span>
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 5 5-5 5"/></svg>
-        </button>
-    </aside>
-    <div id="site-footer-root"></div>
-    <script src="common/locales/ko.js"></script>
-    <script src="common/locales/en.js"></script>
-    <script src="common/i18n.js"></script>
+
+        <section class="portal-v2-snap-section portal-v2-snap-section--notices" id="portal-v2-notices" aria-label="고객 지원 및 공지사항">
+            <div class="portal-v2-snap-section__inner">
+                <div class="portal-v2-support-grid">
+                    <section class="portal-v2-help" aria-labelledby="portal-v2-help-title">
+                        <h2 id="portal-v2-help-title">무엇을 도와드릴까요?</h2>
+                        <div class="portal-v2-help__card">
+                            <nav class="portal-v2-help__questions" data-v2-help-questions aria-label="대표 자주 묻는 질문 10개">
+                                <a data-v2-help-question href="customer/faq.html#faq-booking-ticket"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">승선권은 어떻게 예매하나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-boarding-status"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">결항 여부는 어디서 확인하나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-booking-vehicle"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">차량도 함께 실을 수 있나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-boarding-id"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">승선할 때 어떤 신분증이 필요한가요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-booking-refund"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">예매 변경이나 환불은 어디에 문의하나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-terminal-location"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">터미널 위치와 주차 정보는 어디에서 확인하나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-boarding-arrival"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">출항 몇 분 전까지 도착해야 하나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-boarding-baggage"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">수하물은 얼마나 가져갈 수 있나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-boarding-pet"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">반려동물과 함께 승선할 수 있나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                                <a data-v2-help-question href="customer/faq.html#faq-lost-found-contact"><span class="portal-v2-help__q" aria-hidden="true">Q</span><span class="portal-v2-help__question-text">터미널에서 물건을 잃어버리면 어디에 문의하나요?</span><span class="portal-v2-help__question-arrow" aria-hidden="true">→</span></a>
+                            </nav>
+                        </div>
+                    </section>
+
+                    <section class="portal-v2-notice" aria-labelledby="portal-v2-notices-title">
+                        <header class="portal-v2-notice__header">
+                            <h2 id="portal-v2-notices-title">
+                                <a href="customer/notice.html">공지사항</a>
+                            </h2>
+                            <a class="btn btn--sm btn--outline portal-v2-notice__more" href="customer/notice.html">전체보기</a>
+                        </header>
+                        <div class="portal-v2-notice__card">
+                            <ul class="portal-v2-notice__grid" aria-label="최신 공지사항 4건">
+                                <li><a href="customer/notice-detail.html?id=common-1"><span class="portal-v2-notice__terminal">공통</span><h3>여객선 이용 전 신분증 지참 안내</h3><time datetime="2026-07-24">2026년 7월 24일</time><span class="portal-v2-notice__arrow" aria-hidden="true">›</span></a></li>
+                                <li><a href="customer/notice-detail.html?id=common-2"><span class="portal-v2-notice__terminal">공통</span><h3>기상 악화 시 운항정보 확인 안내</h3><time datetime="2026-07-23">2026년 7월 23일</time><span class="portal-v2-notice__arrow" aria-hidden="true">›</span></a></li>
+                                <li><a href="customer/notice-detail.html?id=incheon-1"><span class="portal-v2-notice__terminal">인천항</span><h3>당일 운항 여부는 매일 아침 06:30에 최초 결정됩니다</h3><time datetime="2026-07-22">2026년 7월 22일</time><span class="portal-v2-notice__arrow" aria-hidden="true">›</span></a></li>
+                                <li><a href="customer/notice-detail.html?id=common-3"><span class="portal-v2-notice__terminal">공통</span><h3>여객선 승선권 예매 및 환불 유의사항</h3><time datetime="2026-07-20">2026년 7월 20일</time><span class="portal-v2-notice__arrow" aria-hidden="true">›</span></a></li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div id="site-footer-root"></div>
+        </section>
+    </main>
+    <script src="common/locales/ko.js?v=20261026-v2-redesign"></script>
+    <script src="common/locales/en.js?v=20261026-v2-redesign"></script>
+    <script src="common/i18n.js?v=20261026-v2-redesign"></script>
     <script src="common/menu-data.js"></script>
     <script src="common/dom-utils.js"></script>
-    <script src="common/layout.js"></script>
     <script src="common/portal-data.js"></script>
-    <script src="common/portal-map.js"></script>
-    <script src="common/notice-data.js"></script>
-    <script src="common/portal.js"></script>
+    <script src="common/weather-data.js"></script>
+    <script src="common/path-resolver.js"></script>
+    <script src="common/layout.js"></script>
+    <script src="common/portal-v2.js?v=20261029-quick-carousel"></script>
 </body>
 
 </html>

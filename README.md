@@ -12,13 +12,14 @@ KSA-TERMINAL/
 │  ├─ style.css               # 포털 및 터미널 공통 디자인
 │  ├─ layout.js               # 헤더·배너·승선·공지·안내·푸터 생성
 │  └─ schedule.js             # 운항표·필터·상태 배지·접기/펼치기
-└─ {terminal}/
-   ├─ index.html              # 공통 파일과 데이터 파일만 불러오는 진입점
-   ├─ terminal-data.js        # 터미널 콘텐츠
-   └─ schedule-data.js        # 운항 시간표
+└─ regions/
+   └─ {terminal}/
+      ├─ index.html           # 공통 파일과 데이터 파일만 불러오는 진입점
+      ├─ terminal-data.js     # 터미널 콘텐츠
+      └─ schedule-data.js     # 운항 시간표
 ```
 
-현재 터미널 폴더는 `jeju`, `incheon`, `yeosu`, `tongyeong`, `pohang`, `wando`, `gunsan`입니다.
+현재 터미널 폴더는 `regions/` 아래의 `jeju`, `incheon`, `yeosu`, `tongyeong`, `pohang`, `wando`, `gunsan`, `mokpo`입니다.
 
 ## 터미널 정보 수정
 
@@ -60,10 +61,10 @@ KSA-TERMINAL/
 
 ## 새 터미널 추가
 
-1. 기존 터미널 폴더 하나를 새 영문 폴더명으로 복사합니다.
+1. `regions/` 아래의 기존 터미널 폴더 하나를 새 영문 폴더명으로 복사합니다.
 2. 새 폴더의 `terminal-data.js`와 `schedule-data.js`만 수정합니다.
 3. 최상위 `index.html`의 `.portal-grid`에 새 터미널 카드를 추가합니다.
-4. 새 폴더의 `index.html`에서 공통 파일 경로가 `../common/`으로 유지되는지 확인합니다.
+4. 새 폴더의 `index.html`에서 공통 파일 경로가 `../../common/`으로 유지되는지 확인합니다.
 
 터미널 페이지의 HTML 구조를 직접 복제하거나 수정할 필요는 없습니다. 레이아웃은 `common/layout.js`, 운항표는 `common/schedule.js`, 디자인은 `common/style.css`에서 관리합니다.
 
@@ -109,6 +110,8 @@ KSA-TERMINAL/
 **코딩 규칙:** 새 요소를 포함한 모든 `font-size`, `font-weight`, `line-height` 변경은 반드시 위 CSS 변수를 통해서만 적용합니다.
 
 ## 확인 방법
+
+목포 여객 승선 4단계는 `regions/mokpo/boarding-procedure.html`, 차량동반 승선 5단계는 `regions/mokpo/vehicle-shipping.html`에서 안내합니다. 두 페이지 모두 공통 스타일의 `.boarding-journey`를 사용하는 연결선형 안내입니다. 차량동반은 1023px 이하, 여객은 700px 이하에서 세로 흐름으로 전환됩니다.
 
 최상위 `index.html`을 브라우저에서 연 뒤 터미널 카드를 선택합니다. 각 페이지의 헤더와 푸터에 있는 `전체 터미널 보기` 링크로 포털에 돌아올 수 있습니다.
 
@@ -175,6 +178,10 @@ KSA-TERMINAL/
 터미널 고유 문구는 사전에 중복하지 않고 데이터 파일 안에서 `{ ko: '...', en: '' }` 짝으로 관리합니다. 시각, 선박명, 전화번호, 날짜처럼 번역하지 않는 값은 기존 문자열을 유지합니다. 제주 공지사항과 승선 안내 카드도 현재는 같은 파일의 짝 필드를 사용하므로 별도 언어 파일 간 키 불일치가 생기지 않습니다.
 
 운항 상태는 `schedule.status.<code>`, 제주 항구명은 `ports.<id>` 사전 키로 표시합니다. 위에 정리한 상태 코드·항구 ID가 후속 터미널 전환의 기준입니다. 제주 터미널 표시명은 `schedule-data.js`의 `filterLabel`·`tableLabel` 짝 필드에서 관리합니다.
+
+### Portal v2 빠른 서비스
+
+루트 `index.html`의 주요 서비스는 가이드 제목 앞에 위치한다. 연한 표면 위에 데스크톱 기준 왼쪽 `MAIN SERVICES / 주요 서비스` 제목과 오른쪽 5개 서비스 버튼이 한 줄로 배치된다. 제목은 아래 `FERRY GUIDE / 여객선 이용 필수 가이드`와 동일한 section title 클래스 구조를 사용한다. 각 버튼은 흰색 표면, 남색 선형 아이콘, 서비스명으로 구성하며 배경 이미지를 사용하지 않는다. 태블릿은 3개, 모바일은 1개씩 노출하며 여러 페이지일 때만 좌우 버튼과 페이지 점을 표시한다. 배경은 전체 폭으로 펼치고 콘텐츠는 히어로 패널의 최대 폭에 정렬한다.
 
 ### 1단계 키 대조 결과
 

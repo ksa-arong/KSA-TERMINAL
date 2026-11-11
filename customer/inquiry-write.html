@@ -91,6 +91,7 @@
     };
   </script>
   <script src="../common/dom-utils.js"></script>
+  <script src="../common/path-resolver.js"></script>
   <script src="../common/layout.js"></script>
   <script>
     (function initializeInquiryWritePage() {
@@ -283,7 +284,7 @@
         }
 
         document.title = '문의 수정 | 전국 여객선터미널';
-        const pageTitle = document.querySelector('.portal-subhero-title h1');
+        const pageTitle = document.querySelector('.subhero-title h1');
         if (pageTitle) pageTitle.textContent = '문의 수정';
         const submitButton = form.querySelector('button[type="submit"]');
         if (submitButton) submitButton.textContent = '수정 완료';

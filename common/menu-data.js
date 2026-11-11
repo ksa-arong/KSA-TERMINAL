@@ -2,17 +2,17 @@
   'use strict';
 
   const regionRegistry = [
-    { key: 'gunsan', nameKo: '군산', portalLabelKo: '군산', gnbLabelKo: '군산항', folder: 'gunsan', logo: 'gunsan.png', status: 'preparing', hasPage: true, order: 1 },
-    { key: 'boryeong', nameKo: '보령', portalLabelKo: '대천', gnbLabelKo: '보령(대천항)', folder: null, logo: 'boryeong.png', status: 'preparing', hasPage: false, order: 2 },
-    { key: 'donghae', nameKo: '동해', portalLabelKo: '동해', gnbLabelKo: '동해항', folder: null, logo: 'donghae.png', status: 'preparing', hasPage: false, order: 3 },
-    { key: 'mokpo', nameKo: '목포', portalLabelKo: '목포', gnbLabelKo: '목포항', folder: 'mokpo', logo: 'mokpo.png', status: 'partial', hasPage: true, order: 4 },
-    { key: 'busan', nameKo: '부산', portalLabelKo: '부산', gnbLabelKo: '부산항', folder: null, status: 'preparing', hasPage: false, order: 5 },
-    { key: 'yeosu', nameKo: '여수', portalLabelKo: '여수', gnbLabelKo: '여수항', folder: 'yeosu', logo: 'yeosu.png', status: 'preparing', hasPage: true, order: 6 },
-    { key: 'wando', nameKo: '완도', portalLabelKo: '완도', gnbLabelKo: '완도항', folder: 'wando', logo: 'wando.png', status: 'preparing', hasPage: true, order: 7 },
-    { key: 'incheon', nameKo: '인천', portalLabelKo: '인천', gnbLabelKo: '인천항', folder: 'incheon', status: 'preparing', hasPage: true, order: 8, isDefault: true },
-    { key: 'jeju', nameKo: '제주', portalLabelKo: '제주', gnbLabelKo: '제주항', folder: 'jeju', logo: 'jeju.png', status: 'ready', hasPage: true, order: 9 },
-    { key: 'tongyeong', nameKo: '통영', portalLabelKo: '통영', gnbLabelKo: '통영항', folder: 'tongyeong', logo: 'tongyeong.png', status: 'preparing', hasPage: true, order: 10 },
-    { key: 'pohang', nameKo: '포항', portalLabelKo: '포항', gnbLabelKo: '포항항', folder: 'pohang', logo: 'pohang.png', status: 'preparing', hasPage: true, order: 11 }
+    { key: 'gunsan', nameKo: '군산', portalLabelKo: '군산', gnbLabelKo: '군산', folder: 'gunsan', logo: 'gunsan.png', status: 'preparing', hasPage: true, order: 1 },
+    { key: 'boryeong', nameKo: '보령', portalLabelKo: '대천', gnbLabelKo: '보령', folder: 'boryeong', logo: 'boryeong.png', status: 'preparing', hasPage: true, order: 2 },
+    { key: 'donghae', nameKo: '동해', portalLabelKo: '동해', gnbLabelKo: '동해', folder: 'donghae', logo: 'donghae.png', status: 'preparing', hasPage: true, order: 3 },
+    { key: 'mokpo', nameKo: '목포', portalLabelKo: '목포', gnbLabelKo: '목포', folder: 'mokpo', logo: 'mokpo.png', status: 'partial', hasPage: true, order: 4 },
+    { key: 'busan', nameKo: '부산', portalLabelKo: '부산', gnbLabelKo: '부산', folder: 'busan', status: 'preparing', hasPage: true, order: 5 },
+    { key: 'yeosu', nameKo: '여수', portalLabelKo: '여수', gnbLabelKo: '여수', folder: 'yeosu', logo: 'yeosu.png', status: 'preparing', hasPage: true, order: 6 },
+    { key: 'wando', nameKo: '완도', portalLabelKo: '완도', gnbLabelKo: '완도', folder: 'wando', logo: 'wando.png', status: 'preparing', hasPage: true, order: 7 },
+    { key: 'incheon', nameKo: '인천', portalLabelKo: '인천', gnbLabelKo: '인천', folder: 'incheon', status: 'preparing', hasPage: true, order: 8, isDefault: true },
+    { key: 'jeju', nameKo: '제주', portalLabelKo: '제주', gnbLabelKo: '제주', folder: 'jeju', logo: 'jeju.png', status: 'ready', hasPage: true, order: 9 },
+    { key: 'tongyeong', nameKo: '통영', portalLabelKo: '통영', gnbLabelKo: '통영', folder: 'tongyeong', logo: 'tongyeong.png', status: 'preparing', hasPage: true, order: 10 },
+    { key: 'pohang', nameKo: '포항', portalLabelKo: '포항', gnbLabelKo: '포항', folder: 'pohang', logo: 'pohang.png', status: 'preparing', hasPage: true, order: 11 }
   ].sort((a, b) => a.order - b.order).map(Object.freeze);
   const regionByKey = Object.freeze(Object.fromEntries(regionRegistry.map((region) => [region.key, region])));
   const regionByNameKo = Object.freeze(Object.fromEntries(regionRegistry.map((region) => [region.nameKo, region])));
@@ -30,6 +30,104 @@
       console.warn(`[지역 레지스트리] ${source}에 미등록 지역이 있습니다: ${unknown.join(', ')}`);
     }
     return unknown;
+  };
+
+  // Regional 2depth information architecture. Page availability is derived at
+  // runtime from each region's verified terminal/schedule data; the menu itself
+  // stays region-agnostic so another region can reuse the same loaders.
+  window.REGION_MENU = Object.freeze([
+    {
+      id: 'terminal', label: '터미널 안내', terminalDirectory: true,
+      pages: [
+        { page: 'terminal-introduction', label: '터미널 소개', href: 'terminal-introduction.html' },
+        { page: 'directions', label: '오시는 길', href: 'directions.html' },
+        { page: 'facilities', label: '시설 안내', href: 'facilities.html' },
+        { page: 'parking', label: '주차 안내', href: 'parking.html' }
+      ],
+      children: []
+    },
+    {
+      id: 'operation', label: '운항정보',
+      children: [
+        { page: 'timetable', label: '운항 스케쥴', href: 'timetable.html' },
+        { page: 'arrivals', label: '출도착 조회', href: 'arrivals.html' },
+        { page: 'marine-weather', label: '해양기상정보', href: 'marine-weather.html' }
+      ]
+    },
+    {
+      id: 'operators', label: '선사안내',
+      children: [
+        { page: 'operators', label: '선사 안내', href: 'operators.html' },
+        { page: 'vessels', label: '선박 안내', href: 'vessels.html' }
+      ]
+    },
+    {
+      id: 'boarding', label: '승선안내',
+      children: [
+        { page: 'boarding-procedure', label: '승선 절차', href: 'boarding-procedure.html' },
+        { page: 'identity', label: '신분증 안내', href: 'identity.html' },
+        { page: 'baggage', label: '수화물 안내', href: 'baggage.html' },
+        { page: 'vehicle-shipping', label: '차량 선적 안내', href: 'vehicle-shipping.html' },
+        { page: 'safety', label: '안전 수칙', href: 'safety.html' }
+      ]
+    },
+    {
+      id: 'customer', label: '고객센터',
+      children: [
+        { page: 'notices', label: '공지사항', href: 'notices.html' },
+        { page: 'contacts', label: '문의처', href: 'contacts.html' },
+        { page: 'tourism', label: '연계 관광 정보', href: 'tourism.html' },
+        { page: 'faq', label: '자주 묻는 질문', href: 'faq.html' },
+        { page: 'lost-found', label: '유실물 안내', href: 'lost-found.html' }
+      ]
+    }
+  ].map((group) => Object.freeze({
+    ...group,
+    pages: group.pages ? Object.freeze(group.pages.map(Object.freeze)) : undefined,
+    children: Object.freeze(group.children.map(Object.freeze))
+  })));
+
+  window.getRegionMenuChildren = (group, terminalData = window.terminalData) => {
+    if (!group?.terminalDirectory) return group?.children || [];
+    const terminals = Array.isArray(terminalData?.terminalProfiles) ? terminalData.terminalProfiles : [];
+    return terminals.filter((terminal) => terminal.verified !== false).map((terminal) => ({
+      page: 'terminal-introduction',
+      terminalId: terminal.id,
+      label: terminal.shortName || terminal.name,
+      href: `terminal-introduction.html#${terminal.id}`
+    }));
+  };
+
+  window.getRegionPageState = (pageKey, terminalData = window.terminalData, scheduleData = window.scheduleData) => {
+    const routes = Array.isArray(scheduleData?.routes) ? scheduleData.routes : [];
+    const cargoContacts = Array.isArray(terminalData?.cargoContacts) ? terminalData.cargoContacts : [];
+    const terminals = Array.isArray(terminalData?.terminalProfiles) ? terminalData.terminalProfiles : [];
+    const record = terminalData?.pages?.[pageKey] || scheduleData?.pages?.[pageKey];
+    if (record && record.verified !== false && Array.isArray(record.sections) && record.sections.length) {
+      return record.status === 'partial' ? 'partial' : 'ready';
+    }
+    const hasOperators = routes.some((entry) => Array.isArray(entry.route?.operators) && entry.route.operators.length);
+    const hasTerminalCarriers = terminals.some((terminal) => Array.isArray(terminal.carriers) && terminal.carriers.length);
+    const hasVessels = routes.some((entry) => {
+      const name = entry.route?.vessel?.name;
+      return typeof name === 'string' ? Boolean(name) : Boolean(name?.ko || name?.en);
+    });
+    return ({
+      'terminal-introduction': terminals.some((terminal) => terminal.name && (terminal.address || terminal.scale || terminal.tel)) ? 'ready' : 'preparing',
+      facilities: terminals.some((terminal) => terminal.parking || terminal.floors?.some((floor) => floor.items?.length)) ? 'ready' : 'preparing',
+      directions: terminals.some((terminal) => terminal.address || terminal.transit?.byShip || terminal.transit?.routes?.length || terminal.transit?.car) ? 'ready' : 'preparing',
+      parking: terminals.some((terminal) => terminal.parking) ? 'ready' : 'preparing',
+      timetable: routes.length ? 'ready' : 'preparing',
+      routes: routes.length ? 'ready' : 'preparing',
+      operators: (hasTerminalCarriers || hasOperators) ? 'ready' : 'preparing',
+      vessels: hasVessels ? 'ready' : 'preparing',
+      'vehicle-shipping': cargoContacts.length ? 'partial' : 'preparing',
+      contacts: (hasTerminalCarriers || hasOperators || cargoContacts.length) ? 'ready' : 'preparing',
+      identity: 'ready',
+      safety: 'ready',
+      faq: 'ready',
+      'lost-found': 'ready'
+    })[pageKey] || 'preparing';
   };
 
   window.MENU_DATA = [

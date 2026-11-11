@@ -29,11 +29,11 @@
     </form>
 
     <div class="portal-faq-categories" role="tablist" aria-label="자주 묻는 질문 카테고리">
-      <button class="tab-pill portal-faq-category" id="faq-tab-all" type="button" role="tab" aria-selected="true" aria-controls="faq-panel-all" data-faq-category="all">전체</button>
-      <button class="tab-pill portal-faq-category" id="faq-tab-terminal" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-terminal" data-faq-category="terminal" tabindex="-1">터미널</button>
-      <button class="tab-pill portal-faq-category" id="faq-tab-booking" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-booking" data-faq-category="booking" tabindex="-1">예약</button>
-      <button class="tab-pill portal-faq-category" id="faq-tab-boarding" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-boarding" data-faq-category="boarding" tabindex="-1">승선</button>
-      <button class="tab-pill portal-faq-category" id="faq-tab-lost-found" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-lost-found" data-faq-category="lost-found" tabindex="-1">유실물</button>
+      <button class="tab-pill portal-filter-pill portal-faq-category" id="faq-tab-all" type="button" role="tab" aria-selected="true" aria-controls="faq-panel-all" data-faq-category="all">전체</button>
+      <button class="tab-pill portal-filter-pill portal-faq-category" id="faq-tab-terminal" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-terminal" data-faq-category="terminal" tabindex="-1">터미널</button>
+      <button class="tab-pill portal-filter-pill portal-faq-category" id="faq-tab-booking" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-booking" data-faq-category="booking" tabindex="-1">예약</button>
+      <button class="tab-pill portal-filter-pill portal-faq-category" id="faq-tab-boarding" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-boarding" data-faq-category="boarding" tabindex="-1">승선</button>
+      <button class="tab-pill portal-filter-pill portal-faq-category" id="faq-tab-lost-found" type="button" role="tab" aria-selected="false" aria-controls="faq-panel-lost-found" data-faq-category="lost-found" tabindex="-1">유실물</button>
     </div>
 
     <section class="portal-faq-panel" id="faq-panel-all" role="tabpanel" aria-labelledby="faq-tab-all">
@@ -46,7 +46,7 @@
           <summary><span class="portal-content-badge">터미널</span><span>터미널 이용 시 주의사항이 있나요?</span></summary>
           <p>기상 상황, 조석, 선박 사정에 따라 출항 여부와 시간이 예고 없이 변경될 수 있으니 터미널 방문 전 여객선사나 포털의 실시간 안내를 확인해 주세요.</p>
         </details>
-        <details>
+        <details id="faq-terminal-location">
           <summary><span class="portal-content-badge">터미널</span><span>터미널 위치와 주차 정보는 어디에서 확인하나요?</span></summary>
           <p>전국 주요 터미널 지도에서 지역과 터미널을 선택하면 위치와 기본 정보를 확인할 수 있습니다. 주차 운영과 요금은 이용 전에 해당 터미널로 확인해 주세요.</p>
         </details>
@@ -75,11 +75,11 @@
 
     <section class="portal-faq-panel" id="faq-panel-booking" role="tabpanel" aria-labelledby="faq-tab-booking" hidden>
       <div class="portal-faq-list">
-        <details>
+        <details id="faq-booking-refund">
           <summary><span class="portal-content-badge">예약</span><span>예매 변경이나 환불은 어디에 문의하나요?</span></summary>
           <p>예매를 진행한 여객선사 또는 예매처로 직접 문의해 주셔야 합니다. 터미널 포털은 예매 업무를 대행하지 않습니다.</p>
         </details>
-        <details>
+        <details id="faq-booking-ticket">
           <summary><span class="portal-content-badge">예약</span><span>여객선 승선권은 어디에서 예매하나요?</span></summary>
           <p>포털의 여객선 예매 메뉴 또는 이용하려는 여객선사의 공식 예매처에서 항로와 일정을 확인한 뒤 예매해 주세요.</p>
         </details>
@@ -103,7 +103,7 @@
           <summary><span class="portal-content-badge">예약</span><span>단체 승선권은 어떻게 예약하나요?</span></summary>
           <p>단체 예약 기준과 접수 방법은 여객선사마다 다를 수 있으므로 이용하려는 선사에 직접 문의해 주세요.</p>
         </details>
-        <details>
+        <details id="faq-booking-vehicle">
           <summary><span class="portal-content-badge">예약</span><span>차량도 함께 실을 수 있나요?</span></summary>
           <p>차량을 선적할 수 있는 차도선에서만 가능합니다. 차종별 선적 제한과 요금이 다르므로 예약 전에 해당 선사에 문의해 주세요.</p>
         </details>
@@ -112,11 +112,11 @@
 
     <section class="portal-faq-panel" id="faq-panel-boarding" role="tabpanel" aria-labelledby="faq-tab-boarding" hidden>
       <div class="portal-faq-list">
-        <details>
+        <details id="faq-boarding-arrival">
           <summary><span class="portal-content-badge">승선</span><span>출항 몇 분 전까지 도착해야 하나요?</span></summary>
           <p>노선과 선박, 차량 선적 여부에 따라 접수 및 개찰 마감 시간이 달라집니다. 승선권과 선사 안내의 마감 시간을 확인하고 여유 있게 도착해 주세요.</p>
         </details>
-        <details>
+        <details id="faq-boarding-status">
           <summary><span class="portal-content-badge">승선</span><span>당일 운항 여부는 어떻게 확인하나요?</span></summary>
           <p>이용 터미널의 실시간 운항정보와 해당 여객선사의 안내를 함께 확인해 주세요. 기상이나 선박 사정으로 예고 없이 변경될 수 있습니다.</p>
         </details>
@@ -130,11 +130,11 @@
             <li><strong>추후결정</strong><span>기상 상황을 더 지켜본 뒤 출항 여부를 결정하는 상태</span></li>
           </ul>
         </details>
-        <details>
+        <details id="faq-boarding-id">
           <summary><span class="portal-content-badge">승선</span><span>신분증은 꼭 지참해야 하나요?</span></summary>
           <p>네. 승선자 전원의 신분 확인 수단을 지참해야 합니다. 연령과 이용 선사에 따라 요구사항이 다를 수 있으므로 출발 전에 확인해 주세요.</p>
         </details>
-        <details>
+        <details id="faq-boarding-baggage">
           <summary><span class="portal-content-badge">승선</span><span>수하물은 얼마나 가져갈 수 있나요?</span></summary>
           <p>수하물 허용 기준은 선박과 여객선사에 따라 다를 수 있습니다. 크기·무게 제한과 별도 요금 여부를 출발 전에 확인해 주세요.</p>
         </details>
@@ -146,7 +146,7 @@
           <summary><span class="portal-content-badge">승선</span><span>승선권을 출력해서 가져가야 하나요?</span></summary>
           <p>모바일 승선권과 현장 발권 이용 여부는 항로와 선사에 따라 다릅니다. 예매 완료 안내에 표시된 발권 방법을 확인해 주세요.</p>
         </details>
-        <details>
+        <details id="faq-boarding-pet">
           <summary><span class="portal-content-badge">승선</span><span>반려동물과 함께 승선할 수 있나요?</span></summary>
           <p>반려동물 동반 기준과 이동장 사용 여부는 선박과 선사별로 다릅니다. 예약 전에 이용 선사에 확인해 주세요.</p>
         </details>
@@ -156,7 +156,7 @@
 
     <section class="portal-faq-panel" id="faq-panel-lost-found" role="tabpanel" aria-labelledby="faq-tab-lost-found" hidden>
       <div class="portal-faq-list">
-        <details>
+        <details id="faq-lost-found-contact">
           <summary><span class="portal-content-badge">유실물</span><span>터미널에서 물건을 잃어버리면 어디에 문의하나요?</span></summary>
           <p>이용한 터미널의 고객안내센터 또는 유실물센터에 문의해 주세요. 터미널별 위치와 연락처는 <a href="lost-found.html">유실물 안내</a>에서 확인할 수 있습니다.</p>
         </details>
@@ -198,6 +198,7 @@
     };
   </script>
   <script src="../common/dom-utils.js"></script>
+  <script src="../common/path-resolver.js"></script>
   <script src="../common/layout.js"></script>
   <script src="../common/pagination.js"></script>
   <script>
@@ -227,7 +228,9 @@
 
       sourceQuestions.forEach((question) => {
         decorateAnswer(question);
-        allList.appendChild(question.cloneNode(true));
+        const clonedQuestion = question.cloneNode(true);
+        if (clonedQuestion.id) clonedQuestion.id = `all-${clonedQuestion.id}`;
+        allList.appendChild(clonedQuestion);
       });
 
       function activePanel() {
@@ -297,6 +300,22 @@
       });
       input.addEventListener('input', () => filterQuestions(true));
       filterQuestions(true);
+
+      function openLinkedQuestion() {
+        const targetId = decodeURIComponent(window.location.hash.slice(1));
+        if (!targetId) return;
+        const target = document.getElementById(targetId);
+        const panel = target?.closest('.portal-faq-panel');
+        const targetTab = panel && tabs.find((tab) => tab.getAttribute('aria-controls') === panel.id);
+        if (!target || !targetTab) return;
+        activateTab(targetTab, false);
+        target.hidden = false;
+        target.open = true;
+        window.requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+      }
+
+      openLinkedQuestion();
+      window.addEventListener('hashchange', openLinkedQuestion);
     }());
   </script>
 </body>

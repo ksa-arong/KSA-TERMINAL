@@ -1,12 +1,16 @@
 window.I18N = window.I18N || {};
 window.I18N.ko = {
+  boardingVehicle: {
+    ticketSummary: '차량등록증과 신분증을 준비하고, 선사가 안내하는 차량 매표소에서 예약 확인과 차량 발권을 진행합니다.',
+    shippingSummary: '지정된 차량 대기 장소에서 직원 안내에 따라 차량을 인계하거나 선적합니다. 선적 전에 선내에서 사용할 물품과 귀중품을 챙겨 주세요.'
+  },
   common: {
     skip: '본문 바로가기', homeSuffix: '홈', ready: '준비중', details: '자세히 보기', all: '전체', newWindow: '새 창 열림'
   },
   nav: { home: '홈', schedule: '운항 안내', boarding: '승선 안내', terminal: '터미널 안내', customer: '고객센터' },
   terminalNav: {
     terminalInfo: '터미널 이용 안내', introduction: '터미널 소개', facilities: '시설 안내', directions: '오시는 길',
-    operation: '운항정보', arrivals: '출도착 조회', timetable: '운항 시간표', fare: '운임 안내', routes: '항로 안내', weather: '해양기상정보',
+    operation: '운항정보', arrivals: '출도착 조회', timetable: '운항 스케쥴', fare: '운임 안내', routes: '항로 안내', weather: '해양기상정보',
     operators: '선사안내', operatorGuide: '선사 안내', shipGuide: '선박 안내',
     boarding: '승선안내', process: '승선 절차', identity: '신분증 안내', baggage: '수하물 규정', vehicle: '차량 선적', safety: '안전 수칙',
     customer: '고객센터', notices: '공지사항', faq: '자주 묻는 질문', lostFound: '유실물 안내', tourism: '연계 관광 정보'
@@ -19,7 +23,7 @@ window.I18N.ko = {
   },
   header: {
     mainMenu: '주요 메뉴', mobileDetail: '모바일 세부 메뉴', quickMenu: '빠른 메뉴', allTerminals: '전체 터미널', mobileTerminal: '터미널',
-    terminalHomepage: '터미널 홈페이지', language: '언어 선택', korean: '한국어', english: '영어', search: '검색',
+    terminalHomepage: '지역별 터미널 홈페이지', language: '언어 선택', korean: '한국어', english: '영어', search: '검색',
     menuOpen: '전체 메뉴 열기', menuClose: '전체 메뉴 닫기'
   },
   mega: {
@@ -29,7 +33,7 @@ window.I18N.ko = {
   },
   footer: { phone: '대표전화', privacy: '개인정보처리방침', terms: '이용약관', sitemap: '사이트맵', directions: '찾아오시는 길', allTerminals: '전체 터미널 보기', slogan: '안전하고 편리한 바닷길 통합 안내' },
   terminalPage: {
-    heroButton: '오늘의 운항 현황 보기', quickAria: '주요 바로가기', timetable: '운항 시간표', timetableDesc: '항로별 출발 시간을 확인하세요',
+    heroButton: '오늘의 운항 현황 보기', quickAria: '주요 바로가기', timetable: '운항 스케쥴', timetableDesc: '항로별 출발 시간을 확인하세요',
     fare: '요금 안내', fareDesc: '승객·차량 요금을 안내합니다', boarding: '승선 절차 안내', boardingDesc: '출항 전 절차를 확인하세요',
     directions: '오시는 길', directionsDesc: '교통편과 위치를 안내합니다', boardingTitle: '편안한 여행을 위한\n승선 안내', boardingMore: '승선안내 자세히 보기',
     notices: '공지사항', noticeAll: '공지사항 전체 보기', allView: '전체 보기 ＋', customer: '고객센터', customerHelp: '운항 및 터미널 이용에 궁금한 점이 있으시면 편하게 문의해 주세요.',
@@ -38,7 +42,7 @@ window.I18N.ko = {
   schedule: {
     movementAria: '입출항 선택', departure: '출항 현황', arrival: '입항 현황', terminalFilterAria: '터미널 필터', all: '전체',
     routeFilterAria: '항로 유형 필터', routeType: '항로 유형', oneWay: '편도항로', circular: '순환항로',
-    expand: '전체 운항 시간표 보기', collapse: '운항 시간표 접기', legendAria: '운항 상태 색상 안내',
+    expand: '전체 운항 스케쥴 보기', collapse: '운항 스케쥴 접기', legendAria: '운항 상태 색상 안내',
     status: { normal: '정상운항', delayed: '지연', cancelled: '결항', controlled: '통제', inquiry: '선사문의' }
   },
   ports: {
@@ -46,6 +50,7 @@ window.I18N.ko = {
     chuja_jindo: '추자·진도', nokdong: '녹동항', chuja_from_jindo: '추자(진도발)', chuja_from_wando: '추자(완도발)'
   },
   facilities: { waitingRoom: '대합실', nursing: '수유실', store: '편의점', restaurant: '식당', locker: '물품보관함', wifi: '무료 Wi-Fi', accessibility: '교통약자 편의시설', lostFound: '유실물 센터' },
+  portalV2: { heroMessage: '여행을 향한 바닷길, 전국 여객선 터미널이 함께 합니다', heroMessageLead: '여행을 향한 바닷길,', heroMessageEmphasis: '전국 여객선 터미널이 함께 합니다', heroDescription: '지역을 선택하면 터미널 정보와 해양 날씨를 확인할 수 있습니다.', routesTitle: '주요 항로', routesEmpty: '주요 항로 정보 준비 중', homepage: '홈페이지 바로가기' },
   portalSubpage: {
     description: {
       terminal: '전국 주요 여객선터미널의 위치와 기본 정보를 확인하세요.', map: '지도에서 지역을 선택해 터미널 정보를 확인하세요.',
@@ -62,7 +67,7 @@ window.I18N.ko = {
   },
   portal: {
     metaTitle: '전국 여객선터미널 안내', metaDescription: '전국 주요 여객선터미널의 운항 정보와 이용 안내를 확인하세요.',
-    heroTitle1: '여행을 향한 바닷길,', heroTitle2: '전국 여객선터미널이 함께합니다.', heroDescription1: '전국 주요 여객선터미널의 운항 정보부터 승선 안내까지', heroDescription2: '더 편리하고 안전한 바닷길을 한곳에서 만나보세요.',
+    heroTitle1: '바다로 이어지는 모든 여정,', heroTitle2: '전국 여객선터미널에서 시작됩니다.', heroDescription1: '전국 주요 여객선터미널의 운항 정보부터 승선 안내까지', heroDescription2: '더 편리하고 안전한 바닷길을 한곳에서 만나보세요.',
     heroPicker: '히어로 배경 선택', heroSlide1: '첫 번째 배경 보기', heroSlide2: '두 번째 배경 보기', heroSlide3: '세 번째 배경 보기', heroPrevious: '이전 히어로 이미지', heroNext: '다음 히어로 이미지', heroPlay: '히어로 슬라이드 재생', heroPause: '히어로 슬라이드 일시정지', quickAria: '주요 서비스 바로가기', quickTitle: '여객선 Smart Service', quickDescription: '여객선 이용에 필요한 주요 서비스를 빠르게 확인하세요.',
     findTerminal: '터미널 찾기', findTerminalDesc: '전국 터미널 위치 안내', schedule: '운항 및 기상정보', scheduleDesc: '운항 현황과 해양기상', bookingQuick: '승선권 예매', bookingQuickDesc: '여객선 승선권 예매', boarding: '승선 안내', boardingDesc: '절차와 준비사항 확인', customer: '고객센터', customerDesc: '공지사항과 이용 문의',
     networkTitle: '전국 주요 터미널', networkDescription: '지도에서 지역을 선택하면 터미널의 주요 정보를 한눈에 확인할 수 있습니다.', mapAria: '전국 여객선터미널 위치 선택 지도', select: '터미널 선택', selected: '선택한 터미널', location: '위치', phone: '대표전화', routes: '주요 항로', operators: '주요 선사', operatorHomepage: '홈페이지 새 창 열림', hours: '운영 안내', terminalCount: '터미널 {count}곳', preCheckTitle: '이용 전 확인사항', preCheckText1: '기상 악화 시 여객선 운항이 지연되거나 취소될 수 있습니다.', preCheckText2: '출발 전 반드시 터미널 공식 홈페이지에서 최신 운항 정보를 확인해 주세요.', sourceLabel: '출처 ·', servicesAria: '선택 터미널 주요 서비스',

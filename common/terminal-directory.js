@@ -125,10 +125,6 @@
     }
 
     function terminalHomepage(terminal) {
-        const definition = regionByNameKo[terminal.region];
-        if (definition?.status === 'preparing') {
-            return definition.hasPage && definition.folder ? `../${definition.folder}/index.html` : '';
-        }
         if (terminal.region === '포항' && terminal.name.includes('울릉')) return 'https://www.ulcruise.co.kr/';
         return homepageByRegion[terminal.region];
     }
@@ -146,26 +142,16 @@
         const name = document.createElement('strong');
         name.textContent = terminal.name;
         const address = document.createElement('p');
-        const definition = regionByNameKo[terminal.region];
-        const preparing = definition?.status === 'preparing';
-        address.textContent = preparing ? '검증된 정보 준비 중' : terminal.address;
+        address.textContent = terminal.address;
         heading.append(region, name);
         info.append(heading, address);
 
         const actions = document.createElement('div');
         actions.className = 'portal-terminal-directory-mobile-actions';
-        if (preparing && definition.hasPage) {
-            actions.append(createActionLink(terminal, '지역 안내', terminalHomepage(terminal)));
-        } else if (preparing) {
-            const unavailable = document.createElement('span');
-            unavailable.textContent = '페이지 준비 중';
-            actions.append(unavailable);
-        } else {
-            actions.append(
-                createActionLink(terminal, '홈페이지', terminalHomepage(terminal)),
-                createActionLink(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`)
-            );
-        }
+        actions.append(
+            createActionLink(terminal, '홈페이지', terminalHomepage(terminal)),
+            createActionLink(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`)
+        );
         entry.append(info, actions);
         return entry;
     }
@@ -174,19 +160,15 @@
         const row = document.createElement('tr');
         const nameCell = createCell('', 'portal-terminal-directory-name');
         const name = document.createElement('strong');
-        const definition = regionByNameKo[terminal.region];
-        const preparing = definition?.status === 'preparing';
 
         name.textContent = terminal.name;
         nameCell.append(name, createMobileEntry(terminal));
         row.append(
             createCell(terminal.region, 'portal-terminal-directory-region'),
             nameCell,
-            createCell(preparing ? '검증된 정보 준비 중' : terminal.address, 'portal-terminal-directory-address'),
-            preparing ? createCell('준비 중', 'portal-terminal-directory-action') : createLinkCell(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`),
-            preparing && !definition.hasPage
-                ? createCell('준비 중', 'portal-terminal-directory-action')
-                : createLinkCell(terminal, preparing ? '지역 안내' : '홈페이지', terminalHomepage(terminal))
+            createCell(terminal.address, 'portal-terminal-directory-address'),
+            createLinkCell(terminal, '위치안내', `https://map.kakao.com/link/search/${encodeURIComponent(terminal.address)}`),
+            createLinkCell(terminal, '홈페이지', terminalHomepage(terminal))
         );
         return row;
     }

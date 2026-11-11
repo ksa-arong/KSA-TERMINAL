@@ -297,7 +297,7 @@ Inverse 계열은 `--text-inverse`와 `transparent`를 `color-mix()`로 합성�
 
 | 토큰 | 값 또는 참조 |
 |---|---|
-| `--layout-container-max` | `1280px` |
+| `--layout-container-max` | `1400px` |
 | `--layout-section-padding` | `var(--global-spacing-section)` |
 
 ### 6.2 Typography
@@ -349,6 +349,8 @@ Inverse 계열은 `--text-inverse`와 `transparent`를 `color-mix()`로 합성�
 
 `--font-small`과 `--font-caption`처럼 값이 같더라도 역할이 다른 토큰은 alias 의미를 유지한다.
 
+지역 페이지의 카드·패널·보조 텍스트는 별도 `--font-title-sm`, `--font-title-md`, `--font-body-sm` 토큰을 만들지 않는다. 카드와 소제목은 `--font-h3`, 패널 제목은 `--font-h2`, 메타·배지·안내문은 `--font-small`을 재사용한다.
+
 ## 7. 전역 Component 토큰
 
 | 토큰 | 값 또는 참조 | 소유 컴포넌트 |
@@ -356,6 +358,9 @@ Inverse 계열은 `--text-inverse`와 `transparent`를 `color-mix()`로 합성�
 | `--portal-btn-radius` | `24px` | Portal button |
 | `--portal-btn-height` | `44px` | Portal button |
 | `--portal-btn-px` | `var(--spacing-16)` | Portal button |
+| `--portal-v2-route-action-*` | semantic color·global spacing/radius 참조 | Portal v2 항로 서비스 버튼 |
+| `--portal-v2-route-option-*` | semantic surface/action·global spacing 참조 | Portal v2 목적지 선택 버튼 |
+| `--portal-v2-route-selection-*` | semantic surface/border 참조 | Portal v2 선택 항로 카드 |
 | `--portal-pill-bg` | `var(--bg-muted)` | Portal pill |
 | `--schedule-header-bg` | `var(--bg-inverse)` | Schedule |
 | `--schedule-tab-width` | `144px` | Schedule tab |
@@ -388,6 +393,10 @@ Inverse 계열은 `--text-inverse`와 `transparent`를 `color-mix()`로 합성�
 | `.portal-hero-slide--*` | `--portal-hero-slide-overlay` | 슬라이드별 overlay |
 | `.korea-map[data-zoom-region]` | `--portal-map-zoom-*`, `--portal-map-focus-marker-*` | 지역별 지도 위치 |
 | `.portal-quick-guide-card--*` | `--quick-guide-*` | 퀵 가이드 카드 variant |
+| `.region-template-page` | `--region-template-text-primary` | 지역 템플릿의 기본 본문색. 기존 `#172b3f` 표현을 유지하기 위한 scoped 토큰 |
+| `.region-terminal-map` | `--region-terminal-map-aspect-ratio` | 터미널 위치 지도 viewport의 가로세로 비율 |
+| `.content-info-panel` | `--content-info-panel-min-column` | 서브 콘텐츠의 정의 목록형 정보 패널 최소 열 너비 |
+| `.content-feature-list` | `--content-feature-icon-size`, `--content-feature-icon-graphic-size`, `--content-feature-visual-column`, `--content-feature-badge-min-height` | 아이콘형 안내 목록의 시각 영역과 배지 크기 |
 
 Scoped 토큰 규칙:
 
@@ -396,6 +405,13 @@ Scoped 토큰 규칙:
 3. breakpoint 재정의는 기본값과 같은 이름을 사용한다.
 4. 다른 컴포넌트에서 공유하기 시작하면 Semantic 또는 전역 Component 토큰 승격을 검토한다.
 5. 지역별 지도 좌표는 디자인 스케일 토큰으로 승격하지 않는다.
+
+### 8.1 공통 서브 콘텐츠 컴포넌트
+
+- `.content-info-panel`은 주소·연락처·운영시간처럼 `dt`와 `dd`로 구성되는 정보를 연한 배경의 반응형 패널로 표시한다. 첫 번째 정보가 긴 경우 `.content-info-panel--lead-wide` variant를 함께 사용하고, 기본 표면과 테두리가 필요한 안내 영역에는 `.content-info-panel--outlined` variant를 사용한다.
+- `.content-guide-section`은 상세 안내 묶음의 기본 세로 여백과 제목 위계를 제공한다. 주요 섹션 제목에는 `.content-guide-section--prominent` variant를 사용한다.
+- `.content-feature-list`와 `.content-feature-item`은 원형 아이콘, 짧은 배지, 제목, 상세 설명을 함께 제공하는 안내 목록이다. 터미널 교통편뿐 아니라 다른 서브 콘텐츠에서도 같은 정보 구조일 때 재사용한다.
+- 지도 viewport와 SDK 상태를 제어하는 `.region-terminal-map-*` 클래스는 기능 종속 컴포넌트이므로 공통 서브 콘텐츠 이름으로 바꾸지 않는다.
 
 ## 9. Alias 관계 명세
 
@@ -849,7 +865,7 @@ L12491의 `.portal-operation-card__departure-time time`도 동일한 저위험 �
 | 날씨 | `.portal-weather-summary-card`, `.portal-weather-feature-card` | subtle surface, radius 16px, shadow 없음 | 1100px·700px padding override | surface alias 통합 가능 |
 | 운항 모바일 | `.portal-operation-card` | 760px 이하에서만 생성되는 정보 묶음 | borderless line layout, radius 0, transparent surface | 일반 카드 기반에서 제외 |
 | 히어로 서비스 | `.portal-hero-service-card` | grid, glass surface, icon·copy | hover/focus에서 거의 흰 surface로 반전 | 전용 component 유지 |
-| 선택형 카드 | `.id-guide-card` | pill button, pressed·focus 상태 | 카드가 아니라 selectable control | 버튼·탭 계열로 분류 |
+| 선택형 카드 | `.tab-button` | pill button, pressed·focus 상태 | 카드가 아니라 selectable control | 버튼·탭 계열로 분류 |
 | 지도 카드 | `.terminal-map-card` | 지도 viewport 컨테이너 | 370·700·1000px 구간별 geometry override | layout 계열로 분류 |
 
 ### 17.3 공통 구조와 현재 차이
@@ -1282,7 +1298,7 @@ compact는 Component token을 별도로 선언하지 않으므로 두 규칙 삭
 - 현재 규칙은 media query 밖의 기본 규칙이다.
 - 같은 선택자에 대한 `gap` 재선언, 중복 속성, `!important`는 없다.
 - 토큰 참조만 교체하므로 선택자 특이도, 선언 순서와 cascade는 바뀌지 않는다.
-- `@media (max-width: 1000px)`는 `.id-guide-audience` 계열을 조정하며 `.id-guide-matrix ul`을 재정의하지 않는다.
+- 공통 `.tab-list`는 항목 수와 화면 폭에 따라 자동 배치되며 `.id-guide-matrix ul`을 재정의하지 않는다.
 - `@media (max-width: 700px)`는 표와 행·셀을 모바일 카드 구조로 바꾸지만 `.id-guide-matrix ul` 또는 해당 `gap`은 재정의하지 않는다. 따라서 모바일에서도 최종 간격은 `8px`이다.
 - `@media (min-width: 480px) and (max-width: 700px)` 역시 audience 버튼만 조정하며 이 목록에는 영향을 주지 않는다.
 - hover, focus, active, selected 또는 disabled 상태와 결합되지 않는다.
@@ -1451,7 +1467,7 @@ gap: var(--global-space-8);
 
 | 계열 | 대표 선택자 | 서비스 exact 참조 | 상태·역할 | 판정 |
 |---|---|---:|---|---|
-| 문서 heading | `.portal-content-heading` | 17 | 정적 heading, 700px typography override | 유지·spacing alias 전환 가능 |
+| 문서 heading | `.content-heading` | 17 | 정적 heading, 700px typography override | 유지·spacing alias 전환 가능 |
 | 정책 문서 | `.portal-policy-page`, `.portal-policy-section` | 2 / 14 | 정적 article·section, 600px padding override | 유지 |
 | 사이트맵 | `.portal-sitemap-group` | 5 | navigation link, hover·focus-visible, 1000px·600px grid override | 유지·기본 surface 전환 가능 |
 | 일정 안내문 | `.notice-line` | 1 | 비상태 보조 안내문 | 유지 |
@@ -1472,7 +1488,7 @@ gap: var(--global-space-8);
 
 | 선택자·위치 | surface | spacing | radius·border | typography | 상태·breakpoint |
 |---|---|---|---|---|---|
-| `.portal-content-heading` L6224–6264 | 없음 | `12px` 상단 문단 margin, literal `36px` bottom | 없음 | caption·display·body-lg와 global line-height | 700px에서 heading margin·h2 크기 override |
+| `.content-heading` L6224–6264 | 없음 | `12px` 상단 문단 margin, literal `36px` bottom | 없음 | caption·display·body-lg와 global line-height | 700px에서 heading margin·h2 크기 override |
 | `.portal-policy-section` L6283–6323 | 없음 | `32px 8px` padding, `12px` heading margin | `--border-default` | h3·body-lg, global loose line-height | 600px에서 `24px 0` padding |
 | `.portal-sitemap-group` L6329–6405 | `--bg-base`, header는 `--surface-subtle` | grid `16px`, link `8px` gap | `--portal-content-border`, top brand border | h3·body | hover·focus-visible 공유, 1000px·600px grid override |
 | `.portal-notice-detail` L9465–9578 | nav hover `--brand-overlay-faint` | `24px`, `8px`, `20px` gap 등 | inverse/content border | h2·body | nav hover·focus, disabled, 700px `dl` gap override |
@@ -1530,7 +1546,7 @@ gap: var(--global-space-8);
 | 2 | L989 | `.terminal-tabs` | `gap` | `--spacing-8` | `--global-space-8` | 8px → 8px | 낮음 |
 | 3 | L1037 | `.route-type-filters` | `gap` | `--spacing-8` | `--global-space-8` | 8px → 8px | 낮음 |
 | 4 | L1074 | `.movement-tabs` | `gap` | `--spacing-32` | `--global-space-32` | 32px → 32px | 낮음 |
-| 5 | L6448 | `.portal-content-heading-row` | `gap` | `--spacing-32` | `--global-space-32` | 32px → 32px | 낮음 |
+| 5 | L6448 | `.content-heading-row` | `gap` | `--spacing-32` | `--global-space-32` | 32px → 32px | 낮음 |
 | 6 | L6950 | `.portal-filter-select-group` | `gap` | `--spacing-8` | `--global-space-8` | 8px → 8px | 낮음 |
 | 7 | L7065 | `.portal-faq-categories` | `gap` | `--spacing-8` | `--global-space-8` | 8px → 8px | 낮음 |
 | 8 | L9496 | `.portal-notice-detail dl` | `gap` | `--spacing-24` | `--global-space-24` | 24px → 24px | 낮음; 700px override 유지 |
@@ -1980,6 +1996,90 @@ locale key는 JavaScript 함수와 달리 언어 데이터 schema 역할을 할 
 - 문서 수정 여부: 있음
 - 수정한 파일: `docs/design-tokens.md`
 
+### Portal v2 빠른 서비스 레이아웃
+
+`portal-v2-quick`은 `--surface-subtle` 전체 폭 표면을 사용한다. 히어로 문구·터미널 탐색기부터 주요 서비스·가이드·FAQ·공지까지의 메인 콘텐츠는 scoped token `--portal-v2-content-max: 1400px`을 공유한다. 헤더와 푸터의 `--portal-v2-panel-max`도 `--layout-container-max: 1400px`을 참조한다. 데스크톱에서는 왼쪽 `MAIN SERVICES / 주요 서비스` 제목과 오른쪽 서비스 버튼 5개를 한 줄로 배치하고, 1023px 이하에서는 제목과 버튼 영역을 위아래로 쌓는다. 제목은 가이드 제목과 동일한 `.section-title.section-title--light.section-title--left`, `.section-title__eyebrow`, `.section-title__title` 구조를 사용한다. 전체 바의 상하 padding은 `--global-space-24`를 사용하고 서비스 사이 구분선은 가운데 정렬된 `--global-space-48` 높이로 제한한다. 버튼은 `--surface-base` 배경, `--border-default` 경계선, `--text-brand` 선형 아이콘과 `--text-strong` 서비스명으로 구성하며 이미지 배경을 사용하지 않는다. hover와 focus-visible에서는 `--surface-inverse` 배경과 반전 텍스트·아이콘을 적용한다. 외부 그림자나 위치 이동은 사용하지 않아 carousel viewport에서 라운드와 경계선이 잘리지 않게 하며, focus-visible 표시는 카드 내부 링으로 제공한다. 한 페이지에는 701~1023px 3개, 700px 이하 1개를 노출한다. 여러 페이지일 때만 좌우 버튼과 `aria-current` 페이지 점을 표시하고 내부 정렬은 `--portal-v2-content-max`와 `--portal-v2-content-gutter`를 따른다.
+
+빠른 서비스와 가이드 제목 사이는 `--global-space-64`로 구분한다. 가이드 콘텐츠를 감싸는 `.portal-v2-content`는 뷰포트 강제 최소 높이를 사용하지 않고 콘텐츠 높이에 따라 배치한다. 가이드 카드와 FAQ·공지 영역 사이는 가이드 하단 padding을 중복하지 않고 다음 영역의 `--global-space-48` 상단 padding 한 번으로 구분한다.
+
+### Portal v2 주요 항로 영역
+
+주요 항로 영역은 제목과 최대 3개의 노선 카드로 구성하며 별도의 `전체 노선 보기` 링크는 사용하지 않는다. 각 `.portal-v2-route-destination-card`에는 목적지, 소요시간과 공식 예매 사이트로 연결되는 `예매하기` 버튼을 함께 표시하며, 운항 횟수는 노출하지 않는다. 기존의 목적지 선택 탭과 별도 선택 항로 서비스 패널은 사용하지 않는다.
+
+카드는 `--surface-subtle`, `--border-default`, `--global-radius-sm`을 재사용하고 콘텐츠 높이에 맞춰 자연스럽게 늘어난다. 외곽 여백은 `--global-space-12`, 목적지와 소요시간은 같은 행에 배치하며 항목과 `예매하기` 사이의 간격은 `--global-space-12 / 2`로 계산한 6px로 통일한다. 버튼에는 별도 위쪽 margin을 더하지 않으며 다음 행 전체 너비를 사용한다. 따라서 버튼 아래에도 외곽 여백만 남고 카드의 남는 높이가 몰리지 않는다. `예매하기`는 카드보다 시각적 우선순위가 높아지지 않도록 `--surface-base` 배경, 브랜드 혼합 경계선, `--text-brand`를 사용하고 hover·focus에서만 연한 브랜드 표면을 표시한다. 소요시간은 별도 아이콘 없이 `--font-body`, `--text-muted`로 표시한다. 700px 초과 화면에서는 3열, 700px 이하에서는 1열로 배치한다. 요약 패널은 상단 터미널명 다음에 주요 항로와 터미널 날씨를 보여주며 주소는 가장 아래에 유지한다.
+
+터미널 날씨 아래에는 `--global-space-16` 여백과 `--border-default` 구분선을 두고 주소만 표시한다. 주소는 패널 최상단 터미널명 영역에서 분리하며 제목은 `--font-body-lg`, `--text-strong`, 값은 `--font-body-lg`, `--text-muted`를 사용한다. 대표번호, 주차 정보, 오시는 길, 터미널 안내 링크 카드는 메인 패널에서 노출하지 않는다.
+
+데스크톱 터미널 상세 패널은 터미널명, 주요 항로, 터미널 날씨, 연락처 순서로 배치한다. 제목과 콘텐츠는 `--global-space-12`를 사용한다. 주요 항로와 날씨, 날씨와 연락처 사이의 구분선은 이전 콘텐츠에서 `--global-space-16`, 다음 콘텐츠까지 `--global-space-16`을 동일하게 적용해 섹션 간격을 32px로 통일한다.
+
+주요 항로는 터미널명 다음의 첫 섹션이므로 별도의 `margin-top`을 추가하지 않고 터미널명 영역의 하단 16px과 항로 섹션의 상단 16px으로 구분한다. 낮은 데스크톱에서는 날씨와 연락처의 구분 간격만 `--global-space-12`로 축소한다.
+
+일반 데스크톱에서는 터미널명 구분선과 주요 항로 제목 사이를 `--global-space-16`으로 유지한다. 높이가 낮은 데스크톱에서는 패널 넘침을 막기 위해 12px 기준으로 축소한다.
+
+데스크톱 `.portal-v2-finder`의 내부 여백은 컴포넌트 토큰 `--portal-v2-finder-inset: var(--global-space-40)`을 사용해 네 방향을 동일하게 유지한다. 주소 섹션은 전역 `section` 하단 padding을 상속하지 않도록 `padding-bottom: 0`을 명시해 패널 아래에 불필요한 공간이 생기지 않게 한다.
+
+일반 데스크톱의 터미널 상세 패널은 섹션 구분선 앞뒤 `--global-space-16`을 공통 기준으로 사용한다. 터미널명 구분선에서 주요 항로 제목, 항로 카드에서 날씨 구분선과 제목, 날씨 데이터에서 연락처 구분선과 주소 행까지 모두 16px 단위로 맞춰 섹션 간 전체 간격을 32px로 유지한다. 높이가 낮은 화면에서는 같은 구조를 12px로 축소한다.
+
+주요 항로 카드는 첫 줄에 출발지, 브랜드 색상 화살표, 목적지를 표시하고 둘째 줄에 소요시간을 배치한다. 경로 텍스트와 화살표는 `--font-body-lg`, 소요시간 값은 `--font-body`와 `--text-brand`를 사용한다. 카드 상단 padding은 `--global-space-20`, 좌우·하단 padding은 `--global-space-12`를 사용한다. 항로와 소요시간 사이는 `--global-space-8`, 소요시간과 예매하기 버튼 사이는 버튼 하단 여백과 같은 `--global-space-12`로 구분한다.
+
+소요시간 행은 `소요시간` 라벨과 실제 시간 값을 분리한다. 라벨은 `--font-compact-description`, `--text-muted`, `--global-font-weight-medium`을 사용하고 시간 값은 `--font-body`, `--text-brand`, `--global-font-weight-bold`로 강조한다.
+
+항로 카드의 출발지와 목적지 사이는 `--text-brand` 색상의 화살표로 연결한다. 별도의 점선 연결선은 사용하지 않으며 항로, 소요시간, 예매 버튼은 카드의 동일한 중앙축에 맞춰 정렬한다.
+
+주요 항로의 예매하기 행동은 공통 `.btn--solid`를 사용하며 `--action-primary`, `--text-inverse`를 따른다. 공통 solid hover의 진회색은 항로 카드에서 과도하게 단절되어 보이므로 버튼 범위에서 `--action-primary-hover`를 `--color-brand-hover`로 재정의한다. 이를 통해 특이도가 높은 공통 hover 선택자도 파란색 계열을 사용한다.
+
+각 항로 카드는 소요시간 아래에 `운항정보`와 `예매하기`를 동일 너비 2열로 배치한다. 행동 영역은 `--global-space-12` 상단 여백과 `--global-space-8` 열 간격을 사용한다. 두 행동은 `.btn--outline`을 공유하며, 운항정보는 `--surface-base`와 `--border-default`, 예매하기는 `--surface-muted`와 `--brand-overlay-border`로 한 단계만 강조한다. 두 버튼의 hover·focus는 `--action-primary` 배경과 경계선, `--text-inverse` 텍스트로 통일해 브랜드 액센트를 명확히 표시한다.
+
+터미널 탐색기 안의 버튼 hover·focus는 파란색 계열로 통일하되 variant 역할은 유지한다. 지역 선택 버튼은 `--action-primary` 배경과 경계선, `--text-inverse`를 사용해 브랜드 액센트를 명확히 표시한다. 예매 solid 버튼은 `--color-brand-hover`와 `--text-inverse`, 터미널 홈페이지 outline 버튼은 `--surface-muted`, `--action-primary` 경계선, `--text-brand`를 사용한다.
+
+출발지와 목적지에는 별도 위치 아이콘을 표시하지 않는다. `소요시간` 앞에만 `--global-space-16` 크기의 시계 아이콘을 `--text-brand` 색상으로 표시하며, 장식 요소로 구현해 접근 가능한 텍스트를 변경하지 않는다.
+
+데스크톱 `portal-v2-finder`는 패널 자체에 별도 padding을 추가하지 않고, `--portal-v2-finder-inset: var(--global-space-40)`을 콘텐츠 안전 여백으로 사용한다. 패널 외곽 테두리에서 지역 선택 콘텐츠, 지도 시각 요소, 오른쪽 요약 콘텐츠까지의 상·하·좌·우 기준선을 40px로 맞춘다. 열 구분선과 패널 전체 크기는 유지하며 1023px 이하의 반응형 여백은 변경하지 않는다.
+
+데스크톱 히어로 문구와 `portal-v2-finder` 사이 간격은 `--global-space-32`를 사용한다. 패널 높이와 40px 내부 inset은 유지하면서 finder를 위쪽에 배치한다. 높이 820px 이하 화면의 기존 `--global-space-16` 재정의는 유지한다.
+
+목적지 버튼과 선택 항로 요약 행 사이는 위·아래 모두 `--global-space-16`을 사용해 목적지 버튼과 다음 구분선 사이에서 시각적으로 중앙에 놓이도록 한다. 날씨 제목과 데이터 사이는 `--global-space-4`를 사용한다. 날씨 데이터와 하단 구분선, 구분선과 주소 영역 사이는 각각 `--global-space-12`로 맞춰 총 24px을 균등 배분한다. 주소 행은 PC에서 36px, 태블릿·모바일에서 `--global-space-40` 높이를 사용하며 기존 타이포그래피 행간은 유지한다.
+
+터미널 요약 패널의 날씨 아이콘은 화면 크기와 관계없이 `--global-space-80`을 사용한다. 아이콘 크기와 날씨 행의 높이는 분리하며, `--portal-v2-weather-current-min-height`로 세로 공간을 관리한다. 데스크톱에서는 아이콘 크기와 같은 80px로 하단 여백을 줄이고, 태블릿·모바일에서는 기존 152px을 유지한다.
+
+날씨 본문은 주요 항로의 3열 카드 폭을 기준으로 정렬한다. 아이콘·상태·온도 영역은 `calc((100% - (var(--global-space-12) * 2)) / 3)`으로 첫 번째 항로 카드와 같은 폭을 사용하고, 나머지 영역은 풍향·풍속·파고의 동일한 3열로 구성한다. 두 영역 사이는 항로 카드와 같은 `--global-space-12` 간격을 사용하며 700px 이하에서는 기존 단일 열 구조로 전환한다.
+
+날씨 현재 정보와 풍향 사이의 첫 구분선은 12px 열 간격의 절반만큼 왼쪽으로 이동해 주요 항로 첫 번째·두 번째 카드 간격의 중앙축에 맞춘다. 풍향·풍속·파고 사이 구분선 위치는 각 데이터 열의 경계를 유지한다.
+
+데스크톱 날씨 수치 아래는 metrics 하단 패딩을 제거하고 날씨 섹션 하단에 `--global-space-4`만 유지한다. 선택 항로 영역과 비교해 과도했던 약 16px을 줄이며, 태블릿·모바일의 기존 하단 여백은 유지한다.
+
+터미널 요약 패널은 터미널명, 주요 항로, 터미널 날씨, 주소 순으로 배치하며 대표번호는 노출하지 않는다.
+
+### Portal v2 전국 지도 마커
+
+전국 지도와 지역 확대 지도 모두 `--portal-v2-marker-size` 크기의 회청색 원형 점을 기본으로 사용한다. 전국 지도에서는 선택 여부와 관계없이 모든 지역명을 확대 지도 라벨과 같은 `--font-body`, `--global-font-weight-bold`, `--text-muted`로 항상 표시하고 선택 지역명만 `--text-brand`로 강조한다. 서해안의 인천·대천·군산·목포 라벨은 마커 왼쪽에 배치하고 나머지 지역은 오른쪽 배치를 유지한다. 전국 지도에서 목포·완도는 제주보다 위쪽에 배치하고, 여수·통영·부산은 남해안 윤곽에 가깝게 좌표를 보정한다. hover·focus-visible·선택 상태에서는 점을 `--action-primary`로 강조하며 선택·hover·focus 상태의 후광 pulse를 유지한다. 지도 이미지는 데스크톱 88%, 태블릿·모바일 98% 높이로 확대된 상태를 유지하고, 전체 지도 마커 그룹은 이미지와 별도로 왼쪽 `--global-space-4`, 위쪽 `--global-space-8`만큼 보정하며 남서부와 제주 지역의 개별 좌표 보정도 유지한다. 전체 지도와 확대 지도 모두 핀 형태와 터미널명 말풍선을 사용하지 않는다. 선택 상태와 `aria-pressed`는 항상 동일하게 유지한다.
+
+### Portal v2 터미널 검색
+
+터미널 검색 패널은 `전국 여객선 터미널 / KSA TERMINAL` 2단 제목, 터미널명 검색, 2열 지역 선택 버튼으로 구성한다. 지역 버튼은 기존 `.btn--region`, `.btn--pill`, `.btn--outline` 시스템을 유지하며 선택 지역은 `aria-pressed` 상태와 브랜드 배경을 함께 사용한다. 데스크톱의 탐색기 좌우 패널 내부 여백은 컴포넌트 inset 40px로 통일하고 지도 이미지의 안전 여백도 같은 inset을 기준으로 계산한다. `전국 여객선 터미널`은 섹션 제목과 같은 `--font-body-lg`, `KSA TERMINAL`은 `--font-card-title-lg`를 사용하고 한 줄로 표시한다.
+
+인덱스 하단은 FAQ 안내와 공지사항을 데스크톱에서 `1fr / 1.15fr` 두 열로 구성하고 1023px 이하에서는 한 열로 쌓는다. 두 영역의 제목은 `여객선 이용 필수 가이드`와 같은 `--font-section-title`, `--section-title-weight`, `--global-line-height-tight` 위계를 사용한다. FAQ 카드는 공지사항 4개 행과 같은 `--global-space-80 * 4` 높이를 사용하며, 연한 파란 표면 역할의 `--surface-subtle`, `--border-default`, `--global-radius-md`로 표현한다. 카드와 중간 flex/grid 요소에는 `min-height: 0`을 적용하고 카드에는 `overflow: hidden`을 사용한다. 별도의 개수 표시와 하단 안내는 사용하지 않으며, 질문 목록 한 곳만 카드 콘텐츠 높이 100%와 `overflow-y: auto`를 사용한다. 스크롤바는 시각적으로 숨기되 브라우저의 기본 휠·트랙패드·터치·키보드 스크롤은 유지한다. 첫 항목과 마지막 항목도 휠 중앙에 도달할 수 있도록 목록의 `::before`·`::after` flex 여유 공간을 목록 높이의 절반 기준으로 계산한다. 세로 percentage padding은 너비를 기준으로 계산되므로 사용하지 않는다. `scroll-snap-type: y proximity`와 각 질문의 중앙 스냅을 사용해 스크롤 종료 시 가장 가까운 항목이 과도한 강제 이동 없이 중앙에 정렬된다.
+
+FAQ 휠의 중앙 강조는 질문 목록과 각 질문 캡슐의 `getBoundingClientRect()` 중앙값을 같은 viewport 좌표계에서 비교하고, 스크롤과 화면 크기 변경 때 갱신한다. 마우스 휠은 한 번의 입력 묶음마다 현재 질문의 바로 위 또는 아래 한 항목만 중앙으로 이동하며, 160ms 동안 이어지는 동일 제스처의 후속 wheel event는 추가 이동시키지 않아 질문을 건너뛰지 않는다. 터치 스크롤은 브라우저의 자연스러운 관성 동작을 유지한다. 처음 진입할 때는 세 번째 질문을 중앙에 배치해 위쪽 두 질문과 아래쪽 질문이 함께 보이게 한다. HTML의 원본 질문 10개는 유지하고, JavaScript가 앞뒤에 접근성과 포인터 입력에서 제외된 시각용 복제 목록을 만든다. 사용자가 스크롤하는 동안에는 위치를 보정하지 않고 시각 상태만 갱신한다. 스크롤 입력이 140ms 동안 멈춘 뒤 복제 목록이 중앙에 있으면 동일한 원본 질문 위치만큼 한 번만 보정해 양방향으로 끊김 없이 순환한다. 이 좌표 보정 한 프레임 동안에는 smooth scroll, scroll snap, 질문 transition을 중지하고 즉시 이동한 다음 복원해 강조 말풍선의 점멸을 방지한다. 중앙에 가장 가까운 질문은 `.is-current`, 앞뒤 질문은 `.is-nearby`로 표시한다. 중앙 거리에 따라 `--portal-v2-help-question-opacity`, `--portal-v2-help-question-scale`, `--portal-v2-help-question-blur`를 대칭적으로 보간한다. 중앙은 `1 / 1.04 / 0`, 바로 위·아래는 약 `.74 / .96 / .3`, 다음 단계는 약 `.42 / .91 / .7`을 기준으로 하며, 목록 자체의 상하 `mask-image`가 가장자리 항목을 자연스럽게 소거한다. 별도의 하단 화살표 안내와 캡슐 꼬리는 사용하지 않는다. 일반 질문은 `--surface-base`와 `--text-strong`, 현재 질문은 `--action-primary`와 `--text-inverse`, 굵은 글씨, `--global-shadow-sm`을 사용한다. 질문 캡슐은 최대 너비 85%로 먼저 중앙 정렬한 뒤 홀수 항목은 왼쪽 6%, 짝수 항목은 오른쪽 6% 이동해 중앙축을 기준으로 교차하며, 실제 글자 크기는 `--font-body`로 유지한다. 모든 질문에 `Q`와 화살표 영역을 미리 확보하고 현재 질문에서만 표시해 강조가 이동해도 너비·높이·줄바꿈이 달라지지 않게 한다. FAQ `<nav>`는 전역 내비게이션 밑줄 가상 요소의 적용 대상에서 제외한다. hover·focus-visible에서는 위치와 관계없이 흐림을 제거하고 opacity 1과 `--global-shadow-sm`으로 질문 전체를 강조한다. 각 원본 질문 링크는 FAQ 페이지의 해당 답변을 연다. 공지사항 제목에는 별도 화살표를 사용하지 않고, 제목 행 오른쪽에 공통 `.btn--sm.btn--outline` 스타일의 `전체보기` 버튼을 배치한다. 공지 제목은 `--font-body-lg`, 날짜는 `--font-home-notice-date`, 태그는 `--font-caption`을 사용한다. 공지 목록은 태그·제목·날짜·이동 화살표를 한 행에 표시하고 모바일에서는 날짜를 제목 아래로 내린다.
+
+FAQ 카드 표면은 바다·하늘 계열의 기존 `--global-color-blue-*`, `--color-hero-quick-accent`를 `color-mix()`한 네 개의 radial gradient로 구성한다. 우상단에는 선명한 시안, 우하단에는 중간 블루, 좌하단에는 브랜드 블루를 배치해 밝은 바탕 안에서도 메쉬의 깊이가 보이게 한다. 질문 캡슐은 `--surface-base` 기반 70% 반투명 표면, 흰색 계열 경계, 컴포넌트 범위의 8px 배경 블러와 토큰 기반 그림자를 사용한다. 현재 질문은 `--action-primary`와 `--global-color-blue-500`의 브랜드 그라데이션, `--brand-overlay-strong` 기반 파란 그림자로 일반 질문보다 높은 깊이를 갖는다. 선택된 `Q`와 이동 화살표는 별도 배경 없이 흰색으로 표시한다. 이 효과를 위한 blur와 shadow 값은 `.portal-v2-help__card` 범위의 컴포넌트 custom property로만 관리한다.
+
+`.portal-v2-summary` 내부 타이포그래피는 패널 밀도에 맞게 기존 전역 토큰을 아래와 같이 재사용한다. 이 계약은 PC·태블릿·모바일에서 동일하며 breakpoint는 타이포그래피가 아닌 배치만 전환한다. 탐색기 화면의 폰트 크기는 36px, 28px, 18px, 16px, 14px의 5단계로 정리한다.
+
+| 역할 | 적용 요소 | 크기 | 굵기 | 색상·행간 |
+|---|---|---|---|---|
+| 패널 페이지 제목 | `[data-v2-terminal-name]` | `--font-card-title-lg` | `--global-font-weight-bold` | `--text-strong` / `--global-line-height-title-compact` |
+| 섹션 제목 | `#portal-v2-routes-title`, `#portal-v2-weather-title` | `--font-body-lg` | `--global-font-weight-bold` | `--text-strong` / `--global-line-height-title-compact` |
+| 정보 제목 | `.portal-v2-route-selection__summary h3`, `.portal-v2-terminal-info__contact-label` | `--font-body` | `--global-font-weight-semibold` | `--text-strong` / `--global-line-height-title-compact` |
+| 항로 카드 제목 | `.portal-v2-route-card__path strong` | `--font-body-lg` | `--global-font-weight-semibold` | `--text-strong` / `--global-line-height-title-compact` |
+| 정보 값 | `.portal-v2-route-selection__duration` 라벨 / 시간 값 | `--font-body` | `--global-font-weight-medium` / `--global-font-weight-bold` | `--text-muted` / `--text-brand` / `--global-line-height-normal` |
+| 터미널 정보 값 | `.portal-v2-terminal-info__value` | `--font-body` | `--global-font-weight-medium` | `--text-muted` / `--global-line-height-normal` |
+| 정보 아이콘 | 선택 항로 위치·화살표, 주소 아이콘 | `--global-space-20` | 위치 stroke `1.8`, 화살표 stroke `2.2` | `--text-brand` / line-height `1` |
+| 보조 설명 | 날씨 기준 시각 | `--font-body` | `--global-font-weight-medium` | `--text-muted` / `--global-line-height-normal` |
+| 주요 날씨 수치 | 기온 | `--font-card-title-lg` | `--global-font-weight-bold` | `--text-body` / `--global-line-height-metric` |
+| 날씨 수치 | 풍향·풍속·파고 | `--font-body-lg` | `--global-font-weight-bold` | `--text-body` / `--global-line-height-metric` |
+| 날씨 라벨 | 날씨 상태·풍향·풍속·파고 라벨 | `--font-compact-description` | `--global-font-weight-medium` | `--text-muted` / `--global-line-height-normal` |
+
 ## 28. 특이도·구조 의존 selector 전수 조사
 
 ### 28.1 조사 기준
@@ -2312,6 +2412,8 @@ media query 내부 `!important`는 reduced-motion의 전역 `transition:none` 1�
 
 ### 30.4 포털 기본 구조와 터미널 탐색기
 
+Portal v2 터미널 탐색기의 데스크톱 3열은 지역 선택·지도·상세 정보 순서로 `minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 2.4fr)` 비율을 사용한다. 1023px 이하의 2열 및 단일 열 전환은 기존 breakpoint 규칙을 따른다.
+
 | 컴포넌트 | 주 정의 범위 | 시작 기준 | 추가 정의·override | 비고 |
 |---|---:|---|---|---|
 | Portal core/cards | L2672~2904 | `/* Shared multi-terminal additions */`, `.portal-page` | L3265~3355 | portal base, legacy hero/card, section heading 포함 |
@@ -2339,7 +2441,7 @@ media query 내부 `!important`는 reduced-motion의 전역 `transition:none` 1�
 
 | 컴포넌트 | 주 정의 범위 | 시작 기준 | 추가 정의·override | 비고 |
 |---|---:|---|---|---|
-| Content heading/callout | L6484~6529 | `.portal-content-heading-row` | L7352~7392 | tablet/mobile typography 보정 |
+| Content heading/callout | L6484~6529 | `.content-heading-row` | L7352~7392 | tablet/mobile typography 보정 |
 | Terminal directory cards | L6530~6595 | `.portal-terminal-directory` | 없음 | booking icon 공유 selector 존재 |
 | Step/check/safety/contact guide | L6596~6947 | `.portal-preparing-block` | L7030~7040 | 여러 guide/info card 계열이 연속 정의됨 |
 | List toolbar/filter controls | L6948~7101 | `.portal-content-badge`, `.portal-list-toolbar` | L7028~7057 | select group과 mobile layout 포함 |
@@ -2409,6 +2511,22 @@ media query 내부 `!important`는 reduced-motion의 전역 `transition:none` 1�
 | Portal guide | L7485~8052, L10175~10812 | 서로 다른 카드 variant인지 같은 구조의 중복 구현인지 |
 | Portal hero/service | L5246~5659, L8097~8253, L12328~12795 | legacy quick link와 service card의 공유 가능 범위 |
 | Breadcrumb/subpage title | L5978~6307, L10894~11063 | 복원 규칙이 기본 규칙을 전면 덮는지 여부 |
+
+### 승선 절차 안내 컴포넌트
+
+목포 `boarding-procedure.html`과 `vehicle-shipping.html`은 `.boarding-journey`를 사용한다. 승선절차 페이지의 여객 절차는 4열, 차량 선적안내 페이지의 차량동반 절차는 `.boarding-journey-route--vehicle`을 적용한 5열 연결선형 안내다. 모든 단계는 동일한 스타일이며 별도 차량 상세 설명 영역은 없다. 승선절차 페이지의 주의사항은 2열 목록이다. 기존 `.portal-step-flow`는 다른 페이지에서 그대로 유지한다.
+
+- 색상은 `--surface-inverse/base/subtle`, `--text-inverse/strong/body/brand`, `--border-default`를 사용한다.
+- 크기와 간격은 `--global-space-*`, 제목과 본문은 기존 `--font-*` 및 굵기·줄간격 토큰을 사용한다.
+- scoped token `--journey-icon-size`는 48 spacing 토큰, `--journey-track-size`는 연결선·배지 정렬을 위한 80 spacing 토큰, `--journey-number-size`는 40 spacing 토큰을 참조한다.
+- 1023px 이하에서 차량 연결선을 세로 흐름으로, 700px 이하에서 여객 연결선을 세로 흐름으로 전환하고 주의사항도 1열로 표시한다. 고정 콘텐츠 높이를 사용하지 않는다.
+- 여객 단계는 `--surface-muted` 배경과 `--text-brand` 글자의 연한 배지, `--text-strong` 아이콘·제목을 사용한다. 차량 단계는 `--surface-muted` 섹션 배경 위에 `--action-primary` 배경·`--text-inverse` 글자의 진한 배지와 흰 카드를 두고, 플랫 아이콘을 `--text-brand`와 `--global-color-blue-300`으로 표현한다.
+- `.boarding-journey-card`는 STEP 배지·연결선과 분리하여 아이콘·제목·설명만 묶는다. 여객·차량 승선 절차 모두 `--surface-base`, `--border-default`, 통합 승선절차 카드와 같은 `--global-radius-md`를 사용한다. 그림자는 없다. 가로 배치에서는 같은 높이로 늘어나고 세로 배치에서는 STEP 트랙 옆에 배치된다.
+- 차량 절차의 데스크톱 카드는 최소 높이 260px로 세로 비율을 확보한다. STEP 01은 터미널과 차량, STEP 03은 차량의 선박 선적을 플랫 아이콘으로 표현한다. 세로 흐름으로 바뀌는 1023px 이하에는 최소 높이를 적용하지 않는다.
+- 차량 승선 절차의 `--surface-muted` 배경은 섹션의 `::before`로 브라우저 너비까지 확장하며, 높이는 해당 섹션에만 맞춘다. 차량 선적안내 페이지의 `.template-section` 상단 여백(기본 80px, 모바일 48px)은 유지하면서 같은 배경색으로 채운다. 제목과 카드의 정렬은 기존 `.container` 안에 유지한다.
+- 차량 절차의 마지막 카드 아래 공간은 상단 여백과 섹션 내부 여백의 합과 같게 설정한다. 마지막 단계의 불필요한 하단 padding은 제거하고, 모바일에서는 48px 상단 여백과 16px 내부 여백을 기준으로 맞춘다.
+- 차량 선적 장소 섹션은 제목·안내 문구·터미널 탭을 표시한다. 두 약도는 동일한 1536×1024 2D 도식 이미지로 제공하고, 이미지 안에는 장소명만 남긴다.
+- 차량 선적 시 주의사항은 `.vehicle-notice`의 하나의 흰 패널 안에 두 목록을 위아래로 배치한다. 패널 전체에 `--border-default` 테두리를 두고 목록 사이는 얇은 점선으로 구분한다. 두 그룹의 번호 배지는 없으며, 각 항목의 제목과 설명은 같은 행에서 이어진다.
 
 ### 30.12 5번 단계 결론
 

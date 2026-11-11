@@ -465,6 +465,7 @@
                         "en": ""
                     },
                     "address": { "ko": "", "en": "" },
+                    "coords": { "lat": 34.781939, "lng": 126.384216 },
                     "hours": {
                         "ko": "",
                         "en": ""
@@ -1415,13 +1416,13 @@
         ],
         mokpo: [
             Object.assign(
-                createPendingPortalTerminal('mokpo-international', 'international', '목포항 국제여객터미널', ['목포 → 국제 크루즈 기항지']), { address: { ko: '전라남도 목포시 해안로148번길 14', en: '' } }
+                createPendingPortalTerminal('mokpo-international', 'international', '목포항 국제여객터미널', ['목포 → 국제 크루즈 기항지']), { address: { ko: '전라남도 목포시 해안로148번길 14', en: '' }, coords: { lat: 34.780118, lng: 126.382181 } }
             ),
             Object.assign(
-                createPendingPortalTerminal('mokpo-heuksando', 'heuksando', '흑산도항여객터미널', ['흑산도 → 홍도', '흑산도 → 가거도']), { address: { ko: '전라남도 신안군 흑산면 예리1길 41-19', en: '' } }
+                createPendingPortalTerminal('mokpo-heuksando', 'heuksando', '흑산도항여객터미널', ['흑산도 → 홍도', '흑산도 → 가거도']), { address: { ko: '전라남도 신안군 흑산면 예리1길 41-19', en: '' }, coords: { lat: 34.68455549121842, lng: 125.44243730078597 } }
             ),
             Object.assign(
-                createPendingPortalTerminal('mokpo-hongdo', 'hongdo', '홍도항여객터미널', ['홍도 → 흑산도', '홍도 → 목포']), { address: { ko: '전라남도 신안군 흑산면 홍도1길 65-2', en: '' } }
+                createPendingPortalTerminal('mokpo-hongdo', 'hongdo', '홍도항여객터미널', ['홍도 → 흑산도', '홍도 → 목포']), { address: { ko: '전라남도 신안군 흑산면 홍도1길 65-2', en: '' }, coords: { lat: 34.682726947546975, lng: 125.19275630676516 } }
             )
         ],
         wando: [
@@ -1566,7 +1567,5 @@
         canonicalRegions[definition.key] = region;
     });
     window.PORTAL_DATA.regions = canonicalRegions;
-    window.PORTAL_DATA.initialRegionId = registry.find((definition) => definition.isDefault)?.key
-        || registry.find((definition) => canonicalRegions[definition.key])?.key
-        || null;
+    window.PORTAL_DATA.initialRegionId = null;
 }());

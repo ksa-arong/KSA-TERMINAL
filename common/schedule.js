@@ -4,15 +4,189 @@
   const config = window.scheduleData;
   if (config?.status === 'preparing') return;
   const section = document.getElementById('schedule');
-  if (!config || !section) throw new Error('scheduleData와 #schedule 요소가 필요합니다.');
+  if (!config) throw new Error('scheduleData가 필요합니다.');
+  if (!section) return;
   if (!window.SectionTitle) throw new Error('SectionTitle 컴포넌트가 필요합니다.');
   const t = window.i18n ? window.i18n.t : (key) => key;
   const localize = window.i18n ? window.i18n.localize : (value) => value && value.ko !== undefined ? value.ko : value;
   const escapeHtml = window.PortalDomUtils.escapeHtml;
 
+  if (Array.isArray(config.timetablePeriods) && config.timetablePeriods.length) {
+    renderRegionTimetable();
+    return;
+  }
+
   if (config.schemaVersion === '2.0' && Array.isArray(config.routes)) {
     renderRegionSchedule();
     return;
+  }
+
+  function renderRegionTimetable() {
+    const pageSize = 10;
+    let activePeriodId = config.timetablePeriods.some((period) => period.id === config.period)
+      ? config.period
+      : config.timetablePeriods[0].id;
+    let activeGroup = '전체';
+    let currentPage = 1;
+    const periodOptions = config.timetablePeriods.map((period) =>
+      `<option value="${escapeHtml(period.id)}"${period.id === activePeriodId ? ' selected' : ''}>${escapeHtml(period.label)}</option>`
+    ).join('');
+    const subpage = section.classList.contains('region-page-schedule');
+    const heading = subpage
+      ? '<h2 class="sr-only" id="schedule-title">목포항 운항 스케쥴</h2>'
+      : `<div class="content-heading"><h2 id="schedule-title">운항 스케쥴</h2><p>목포항 출항편을 방면·선박별로 확인하세요.</p></div>`;
+    const content = `${heading}
+      <div class="region-timetable" data-region-timetable>
+        <div class="portal-list-toolbar portal-operation-toolbar region-timetable-controls" aria-label="운항 스케쥴 검색 조건">
+          <div class="portal-operation-controls">
+            <div class="portal-filter-select-group">
+              <div class="portal-list-select">
+                <label class="sr-only" for="region-timetable-period">운항 기준</label>
+                <select id="region-timetable-period">${periodOptions}</select>
+              </div>
+              <div class="portal-list-select">
+                <label class="sr-only" for="region-timetable-group">항로 선택</label>
+                <select id="region-timetable-group"><option value="전체">전체 항로</option></select>
+              </div>
+            </div>
+            <div class="portal-list-search">
+              <label class="sr-only" for="region-timetable-query">운항편 검색</label>
+              <input id="region-timetable-query" type="search" placeholder="목적지, 선박명, 기항지 검색" autocomplete="off">
+              <button class="btn btn--icon btn--md btn--ghost" type="button" data-timetable-reset aria-label="검색어 초기화">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+              </button>
+            </div>
+          </div>
+          <div class="portal-operation-result-meta">
+            <p class="portal-operation-updated"><strong>운항 기준</strong> <span data-timetable-source aria-live="polite"></span></p>
+          </div>
+        </div>
+        <div class="region-timetable-results-head">
+          <h3 data-timetable-heading>전체 운항편</h3>
+          <span data-timetable-count aria-live="polite"></span>
+        </div>
+        <div class="table-scroll-region region-timetable-table-wrap" role="region" aria-label="목포항 출항 시간표" tabindex="0">
+          <table class="portal-data-table region-timetable-table mobile-table--stacked">
+            <caption class="sr-only">목포항 여객선 출항 시간표</caption>
+            <thead><tr><th scope="col">출항시간</th><th scope="col">선박명</th><th scope="col">기항지</th><th scope="col">선사</th><th scope="col">문의전화</th></tr></thead>
+            <tbody data-timetable-results></tbody>
+          </table>
+        </div>
+        <nav class="portal-pagination" data-timetable-pagination aria-label="운항 스케쥴 페이지" hidden></nav>
+        <p class="region-timetable-notice" role="note"><strong>이용 전 확인</strong><span>운항 시간은 기상과 선사 사정에 따라 변경될 수 있습니다. 출항 전 해당 선사에 최신 일정을 확인해 주세요.</span></p>
+        <div class="region-timetable-notes" data-timetable-notes></div>
+        <section class="region-timetable-guide" aria-labelledby="region-timetable-guide-title">
+          <h3 id="region-timetable-guide-title">여객선 이용 안내</h3>
+          <ul>
+            <li>승선 시 신분증 등 본인 확인에 필요한 서류를 지참해 주세요.</li>
+            <li>매표는 출항 직전에 마감될 수 있으므로 여유 있게 터미널에 도착해 주세요.</li>
+            <li>차량 선적 가능 여부와 도착·출항 항구는 운항편별로 선사에 확인해 주세요.</li>
+            <li>휴항일과 운항 일정은 기상 및 선박 사정에 따라 달라질 수 있습니다.</li>
+          </ul>
+        </section>
+      </div>`;
+    section.innerHTML = subpage ? content : `<div class="container">${content}</div>`;
+
+    const periodSelect = section.querySelector('#region-timetable-period');
+    const groupSelect = section.querySelector('#region-timetable-group');
+    const queryInput = section.querySelector('#region-timetable-query');
+    const resetButton = section.querySelector('[data-timetable-reset]');
+    const results = section.querySelector('[data-timetable-results]');
+    const resultsHeading = section.querySelector('[data-timetable-heading]');
+    const count = section.querySelector('[data-timetable-count]');
+    const notes = section.querySelector('[data-timetable-notes]');
+    const source = section.querySelector('[data-timetable-source]');
+    const pagination = section.querySelector('[data-timetable-pagination]');
+
+    function phoneLink(phone) {
+      const callable = String(phone).replace(/[^\d+]/g, '');
+      return `<a href="tel:${callable}">${escapeHtml(phone)}</a>`;
+    }
+
+    function currentPeriod() {
+      return config.timetablePeriods.find((period) => period.id === activePeriodId) || config.timetablePeriods[0];
+    }
+
+    function rowMarkup(entry) {
+      const row = entry.row;
+      const phoneMarkup = row.phones?.length ? row.phones.map(phoneLink).join('<br>') : '-';
+      return `<tr data-timetable-row>
+        <td data-label="출항시간"><time class="region-timetable-time">${escapeHtml(row.departure)}</time></td>
+        <td data-label="선박명"><strong>${escapeHtml(row.vessel)}</strong></td>
+        <td data-label="기항지">${escapeHtml(row.ports)}</td>
+        <td data-label="선사">${escapeHtml(row.operator)}</td>
+        <td data-label="문의전화" class="region-timetable-phone">${phoneMarkup}</td>
+      </tr>`;
+    }
+
+    function render() {
+      const period = currentPeriod();
+      const query = queryInput.value.trim().toLocaleLowerCase('ko-KR');
+      const groupNames = period.groups.map((group) => group.name);
+      if (activeGroup !== '전체' && !groupNames.includes(activeGroup)) activeGroup = '전체';
+      groupSelect.innerHTML = ['전체', ...groupNames].map((group) =>
+        `<option value="${escapeHtml(group)}">${escapeHtml(group === '전체' ? '전체 항로' : group)}</option>`
+      ).join('');
+      groupSelect.value = activeGroup;
+
+      const activeGroups = activeGroup === '전체'
+        ? period.groups
+        : period.groups.filter((group) => group.name === activeGroup);
+      const entries = activeGroups.flatMap((group) => group.rows.map((row) => ({ group, row })));
+      const visibleEntries = query
+        ? entries.filter(({ group, row }) => [group.name, row.departure, row.vessel, row.ports, row.operator, ...(row.phones || [])]
+          .join(' ').toLocaleLowerCase('ko-KR').includes(query))
+        : entries;
+      const totalPages = Math.ceil(visibleEntries.length / pageSize);
+      currentPage = Math.min(Math.max(currentPage, 1), Math.max(totalPages, 1));
+      const pageStart = (currentPage - 1) * pageSize;
+      const pageEntries = visibleEntries.slice(pageStart, pageStart + pageSize);
+      results.innerHTML = pageEntries.length
+        ? pageEntries.map(rowMarkup).join('')
+        : '<tr><td class="region-timetable-empty" colspan="5">조건에 맞는 운항편이 없습니다.</td></tr>';
+      resultsHeading.textContent = activeGroup === '전체' ? '전체 운항편' : `${activeGroup} 방면`;
+      count.textContent = `총 ${visibleEntries.length}편`;
+      source.textContent = `${period.label} 안내자료 기준`;
+      if (window.PortalPagination) {
+        window.PortalPagination.renderPagination(pagination, currentPage, totalPages, (page) => {
+          currentPage = page;
+          render();
+          results.closest?.('table')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+        });
+      } else {
+        pagination.hidden = true;
+      }
+
+      const noteItems = [...new Set(activeGroups.flatMap((group) => group.notes || []))];
+      notes.hidden = noteItems.length === 0;
+      notes.innerHTML = noteItems.length
+        ? `<h3>운항 및 휴항 안내</h3><ul>${noteItems.map((note) => `<li>${escapeHtml(note)}</li>`).join('')}</ul>`
+        : '';
+    }
+
+    periodSelect.addEventListener('change', () => {
+      activePeriodId = periodSelect.value;
+      activeGroup = '전체';
+      currentPage = 1;
+      render();
+    });
+    groupSelect.addEventListener('change', () => {
+      activeGroup = groupSelect.value;
+      currentPage = 1;
+      render();
+    });
+    queryInput.addEventListener('input', () => {
+      currentPage = 1;
+      render();
+    });
+    resetButton.addEventListener('click', () => {
+      queryInput.value = '';
+      activeGroup = '전체';
+      currentPage = 1;
+      render();
+      queryInput.focus?.();
+    });
+    render();
   }
 
   function renderRegionSchedule() {
@@ -68,11 +242,11 @@
         ...(route.outbound || []).map((row) => ({ ...row, direction: 'outbound' })),
         ...(route.inbound || []).map((row) => ({ ...row, direction: 'inbound' }))
       ];
-      const standard = rowsTable(standardRows, `${localize(route.destination) || localize(route.group)} 항로 운항 시간표`, isRoundTrip);
+      const standard = rowsTable(standardRows, `${localize(route.destination) || localize(route.group)} 항로 운항 스케쥴`, isRoundTrip);
       const patterns = (route.patterns || []).map((pattern) => {
         const dayText = (pattern.days || []).map((day) => dayLabels[day] || day).join('·');
         const note = localize(pattern.note);
-        return `<section class="region-pattern" aria-label="${escapeHtml(`${dayText}요일 운항`)}"><h4>${escapeHtml(dayText)}요일${note ? ` <span>${escapeHtml(note)}</span>` : ''}</h4>${rowsTable(pattern.legs || [], `${dayText}요일 운항 시간표`)}</section>`;
+        return `<section class="region-pattern" aria-label="${escapeHtml(`${dayText}요일 운항`)}"><h4>${escapeHtml(dayText)}요일${note ? ` <span>${escapeHtml(note)}</span>` : ''}</h4>${rowsTable(pattern.legs || [], `${dayText}요일 운항 스케쥴`)}</section>`;
       }).join('');
       return `${standard}${patterns}`;
     };
@@ -112,14 +286,15 @@
       ? `<span>자료 기준 <time datetime="${escapeHtml(config.sourceDate)}">${formatSourceDate(config.sourceDate)}</time></span>`
       : `<span>${escapeHtml(localize(config.sourceLabel))}</span>`;
 
-    section.innerHTML = `<div class="container">
-      <div class="region-schedule-heading">
-        <div><p class="section-kicker">SCHEDULE</p><h2 id="schedule-title">운항 시간표</h2><p>${hasRoundTrip ? '가는편과 오는편을 항로·선박별로 확인하세요.' : '출항시간과 경유 기항지를 방면·선박별로 확인하세요.'}</p></div>
-        <div class="region-schedule-source"><strong>${escapeHtml(config.period)}</strong>${sourceReference}</div>
-      </div>
+    const description = hasRoundTrip ? '가는편과 오는편을 항로·선박별로 확인하세요.' : '출항시간과 경유 기항지를 방면·선박별로 확인하세요.';
+    const subpage = section.classList.contains('region-page-schedule');
+    const heading = subpage
+      ? `<div class="content-heading"><h2 id="schedule-title">운항 스케쥴</h2><p>${description}</p></div><div class="region-schedule-source"><strong>${escapeHtml(config.period)}</strong>${sourceReference}</div>`
+      : `<div class="region-schedule-heading"><div><p class="section-kicker">SCHEDULE</p><h2 id="schedule-title">운항 스케쥴</h2><p>${description}</p></div><div class="region-schedule-source"><strong>${escapeHtml(config.period)}</strong>${sourceReference}</div></div>`;
+    const content = `${heading}
       <p class="region-source-title">출처: ${escapeHtml(localize(config.source))}</p>
-      <div class="region-route-list">${routeCards}</div>
-    </div>`;
+      <div class="region-route-list">${routeCards}</div>`;
+    section.innerHTML = subpage ? content : `<div class="container">${content}</div>`;
   }
 
   const schedule = config.items || [];

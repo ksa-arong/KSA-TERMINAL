@@ -21,8 +21,8 @@
       description: { key: 'portalSubpage.description.weather' },
       content: `
 <div class="portal-weather-page" data-weather-root aria-busy="false">
-<section class="portal-content-block" aria-labelledby="terminal-weather-title">
-<div class="portal-content-heading">
+<section class="content-block" aria-labelledby="terminal-weather-title">
+<div class="content-heading">
   <h2 id="terminal-weather-title">터미널별 기상 안내</h2>
 </div>
 <div class="portal-list-toolbar portal-operation-toolbar portal-weather-filter-toolbar" aria-label="기상·특보 안내 조회 조건">
@@ -76,8 +76,8 @@
 </div>
 </section>
 
-<section class="portal-content-block" aria-labelledby="weather-advisory-title">
-  <div class="portal-content-heading">
+<section class="content-block" aria-labelledby="weather-advisory-title">
+  <div class="content-heading">
     <h2 id="weather-advisory-title">기상특보</h2>
   </div>
   <div class="portal-weather-advisory-list" data-weather-advisory-list aria-live="polite"></div>
@@ -86,6 +86,7 @@
     };
   </script>
   <script src="../common/dom-utils.js"></script>
+  <script src="../common/path-resolver.js"></script>
   <script src="../common/layout.js"></script>
   <script src="../common/weather-data.js"></script>
   <script src="../common/portal-weather.js"></script>

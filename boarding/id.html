@@ -20,18 +20,18 @@
       rootPrefix: '../',
       description: { key: 'portalSubpage.description.identity' },
       content: `
-<section class="portal-content-block id-guide" aria-labelledby="identity-guide-title">
-  <div class="portal-content-heading">
+<section class="content-block id-guide" aria-labelledby="identity-guide-title">
+  <div class="content-heading">
     <h2 id="identity-guide-title">신분증 인정범위</h2>
     <p>승선자 본인 확인에 필요한 신분 확인 수단을 안내합니다.</p>
   </div>
-  <div class="id-guide-audience" role="group" aria-label="대상별 신분증 인정범위 필터">
-    <button class="id-guide-card" type="button" data-identity-filter="all" aria-pressed="true" aria-controls="identity-guide-table-body">전체</button>
-    <button class="id-guide-card" type="button" data-identity-filter="general" aria-pressed="false" aria-controls="identity-guide-table-body">일반인</button>
-    <button class="id-guide-card" type="button" data-identity-filter="military" aria-pressed="false" aria-controls="identity-guide-table-body">군인</button>
-    <button class="id-guide-card" type="button" data-identity-filter="foreigner" aria-pressed="false" aria-controls="identity-guide-table-body">외국인</button>
-    <button class="id-guide-card" type="button" data-identity-filter="youth" aria-pressed="false" aria-controls="identity-guide-table-body">초·중·고·미취학</button>
-    <button class="id-guide-card" type="button" data-identity-filter="islander" aria-pressed="false" aria-controls="identity-guide-table-body">도서민</button>
+  <div class="tab-list" role="group" aria-label="대상별 신분증 인정범위 필터">
+    <button class="tab-button" type="button" data-identity-filter="all" aria-pressed="true" aria-controls="identity-guide-table-body">전체</button>
+    <button class="tab-button" type="button" data-identity-filter="general" aria-pressed="false" aria-controls="identity-guide-table-body">일반인</button>
+    <button class="tab-button" type="button" data-identity-filter="military" aria-pressed="false" aria-controls="identity-guide-table-body">군인</button>
+    <button class="tab-button" type="button" data-identity-filter="foreigner" aria-pressed="false" aria-controls="identity-guide-table-body">외국인</button>
+    <button class="tab-button" type="button" data-identity-filter="youth" aria-pressed="false" aria-controls="identity-guide-table-body">초·중·고·미취학</button>
+    <button class="tab-button" type="button" data-identity-filter="islander" aria-pressed="false" aria-controls="identity-guide-table-body">도서민</button>
   </div>
   <div class="portal-table-wrap id-guide-matrix-wrap" role="region" aria-label="대상별 신분증 인정범위 표" tabindex="0">
     <table class="id-guide-matrix">
@@ -51,6 +51,7 @@
     };
   </script>
   <script src="../common/dom-utils.js"></script>
+  <script src="../common/path-resolver.js"></script>
   <script src="../common/layout.js"></script>
   <script>
     (function () {

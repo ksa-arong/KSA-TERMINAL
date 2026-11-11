@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="../../common/images/logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="여객선 출항시각과 선박·항로별 운항 상태를 조회하세요.">
+  <meta property="og:title" content="목포항 여객터미널 운항 스케쥴">
+  <meta property="og:description" content="여객선 출항시각과 선박·항로별 운항 상태를 조회하세요.">
+  <meta property="og:type" content="website">
+  <title>운항 스케쥴 | 목포항 여객터미널</title>
+  <link rel="stylesheet" href="../../common/style.css">
+</head>
+<body class="portal-page portal-subpage portal-template-page region-template-page region-subpage-page" data-region-page="timetable">
+  <div id="app"></div>
+  <script src="./terminal-data.js"></script>
+  <script src="./schedule-data.js"></script>
+  <script src="../../common/path-resolver.js"></script>
+<script src="../../common/locales/ko.js"></script>
+  <script src="../../common/locales/en.js"></script>
+  <script src="../../common/i18n.js"></script>
+  <script src="../../common/menu-data.js"></script>
+  <script>
+    window.PORTAL_OPERATION_OPTIONS = {
+      fixedRegion: '목포',
+      showRegionColumn: false,
+      timeFirst: true,
+      contactTimetable: true,
+      groupedContactTimetable: true,
+      defaultPeriod: '2026-10'
+    };
+    window.PORTAL_OPERATION_ROWS = [
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '제주도 방면',
+        groupNoteTitle: '운항안내',
+        groupNote: '퀸제누비아호 선박 검사로 인하여 운항 스케줄 및 선박(선명)이 변경될 수 있으니 참고해 주시길 바랍니다.',
+        time: '0830',
+        ship: '퀸메리',
+        shipType: '카훼리여객선',
+        route: '제주도',
+        operator: '씨월드 고속훼리',
+        contact: '061-243-1927'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '제주도 방면',
+        time: '0100',
+        ship: '퀸제누비아2호',
+        shipType: '카훼리여객선',
+        route: '제주도',
+        operator: '씨월드 고속훼리',
+        contact: '061-243-1927'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '흑산도 방면',
+        groupNoteTitle: '운항안내',
+        groupNote: '흑산 방면 차량선적은 뉴드림호 06:40 압해도 송공항 출항이며, 해진해운(061-279-4222)으로 문의해 주시기 바랍니다. 쾌속선 16:00 운항편은 매주 토·일요일 휴항입니다.',
+        time: '0750',
+        ship: '쾌속선',
+        shipType: '쾌속선',
+        route: '도초(비금), 흑산도, 홍도',
+        operator: '남해고속 · 동양훼리',
+        operatorSchedules: [{ name: '남해고속', schedule: '홀수일' }, { name: '동양훼리', schedule: '짝수일' }],
+        contact: ['061-244-9915', '061-243-2111'],
+        duration: '2시간 30분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '흑산도 방면',
+        time: '1230',
+        ship: '쾌속선',
+        shipType: '쾌속선',
+        route: '도초(비금), 흑산도, 홍도',
+        operator: '남해고속 · 동양훼리',
+        operatorSchedules: [{ name: '남해고속', schedule: '홀수일' }, { name: '동양훼리', schedule: '짝수일' }],
+        contact: ['061-244-9915', '061-243-2111'],
+        duration: '2시간 30분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '가거도 방면',
+        time: '0810',
+        ship: '선사문의',
+        shipType: '초쾌속선',
+        route: '다물도, 흑산도, 상·하태, 가거도',
+        operator: '남해고속',
+        contact: '061-244-9915',
+        duration: '4시간 10분',
+        suspension: '화·목 휴항'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '가거도 방면',
+        time: '1400',
+        ship: '선사문의',
+        shipType: '초쾌속선',
+        route: '하태도, 만재도, 가거도',
+        operator: '남해고속',
+        contact: '061-244-9915',
+        duration: '4시간 30분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '흑산도 방면',
+        time: '1600',
+        ship: '쾌속선',
+        shipType: '쾌속선',
+        route: '도초(비금), 흑산도',
+        operator: '남해고속 · 동양훼리',
+        operatorSchedules: [{ name: '남해고속', schedule: '홀수일' }, { name: '동양훼리', schedule: '짝수일' }],
+        contact: ['061-244-9915', '061-243-2111'],
+        duration: '—',
+        suspension: '토·일 휴항'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산, 옥도, 장병, 신의, 하의, 안좌 방면',
+        time: '0530',
+        ship: '천사 1호(2호)',
+        shipType: '-',
+        route: '안좌(복호), 장산(북강), 옥도, 장병, 하의(웅곡)',
+        operator: '신안교통재단',
+        contact: '061-242-0888'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산, 옥도, 장병, 신의, 하의, 안좌 방면',
+        time: '0540',
+        ship: '천사 3호',
+        shipType: '-',
+        route: '장산(축강), 신의(동리)',
+        operator: '신안교통재단',
+        contact: '061-242-0888'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산, 옥도, 장병, 신의, 하의, 안좌 방면',
+        time: '1030',
+        ship: '천사 3호',
+        shipType: '-',
+        route: '장산(축강), 신의(동리)',
+        operator: '신안교통재단',
+        contact: '061-242-0888'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산, 옥도, 장병, 신의, 하의, 안좌 방면',
+        time: '1200',
+        ship: '천사 1호(2호)',
+        shipType: '-',
+        route: '장산(북강), 안좌(복호), 하의',
+        operator: '신안교통재단',
+        contact: '061-242-0888'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산, 옥도, 장병, 신의, 하의, 안좌 방면',
+        time: '1510',
+        ship: '천사 3호',
+        shipType: '-',
+        route: '장산(마진도), 장산(축강), 신의(동리)',
+        operator: '신안교통재단',
+        contact: '061-242-0888'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산, 옥도, 장병, 신의, 하의, 안좌 방면',
+        time: '1730',
+        ship: '천사 1호(2호)',
+        shipType: '-',
+        route: '안좌(복호), 장산(북강), 옥도, 장병도, 하의(웅곡)',
+        operator: '신안교통재단',
+        contact: '061-242-0888'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산(북강), 하의도, 신의(상태서리) 방면',
+        time: '0600',
+        ship: '퍼스트엔젤',
+        shipType: '쾌속선',
+        route: '장산(북강), 하의도, 신의(상태)',
+        operator: '(유)신진해운',
+        contact: '061-244-0522',
+        duration: '1시간 13분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '장산(북강), 하의도, 신의(상태서리) 방면',
+        time: '1400',
+        ship: '퍼스트엔젤',
+        shipType: '쾌속선',
+        route: '장산(북강), 하의도, 신의(상태)',
+        operator: '(유)신진해운',
+        contact: '061-244-0522',
+        duration: '1시간 13분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '조도 방면',
+        time: '0830',
+        ship: '섬사랑 10,13호',
+        shipType: '-',
+        route: '조도 방면',
+        operator: '해광운수',
+        contact: '061-283-9915'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '도초, 우이도, 달리도, 장좌도, 율도, 외달도 방면',
+        time: '0700',
+        ship: '슬로아일랜드호',
+        shipType: '차도선',
+        route: '달리도, 장좌도, 율도, 외달도',
+        operator: '(유)신진해운',
+        contact: '061-244-0522',
+        duration: '54분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '도초, 우이도, 달리도, 장좌도, 율도, 외달도 방면',
+        time: '1030',
+        ship: '슬로아일랜드호',
+        shipType: '차도선',
+        route: '달리도, 장좌도, 율도, 외달도',
+        operator: '(유)신진해운',
+        contact: '061-244-0522',
+        duration: '54분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '도초, 우이도, 달리도, 장좌도, 율도, 외달도 방면',
+        time: '1330',
+        ship: '슬로아일랜드호',
+        shipType: '차도선',
+        route: '달리도, 장좌도, 율도, 외달도',
+        operator: '(유)신진해운',
+        contact: '061-244-0522',
+        duration: '54분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '도초, 우이도, 달리도, 장좌도, 율도, 외달도 방면',
+        time: '1630',
+        ship: '슬로아일랜드호',
+        shipType: '차도선',
+        route: '달리도, 장좌도, 율도, 외달도',
+        operator: '(유)신진해운',
+        contact: '061-244-0522',
+        duration: '54분'
+      },
+      {
+        region: '목포',
+        period: '2026-10',
+        group: '도초, 우이도, 달리도, 장좌도, 율도, 외달도 방면',
+        time: '1150',
+        ship: '섬사랑6호',
+        shipType: '-',
+        route: '도초, 우이도',
+        operator: '신안군',
+        contact: '061-240-8164'
+      }
+    ];
+    window.PORTAL_SUBPAGE_DATA = {
+      rootPrefix: '../',
+      content: `
+<div class="portal-list-toolbar portal-operation-toolbar" aria-label="운항정보 검색 조건">
+  <div class="portal-operation-controls">
+    <div class="portal-filter-select-group">
+      <div class="portal-list-select">
+        <label class="sr-only" for="operation-period-select">운항 월 선택</label>
+        <select id="operation-period-select" aria-label="운항 월 선택"></select>
+      </div>
+      <div class="portal-list-select portal-list-select--route">
+        <label class="sr-only" for="operation-route-select">항로 선택</label>
+        <select id="operation-route-select" aria-label="항로 선택"></select>
+      </div>
+    </div>
+    <form class="portal-list-search" id="operation-search-form" role="search">
+      <label class="sr-only" for="operation-search-input">선명 또는 기항지 검색</label>
+      <input id="operation-search-input" type="search" placeholder="선명, 기항지 검색" autocomplete="off">
+      <button class="btn btn--icon btn--md btn--ghost" type="submit" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg></button>
+    </form>
+  </div>
+</div>
+
+<div class="mokpo-timetable-groups" id="operation-group-list"></div>
+<div class="portal-operation-card-list mokpo-timetable-card-list" id="operation-card-list" aria-label="여객선 운항정보 목록"></div>
+<nav class="portal-pagination" id="operation-pagination" aria-label="운항정보 페이지" hidden></nav>
+<p class="portal-faq-empty portal-operation-empty" id="operation-empty" role="status" hidden>조건에 맞는 운항정보가 없습니다.</p>
+<aside class="mokpo-timetable-group-note mokpo-timetable-general-notice" role="note" aria-labelledby="mokpo-timetable-general-notice-title">
+  <strong class="mokpo-timetable-group-note__title" id="mokpo-timetable-general-notice-title">
+    <span>여객선 이용 유의사항</span>
+  </strong>
+  <ul>
+    <li>해상의 기상악화, 선박사정, 정기휴항일이 있사오니 사전에 전화문의 하신 후 이용하시기 바랍니다.</li>
+    <li>승선권 발권 시 신분증 및 본인확인 증빙서류를 미제출 할 경우 승선권이 발권되지 않으니 유의하시기 바랍니다.</li>
+    <li>모든 선박의 승선권 매표는 선박 출항 5분 전 마감되오니 유의하시기 바랍니다.</li>
+    <li>각 기항지 출·입항은 운항 선박회사에 문의하시기 바랍니다.</li>
+  </ul>
+</aside>
+`
+    };
+  </script>
+  <script src="../../common/dom-utils.js"></script>
+  <script src="../../common/region-page.js"></script>
+  <script src="../../common/layout.js"></script>
+  <script src="../../common/terminal-regions.js"></script>
+  <script src="../../common/pagination.js"></script>
+  <script src="../../common/operation-info.js"></script>
+</body>
+</html>

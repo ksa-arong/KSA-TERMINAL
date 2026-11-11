@@ -18,11 +18,16 @@ function renderSharedLayout() {
     if (!rootPrefix || href.startsWith('#') || /^[a-z][a-z\d+.-]*:/i.test(href)) return href;
     return `${rootPrefix}${href}`;
   };
-  const resolveTerminalLogoSrc = (regionId, rootPrefix = '../') => {
+  const createPaths = (rootPrefix = '', regionId = '') => window.KsaPathResolver.create({
+    location: regionId ? 'region' : rootPrefix ? 'portal-subpage' : 'portal-root',
+    regionId: regionId || undefined
+  });
+  const resolveTerminalLogoSrc = (regionId) => {
     const logoFile = window.getPortalRegionDefinition?.(regionId)?.logo;
+    const paths = createPaths('', regionId);
     return logoFile
-      ? withRootPrefix(`common/images/logo/${encodeURIComponent(logoFile)}`, rootPrefix)
-      : withRootPrefix('common/images/logo.png', rootPrefix);
+      ? paths.asset(`images/logo/${encodeURIComponent(logoFile)}`)
+      : paths.asset('images/logo.png');
   };
 
   const portalQuickIconPaths = {
@@ -40,15 +45,19 @@ function renderSharedLayout() {
   }
 
   function sharedHeader(options) {
-    const { brandName, brandLogoSrc = '', portal = false, guidePage = false, portalSection = '', rootPrefix = '', menuMode = portal ? 'portal' : 'terminal' } = options;
+    const { brandName, brandLogoSrc = '', portal = false, guidePage = false, portalSection = '', rootPrefix = '', regionId = '', menuMode = portal ? 'portal' : 'terminal' } = options;
     const terminalMenu = menuMode === 'terminal';
+    const regionMenu = menuMode === 'region-v2';
+    const regionalSite = menuMode === 'region-v2' || menuMode === 'terminal';
+    const paths = createPaths(rootPrefix, regionalSite ? regionId || window.terminalData?.regionId : '');
     const currentLanguage = window.i18n?.language === 'en' ? 'en' : 'ko';
     const currentLanguageCode = currentLanguage === 'en' ? 'ENG' : 'KOR';
     const currentLanguageName = t(`header.${currentLanguage === 'en' ? 'english' : 'korean'}`);
-    const homeLink = terminalMenu
+    const homeLink = regionMenu
+      ? './index.html'
+      : terminalMenu
       ? (guidePage ? './index.html' : '#home')
-      : withRootPrefix('index.html', rootPrefix);
-    const terminalRoot = portal ? rootPrefix : '../';
+      : paths.portal();
     const currentClass = (section) => {
       if (portal) {
         if (section === 'terminal' && !portalSection) return ' current';
@@ -58,9 +67,11 @@ function renderSharedLayout() {
       if (section === 'terminal' && guidePage) return ' current';
       return '';
     };
-    const menuItems = menuData.map((item) => terminalMenu ? item.terminal : item).filter((item) => item && !item.hidden);
+    const menuItems = regionMenu
+      ? (window.REGION_MENU || [])
+      : menuData.map((item) => terminalMenu ? item.terminal : item).filter((item) => item && !item.hidden);
     const resolveMenuHref = (href) => {
-      if (!terminalMenu) return withRootPrefix(href, rootPrefix);
+      if (!terminalMenu) return paths.portal(href);
       if (!href.startsWith('{terminal}/')) return href;
       const relative = href.slice('{terminal}/'.length);
       if (relative.startsWith('index.html#')) return guidePage ? `./${relative}` : `#${relative.split('#')[1]}`;
@@ -70,12 +81,46 @@ function renderSharedLayout() {
     };
     const externalAttributes = (item) => portalExternalAttributes(item);
     const externalLinkIcon = '<svg class="mega-menu-external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="m10 14 11-11"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>';
-    const renderGnbItems = () => menuItems.map((item) => {
+    const currentRegionPage = document.body.dataset.regionPage || '';
+    const currentTerminalId = decodeURIComponent(window.location.hash.slice(1)) || 'mokpo-coastal';
+    const resolveRegionHref = (item) => item.external ? paths.portal(item.href) : paths.regionPage(item.href);
+    const regionGroupCurrent = (item) => (item.pages || item.children).some((child) => child.page === currentRegionPage);
+    const regionChildren = (item) => window.getRegionMenuChildren ? window.getRegionMenuChildren(item, window.terminalData) : item.children;
+    const regionLinkedChildren = (item) => regionChildren(item).filter((child) => child.href);
+    const renderRegionChild = (child, surface) => {
+      const current = child.terminalId
+        ? child.terminalId === currentTerminalId && ['terminal-introduction', 'facilities', 'directions', 'parking'].includes(currentRegionPage)
+        : child.page === currentRegionPage;
+      const icon = child.external ? externalLinkIcon : '';
+      const classNames = [];
+      if (child.external) classNames.push(surface === 'mega' ? 'mega-menu-external-link region-menu-external' : 'region-menu-external');
+      if (current) classNames.push('region-menu-current');
+      const className = classNames.length ? ` class="${classNames.join(' ')}"` : '';
+      return `<a${className} href="${resolveRegionHref(child)}"${current ? ' aria-current="page"' : ''}><span>${escapeHtml(child.label)}</span>${icon}</a>`;
+    };
+    const renderGnbItems = regionMenu ? () => menuItems.map((item) => {
+      const current = regionGroupCurrent(item);
+      const linkedChildren = regionLinkedChildren(item);
+      const target = linkedChildren.find((child) => child.page === currentRegionPage) || linkedChildren[0];
+      const content = target
+        ? `<a class="gnb-link${current ? ' current' : ''}" data-mega="${item.id}" href="${resolveRegionHref(target)}"${current ? ' aria-current="page"' : ''}>${escapeHtml(item.label)}</a>`
+        : `<span class="gnb-link region-menu-disabled" data-mega="${item.id}" aria-disabled="true">${escapeHtml(item.label)}</span>`;
+      return `<li class="gnb-item">${content}</li>`;
+    }).join('') : () => menuItems.map((item) => {
       const current = Boolean(currentClass(item.currentSection || ''));
       return `
       <li class="gnb-item"><a class="gnb-link${current ? ' current' : ''}" data-mega="${item.id}" href="${resolveMenuHref(item.href)}"${externalAttributes(item)}${current ? ' aria-current="page"' : ''}>${t(item.labelKey)}</a></li>`;
     }).join('');
-    const renderMobileMenuGroups = () => menuItems.map((item) => {
+    const renderMobileMenuGroups = regionMenu ? () => menuItems.map((item) => {
+      const current = regionGroupCurrent(item);
+      const linkedChildren = regionLinkedChildren(item);
+      const target = linkedChildren.find((child) => child.page === currentRegionPage) || linkedChildren[0];
+      const submenuId = `mobile-menu-submenu-${item.id}`;
+      const title = target
+        ? `<a class="mobile-menu-title${current ? ' current' : ''}" href="${resolveRegionHref(target)}"${current ? ' aria-current="page"' : ''}>${escapeHtml(item.label)}</a>`
+        : `<span class="mobile-menu-title region-menu-disabled" aria-disabled="true">${escapeHtml(item.label)}</span>`;
+      return `<section class="mobile-menu-group${current ? ' is-open' : ''}"><div class="mobile-menu-primary"><h2>${title}</h2><button class="mobile-menu-toggle" type="button" aria-label="${escapeHtml(`${item.label} 상세 메뉴`)}" aria-expanded="${String(current)}" aria-controls="${submenuId}"><span aria-hidden="true"></span></button></div><ul class="mobile-menu-links" id="${submenuId}"${current ? '' : ' hidden'}>${regionChildren(item).map((child) => `<li>${renderRegionChild(child, 'mobile')}</li>`).join('')}</ul></section>`;
+    }).join('') : () => menuItems.map((item) => {
       const visibleChildren = item.children.filter((child) => !child.hidden);
       if (!item.href && visibleChildren.length === 0) return '';
       const current = Boolean(currentClass(item.currentSection || ''));
@@ -88,26 +133,34 @@ function renderSharedLayout() {
         : '';
       return `<section class="mobile-menu-group${current ? ' is-open' : ''}"><div class="mobile-menu-primary"><h2><a class="mobile-menu-title${current ? ' current' : ''}" href="${resolveMenuHref(item.href)}"${externalAttributes(item)}${current ? ' aria-current="page"' : ''}>${t(item.labelKey)}</a></h2>${toggle}</div>${childLinks}</section>`;
     }).join('');
-    const renderMobileUtility = () => `
+    const renderMobileUtility = regionalSite ? () => `
+      <nav class="mobile-menu-utility" aria-label="지역 사이트 빠른 메뉴">
+        <a href="${paths.portal()}">통합 홈페이지</a>
+        <a href="${paths.portal('privacy.html')}">${t('footer.privacy')}</a>
+        <a href="${paths.portal('terms.html')}">${t('footer.terms')}</a>
+      </nav>` : () => `
       <nav class="mobile-menu-utility" aria-label="${t('header.quickMenu')}">
         <a href="${resolveMenuHref('privacy.html')}">${t('footer.privacy')}</a>
         <a href="${resolveMenuHref('terms.html')}">${t('footer.terms')}</a>
       </nav>`;
-    const renderMegaMenu = () => `
+    const renderMegaMenu = regionMenu ? () => `
+      <div class="container mega-menu-inner portal-mega-menu-inner region-mega-menu-inner">
+        ${menuItems.map((item) => `<div class="mega-column" role="group" aria-label="${escapeHtml(item.label)}">${regionChildren(item).map((child) => renderRegionChild(child, 'mega')).join('')}</div>`).join('')}
+      </div>` : () => `
       <div class="container mega-menu-inner ${portal ? 'portal-mega-menu-inner' : 'terminal-mega-menu-inner'}">
         ${menuItems.map((item) => `<div class="mega-column" role="group" aria-label="${escapeHtml(t(item.labelKey))}">${item.children.filter((child) => !child.hidden).map((child) => `<a${child.external ? ' class="mega-menu-external-link"' : ''} href="${resolveMenuHref(child.href)}"${externalAttributes(child)}><span>${t(child.labelKey)}</span>${child.external ? externalLinkIcon : ''}</a>`).join('')}</div>`).join('')}
       </div>`;
-    const headerLogoSrc = brandLogoSrc || withRootPrefix('common/images/logo.png', rootPrefix);
+    const headerLogoSrc = brandLogoSrc || paths.asset('images/logo.png');
     const brandContent = portal
       ? `<span class="portal-header-brand-assets" aria-hidden="true"><img class="portal-header-brand-image" src="${headerLogoSrc}" alt="" width="954" height="196"></span>`
       : escapeHtml(brandName);
-    const mobileMenuLogoSrc = brandLogoSrc || (portal ? withRootPrefix('common/images/logo.png', rootPrefix) : '../common/images/logo.png');
+    const mobileMenuLogoSrc = brandLogoSrc || paths.asset('images/logo.png');
     const terminalMenuItems = (window.PORTAL_REGION_REGISTRY || []).map((region) => {
       const label = escapeHtml(region.gnbLabelKo || region.nameKo);
       if (!region.hasPage || !region.folder) {
         return `<span class="terminal-switcher-disabled" aria-disabled="true"><span>${label}</span><small>${t('common.ready')}</small></span>`;
       }
-      return `<a href="${terminalRoot}${encodeURIComponent(region.folder)}/index.html"><span>${label}</span><i aria-hidden="true">→</i></a>`;
+      return `<a href="${paths.region(region.folder)}"><span>${label}</span><i aria-hidden="true">→</i></a>`;
     }).join('');
 
     const gnbItems = renderGnbItems();
@@ -125,6 +178,7 @@ function renderSharedLayout() {
             </ul>
           </nav>
           <div class="header-utils">
+            ${regionalSite ? `<a class="btn btn--sm btn--portal-home regional-portal-link" data-integrated-home-link href="${paths.portal()}">통합 홈페이지</a>` : ''}
             <div class="terminal-switcher">
               <button class="all-terminals-link" id="terminal-switcher-button" type="button" aria-expanded="false" aria-controls="terminal-switcher-menu"><span class="utility-grid-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>${t('header.allTerminals')}<span class="terminal-switcher-chevron" aria-hidden="true"></span></button>
               <div class="terminal-switcher-menu" id="terminal-switcher-menu" aria-hidden="true">
@@ -169,7 +223,8 @@ function renderSharedLayout() {
       </aside>`;
   }
 
-  function sharedSiteFooter(rootPrefix = '') {
+  function sharedSiteFooter(rootPrefix = '', regionId = '') {
+    const paths = createPaths(rootPrefix, regionId);
     const relatedOptions = [
       ['https://www.theksa.or.kr/', '한국해운조합'],
       ['https://island.theksa.co.kr/', 'KSA여객선예매'],
@@ -180,15 +235,15 @@ function renderSharedLayout() {
         <div class="container">
           <div class="site-footer-top">
             <nav class="site-footer-policy" aria-label="정책 및 이용 안내">
-              <a class="is-emphasis" href="${withRootPrefix('privacy.html', rootPrefix)}">${t('footer.privacy')}</a>
-              <a href="${withRootPrefix('terms.html', rootPrefix)}">${t('footer.terms')}</a>
-              <a href="${withRootPrefix('sitemap.html', rootPrefix)}">${t('footer.sitemap')}</a>
+              <a class="is-emphasis" href="${paths.portal('privacy.html')}">${t('footer.privacy')}</a>
+              <a href="${paths.portal('terms.html')}">${t('footer.terms')}</a>
+              <a href="${paths.portal('sitemap.html')}">${t('footer.sitemap')}</a>
             </nav>
           </div>
           <div class="site-footer-main">
             <div class="site-footer-company">
-              <a class="site-footer-logo" href="${withRootPrefix('index.html', rootPrefix)}" aria-label="전국여객선터미널 홈">
-                <img class="site-footer-brand-image" src="${withRootPrefix('common/images/logo.png', rootPrefix)}" alt="" width="954" height="196">
+              <a class="site-footer-logo" href="${paths.portal()}" aria-label="전국여객선터미널 홈">
+                <img class="site-footer-brand-image" src="${paths.asset('images/logo.png')}" alt="" width="954" height="196">
               </a>
               <p class="site-footer-contact"><strong>전국여객선운항안내</strong><a href="tel:1544-1114">1544-1114</a></p>
               <address class="site-footer-address">
@@ -300,17 +355,17 @@ function renderSharedLayout() {
     }).join('');
     const depthOneItems = renderBreadcrumbItems(menuData, parent.id);
     const depthTwoItems = renderBreadcrumbItems(visibleChildren, child ? child.id : '');
-    const breadcrumb = `<nav class="portal-breadcrumb portal-subnav-breadcrumb" aria-label="현재 위치">
-      <a class="portal-breadcrumb-home" href="${withRootPrefix('index.html', rootPrefix)}" aria-label="${t('nav.home')}"><svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.7h-6v-6h-5v6h-6z"/></svg></a>
-      <span class="portal-breadcrumb-separator" aria-hidden="true"></span>
-      <div class="portal-breadcrumb-dropdown">
-        <button class="portal-breadcrumb-trigger" type="button" aria-expanded="false" aria-controls="portal-depth-one-menu"><span>${parentLabel}</span><i aria-hidden="true"></i></button>
-        <ul class="portal-breadcrumb-menu" id="portal-depth-one-menu" hidden>${depthOneItems}</ul>
+    const breadcrumb = `<nav class="breadcrumb subnav-breadcrumb" aria-label="현재 위치">
+      <a class="breadcrumb-home" href="${withRootPrefix('index.html', rootPrefix)}" aria-label="${t('nav.home')}"><svg class="line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.8l8.5 6.7v9.7h-6v-6h-5v6h-6z"/></svg></a>
+      <span class="breadcrumb-separator" aria-hidden="true"></span>
+      <div class="breadcrumb-dropdown">
+        <button class="breadcrumb-trigger" type="button" aria-expanded="false" aria-controls="portal-depth-one-menu"><span>${parentLabel}</span><i aria-hidden="true"></i></button>
+        <ul class="breadcrumb-menu" id="portal-depth-one-menu" hidden>${depthOneItems}</ul>
       </div>
-      ${indexPage ? '' : `<span class="portal-breadcrumb-separator" aria-hidden="true"></span>
-      <div class="portal-breadcrumb-dropdown">
-        <button class="portal-breadcrumb-trigger" type="button" aria-expanded="false" aria-controls="portal-depth-two-menu"><span>${pageLabel}</span><i aria-hidden="true"></i></button>
-        <ul class="portal-breadcrumb-menu" id="portal-depth-two-menu" hidden>${depthTwoItems}</ul>
+      ${indexPage ? '' : `<span class="breadcrumb-separator" aria-hidden="true"></span>
+      <div class="breadcrumb-dropdown">
+        <button class="breadcrumb-trigger" type="button" aria-expanded="false" aria-controls="portal-depth-two-menu"><span>${pageLabel}</span><i aria-hidden="true"></i></button>
+        <ul class="breadcrumb-menu" id="portal-depth-two-menu" hidden>${depthTwoItems}</ul>
       </div>`}
     </nav>`;
     const childCards = indexPage ? `<div class="portal-terminal-directory">${visibleChildren.map((item) => `<a class="portal-terminal-link-card" href="${resolvePortalLink(item)}"${portalExternalAttributes(item)}><span class="portal-card-region">${parentLabel}</span><h3>${t(item.labelKey)}</h3><strong>${t(item.labelKey)} <i aria-hidden="true">→</i></strong></a>`).join('')}</div>` : '';
@@ -318,9 +373,9 @@ function renderSharedLayout() {
     const content = (typeof data.content === 'function' ? data.content({ t, escapeHtml, rootPrefix }) : data.content) || renderPortalPreparingBlock(data.emptyState, rootPrefix);
     const renderSection = (section = {}) => {
       const sectionTitle = resolveText(section.title);
-      const sectionClass = `portal-template-section${section.soft ? ' portal-template-section--soft' : ''}`;
+      const sectionClass = `template-section${section.soft ? ' template-section--soft' : ''}`;
       return `<section class="${sectionClass}"><div class="container">
-        ${sectionTitle ? `<div class="portal-template-section-heading${section.accent ? ' has-accent' : ''}"><h2>${escapeHtml(sectionTitle)}</h2></div>` : ''}
+        ${sectionTitle ? `<div class="template-section-heading${section.accent ? ' has-accent' : ''}"><h2>${escapeHtml(sectionTitle)}</h2></div>` : ''}
         ${section.content || ''}
       </div></section>`;
     };
@@ -339,9 +394,9 @@ function renderSharedLayout() {
       <a class="skip-link" href="#main">${t('common.skip')}</a>
       <div id="portal-header-root"></div>
       <main id="main">
-        <div class="portal-subnav-bar"><div class="container">${breadcrumb}</div></div>
-        <section class="portal-subhero" aria-labelledby="page-title"><div class="container">
-          <div class="portal-subhero-title">
+        <div class="subnav-bar"><div class="container">${breadcrumb}</div></div>
+        <section class="subhero" aria-labelledby="page-title"><div class="container">
+          <div class="subhero-title">
             <h1 id="page-title">${escapeHtml(pageTitle)}</h1>
           </div>
         </div></section>
@@ -352,14 +407,14 @@ function renderSharedLayout() {
     return rootPrefix;
   }
 
-  function initializePortalBreadcrumb() {
-    const breadcrumb = document.querySelector('.portal-subnav-breadcrumb');
+  function initializeBreadcrumb() {
+    const breadcrumb = document.querySelector('.subnav-breadcrumb');
     if (!breadcrumb) return;
-    const dropdowns = [...breadcrumb.querySelectorAll('.portal-breadcrumb-dropdown')];
+    const dropdowns = [...breadcrumb.querySelectorAll('.breadcrumb-dropdown')];
 
     function setDropdown(dropdown, open, returnFocus = false) {
-      const trigger = dropdown.querySelector('.portal-breadcrumb-trigger');
-      const menu = dropdown.querySelector('.portal-breadcrumb-menu');
+      const trigger = dropdown.querySelector('.breadcrumb-trigger');
+      const menu = dropdown.querySelector('.breadcrumb-menu');
       dropdown.classList.toggle('open', open);
       trigger.setAttribute('aria-expanded', String(open));
       menu.hidden = !open;
@@ -373,8 +428,8 @@ function renderSharedLayout() {
     }
 
     dropdowns.forEach((dropdown) => {
-      const trigger = dropdown.querySelector('.portal-breadcrumb-trigger');
-      const menu = dropdown.querySelector('.portal-breadcrumb-menu');
+      const trigger = dropdown.querySelector('.breadcrumb-trigger');
+      const menu = dropdown.querySelector('.breadcrumb-menu');
       const links = [...menu.querySelectorAll('a')];
 
       trigger.addEventListener('click', () => {
@@ -678,110 +733,21 @@ function renderSharedLayout() {
     });
   }
 
-  function regionSectionHeading(kicker, title, description, id) {
-    return `<div class="region-section-heading"><p class="section-kicker">${escapeHtml(kicker)}</p><h2 id="${id}">${escapeHtml(title)}</h2>${description ? `<p>${escapeHtml(description)}</p>` : ''}</div>`;
-  }
-
-  function regionTelephone(tel, label = tel) {
-    const callable = String(tel).split('~')[0].replace(/[^\d+]/g, '');
-    return `<a class="region-contact-tel" href="tel:${callable}">${escapeHtml(label)}</a>`;
-  }
-
-  function renderRegionQuickNav(data) {
-    const defaultItems = [
-      ['schedule', '운항 시간표', '항로별 출항·입항 시간', '#schedule'],
-      ['terminal', '터미널·부두', '연안 2부두·국제 7부두', '#terminals'],
-      ['customer', '선사 연락처', '운항 전 선사 확인', '#operators'],
-      ['booking', '화물·크루즈 문의', '선적 및 크루즈 연락처', '#special-contacts']
-    ];
-    const customItems = (data.quickNav || []).map((item) => [item.icon, localize(item.title), localize(item.description), item.href]);
-    const items = customItems.length ? customItems : defaultItems;
-    const ariaLabel = customItems.length ? `${localize(data.name)} 페이지 바로가기` : '제주항 페이지 바로가기';
-    return `<nav class="container portal-hero-service-grid region-quick-nav" aria-label="${escapeHtml(ariaLabel)}">${items.map(([icon, title, description, href], index) => `<a class="portal-hero-service-card portal-hero-service-card--${index + 1}" href="${href}">${renderPortalQuickIcon(icon)}<strong>${escapeHtml(title)}</strong><small>${escapeHtml(description)}</small></a>`).join('')}</nav>`;
-  }
-
   function renderRegionTemplate(data, app) {
+    if (!window.RegionHome) throw new Error('지역 메인에는 RegionHome 컴포넌트가 필요합니다.');
     const terminalName = localize(data.name);
     const scheduleConfig = window.scheduleData || {};
-    const routes = Array.isArray(scheduleConfig.routes) ? scheduleConfig.routes : [];
-    const operators = [];
-    const operatorKeys = new Set();
-    routes.forEach((entry) => (entry.route?.operators || []).forEach((operator) => {
-      const key = `${localize(operator.name)}|${operator.tel}`;
-      if (!operatorKeys.has(key)) {
-        operatorKeys.add(key);
-        operators.push(operator);
-      }
-    }));
-
-    const terminalCards = (data.terminals || []).map((terminal) => `<article class="region-info-card"><span class="region-card-label">${terminal.id === 'coastal' ? 'COASTAL' : 'INTERNATIONAL'}</span><h3>${escapeHtml(localize(terminal.name))}</h3><address>${escapeHtml(localize(terminal.address))}</address></article>`).join('');
-    const operatorCards = operators.map((operator) => `<article class="region-contact-card"><h3>${escapeHtml(localize(operator.name))}</h3>${regionTelephone(operator.tel)}</article>`).join('');
-    const cargoCards = (data.cargoContacts || []).map((contact) => `<li><span><strong>${escapeHtml(localize(contact.route))}</strong>${escapeHtml(localize(contact.name))}</span>${regionTelephone(contact.tel)}</li>`).join('');
-    const cruiseCards = (data.cruiseContacts || []).map((contact) => `<li><strong>${escapeHtml(localize(contact.name))}</strong>${regionTelephone(contact.tel)}</li>`).join('');
-    const notices = (data.notices || []).map((notice) => `<li>${escapeHtml(localize(notice))}</li>`).join('');
-    const representative = data.contacts?.representative;
-    const national = data.contacts?.national;
-    const hero = data.hero || {};
-    const hasTerminalInfo = Boolean(terminalCards || representative || national || Object.keys(data.links || {}).length);
-    const terminalSection = hasTerminalInfo ? `<section class="region-section region-terminals" id="terminals" aria-labelledby="terminals-title">
-          <div class="container">
-            ${regionSectionHeading('TERMINAL', '터미널·부두 안내', '제주항 여객선은 선박별 지정 부두에서 출항합니다.', 'terminals-title')}
-            <div class="region-card-grid region-card-grid--two">${terminalCards}</div>
-            <div class="region-primary-contacts" aria-label="대표 안내 연락처">
-              ${representative ? `<div><span>${escapeHtml(localize(representative.label))}</span>${regionTelephone(representative.tel)}</div>` : ''}
-              ${national ? `<div><span>${escapeHtml(localize(national.label))}${national.note ? ` <small>${escapeHtml(localize(national.note))}</small>` : ''}</span>${regionTelephone(national.tel)}</div>` : ''}
-            </div>
-            <div class="region-action-links">
-              ${Object.values(data.links || {}).map((link) => `<a class="btn btn--outline" href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}<span aria-hidden="true">↗</span></a>`).join('')}
-            </div>
-          </div>
-        </section>` : '';
-    const specialContactGroups = [
-      cargoCards ? `<article><h3>화물선적 문의</h3><ul>${cargoCards}</ul></article>` : '',
-      cruiseCards ? `<article><h3>크루즈 문의</h3><ul>${cruiseCards}</ul></article>` : ''
-    ].filter(Boolean);
-    const specialContactsTitle = localize(data.specialContactsTitle) || '화물선적·크루즈 문의';
-    const specialContactsSection = specialContactGroups.length ? `<section class="region-section region-special-contacts" id="special-contacts" aria-labelledby="special-contacts-title">
-          <div class="container">
-            ${regionSectionHeading('CONTACT', specialContactsTitle, '', 'special-contacts-title')}
-            <div class="region-contact-columns${specialContactGroups.length === 1 ? ' region-contact-columns--single' : ''}">
-              ${specialContactGroups.join('\n              ')}
-            </div>
-          </div>
-        </section>` : '';
-    const heroSlide = data.regionId === 'mokpo' ? 'mokpo' : 'jeju';
-
     app.innerHTML = `
       <a class="skip-link" href="#main">${t('common.skip')}</a>
-      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, portalSection: 'terminal', rootPrefix: '../', menuMode: 'terminal' })}
+      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, portalSection: 'terminal', rootPrefix: '../../', regionId: data.regionId, menuMode: data.regionId === 'mokpo' ? 'region-v2' : 'terminal' })}
       <main id="main">
-        <section class="portal-hero region-hero" id="home" aria-labelledby="region-hero-title">
-          <div class="portal-hero-media" aria-hidden="true"><span class="portal-hero-slide portal-hero-slide--${heroSlide} active"></span></div>
-          <div class="container portal-hero-content region-hero-content">
-            <span class="eyebrow">${escapeHtml(localize(hero.eyebrow))}</span>
-            <h1 id="region-hero-title">${escapeHtml(localize(hero.title))}</h1>
-            <p>${escapeHtml(localize(hero.description))}</p>
-            <p class="region-source">${escapeHtml(localize(scheduleConfig.source))}</p>
-          </div>
-          ${renderRegionQuickNav(data)}
-        </section>
-        <section class="region-section region-schedule-section" id="schedule" aria-labelledby="schedule-title"></section>
-        ${terminalSection}
-        <section class="region-section region-operators" id="operators" aria-labelledby="operators-title">
-          <div class="container">
-            ${regionSectionHeading('OPERATORS', '선사 연락처', '운항 여부와 승선 관련 사항은 출항 전에 해당 선사로 확인하세요.', 'operators-title')}
-            <div class="region-card-grid region-card-grid--three">${operatorCards}</div>
-          </div>
-        </section>
-        ${specialContactsSection}
-        <section class="region-section region-notices" id="notices" aria-labelledby="notices-title">
-          <div class="container">
-            ${regionSectionHeading('NOTICE', '유의사항', '', 'notices-title')}
-            <ul>${notices}</ul>
-          </div>
-        </section>
+        ${window.RegionHome.renderHero(data, scheduleConfig)}
+        ${window.RegionHome.renderTerminalSection(data, scheduleConfig)}
+        ${window.RegionHome.renderGuideSection(data)}
+        ${window.RegionHome.renderBottomInfo(data)}
       </main>
-      ${sharedSiteFooter('../')}`;
+      ${window.RegionHome.renderFloatingQuick()}
+      ${sharedSiteFooter('../../', data.regionId)}`;
 
     initializeHeader();
     initializeSiteFooter();
@@ -789,35 +755,23 @@ function renderSharedLayout() {
   }
 
   function renderRegionGuidePlaceholder(data, app) {
+    if (!window.RegionHome) throw new Error('지역 메인에는 RegionHome 컴포넌트가 필요합니다.');
     const terminalName = localize(data.name);
-    const guideTitle = localize(data.guideTitle) || '제주항 터미널 이용안내';
-    const guideUnavailable = localize(data.guideUnavailable) || '요금, 오시는 길, 시설 안내는 확인된 데이터가 없어 현재 제공하지 않습니다.';
-    const guideBackLabel = localize(data.guideBackLabel) || '터미널·부두 안내로 돌아가기';
-    const guideBackHref = data.guideBackHref || './index.html#terminals';
-    const guideActions = (data.guideActions || []).map((action) => {
-      const external = /^https?:\/\//.test(action.href || '');
-      return `<a class="btn btn--outline" href="${escapeHtml(action.href)}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHtml(localize(action.label))}${external ? '<span aria-hidden="true">↗</span>' : ''}</a>`;
-    }).join('');
-    const actionMarkup = guideActions
-      ? `<div class="region-guide-actions">${guideActions}</div>`
-      : `<a class="btn btn--outline" href="${escapeHtml(guideBackHref)}">${escapeHtml(guideBackLabel)}</a>`;
+    const scheduleConfig = window.scheduleData || {};
     app.innerHTML = `
       <a class="skip-link" href="#main">${t('common.skip')}</a>
-      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, guidePage: true, portalSection: 'terminal', rootPrefix: '../', menuMode: 'terminal' })}
-      <main id="main" class="region-guide-main">
-        <section class="region-guide-placeholder" aria-labelledby="region-guide-title">
-          <div class="container">
-            <p class="section-kicker">TERMINAL GUIDE</p>
-             <h1 id="region-guide-title">${escapeHtml(guideTitle)}</h1>
-             <strong>준비 중</strong>
-             <p>${escapeHtml(guideUnavailable)}</p>
-             ${actionMarkup}
-          </div>
-        </section>
+      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, portalSection: 'terminal', rootPrefix: '../../', regionId: data.regionId, menuMode: data.regionId === 'mokpo' ? 'region-v2' : 'terminal' })}
+      <main id="main">
+        ${window.RegionHome.renderHero(data, scheduleConfig)}
+        ${window.RegionHome.renderTerminalSection(data, scheduleConfig)}
+        ${window.RegionHome.renderGuideSection(data)}
+        ${window.RegionHome.renderBottomInfo(data)}
       </main>
-      ${sharedSiteFooter('../')}`;
+      ${window.RegionHome.renderFloatingQuick()}
+      ${sharedSiteFooter('../../', data.regionId)}`;
     initializeHeader();
     initializeSiteFooter();
+    initializeFloatingQuick();
   }
 
   if (document.body.classList.contains('portal-page') && !document.body.classList.contains('region-template-page')) {
@@ -837,7 +791,7 @@ function renderSharedLayout() {
       initializeSiteFooter();
     }
     if (portalQuickRoot) portalQuickRoot.innerHTML = renderPortalQuickMenu();
-    if (subpageData) initializePortalBreadcrumb();
+    if (subpageData) initializeBreadcrumb();
     initializeFloatingQuick();
     return;
   }
@@ -845,6 +799,23 @@ function renderSharedLayout() {
   const data = window.terminalData;
   const app = document.getElementById('app');
   if (!data || !app) throw new Error('terminalData와 #app 요소가 필요합니다.');
+
+  const regionPageKey = document.body.dataset.regionPage;
+  if (regionPageKey) {
+    if (!window.RegionPage) throw new Error('지역 서브페이지에는 RegionPage 렌더러가 필요합니다.');
+    const terminalName = localize(data.name);
+    app.innerHTML = `
+      <a class="skip-link" href="#main">${t('common.skip')}</a>
+      ${sharedHeader({ brandName: terminalName, brandLogoSrc: resolveTerminalLogoSrc(data.regionId), portal: true, portalSection: 'terminal', rootPrefix: '../../', regionId: data.regionId, menuMode: 'region-v2' })}
+      ${window.RegionPage.renderMain({ pageKey: regionPageKey, terminalData: data, scheduleData: window.scheduleData || {} })}
+      ${sharedSiteFooter('../../', data.regionId)}`;
+    window.RegionPage.initialize?.();
+    initializeBreadcrumb();
+    initializeHeader();
+    initializeSiteFooter();
+    initializeFloatingQuick();
+    return;
+  }
 
   if (data.template === 'portal-region') {
     const regionStatus = window.getPortalRegionStatus
