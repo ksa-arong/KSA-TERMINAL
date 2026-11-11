@@ -20282,6 +20282,7 @@
 
         .portal-v2-terminal-info__value {
             display: block;
+            margin-top: 10px;
         }
         
         .portal-v2-terminal-guide {
