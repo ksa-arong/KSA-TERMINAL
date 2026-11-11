@@ -20424,7 +20424,7 @@
         }
         
         .portal-v2-summary .portal-v2-weather__body {
-            grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+            grid-template-columns: calc((100% - (var(--global-space-12) * 2)) / 3) minmax(0, 1fr);
             gap: var(--global-space-12);
         }
         
