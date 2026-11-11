@@ -20413,7 +20413,7 @@
             --portal-v2-weather-icon-size: var(--global-space-80);
             --portal-v2-weather-current-min-height: calc(var(--global-space-80) + var(--global-space-40) + var(--global-space-32));
             position: relative;
-            padding: var(--global-space-16) 0 var(--global-space-12);
+            padding: var(--global-space-16) 0 var(--global-space-8);
             border: 0;
             border-top: 1px solid var(--border-default);
             border-radius: 0;
@@ -20570,7 +20570,7 @@
                 --portal-v2-weather-current-min-height: var(--global-space-80);
                 margin-top: var(--global-space-16);
                 padding-top: var(--global-space-16);
-                padding-bottom: var(--global-space-16);
+                padding-bottom: var(--global-space-8);
                 gap: var(--portal-v2-summary-content-gap);
             }
             .portal-v2-summary .portal-v2-weather__current img {
@@ -20666,7 +20666,7 @@
             .portal-v2-summary .portal-v2-weather {
                 margin-top: var(--portal-v2-summary-section-space);
                 padding-top: var(--portal-v2-summary-section-space);
-                padding-bottom: var(--portal-v2-summary-section-space);
+                padding-bottom: var(--global-space-8);
             }
             .portal-v2-summary .portal-v2-terminal-card {
                 padding-top: var(--portal-v2-summary-section-space);
