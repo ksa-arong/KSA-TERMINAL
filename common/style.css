@@ -20573,6 +20573,10 @@
                 padding-bottom: var(--global-space-8);
                 gap: var(--portal-v2-summary-content-gap);
             }
+            .portal-v2-summary .portal-v2-weather__advisory {
+                margin-top: 0;
+                padding: var(--global-space-12) var(--global-space-20);
+            }
             .portal-v2-summary .portal-v2-weather__current img {
                 margin-block: 0;
             }
