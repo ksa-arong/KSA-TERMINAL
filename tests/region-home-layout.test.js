@@ -102,7 +102,7 @@ test('선택 적용된 지역 히어로는 지역 문구와 지역 이미지만 
       title: { ko: '목포항 여객선 운항 안내' },
       description: { ko: '목포항의 출항시간과 터미널 정보를 확인하세요.' },
       images: [
-        { src: '../../common/images/portal-hero-mokpo-terminal.jpg', alt: '목포항 여객터미널' },
+        { src: '../../common/images/portal-hero-mokpo-coastal-aerial.png', alt: '목포항 여객터미널' },
         { src: '../../common/images/terminal-mokpo-coastal-waterfront.jpg', alt: '바다에서 본 목포항' }
       ]
     }
@@ -113,7 +113,7 @@ test('선택 적용된 지역 히어로는 지역 문구와 지역 이미지만 
   assert.match(html, /목포항 여객선 운항 안내/);
   assert.match(html, /목포항의 출항시간과 터미널 정보를 확인하세요\./);
   assert.equal((html.match(/portal-hero-slide--regional/g) || []).length, 2);
-  assert.match(html, /src="\.\.\/\.\.\/common\/images\/portal-hero-mokpo-terminal\.jpg"/);
+  assert.match(html, /src="\.\.\/\.\.\/common\/images\/portal-hero-mokpo-coastal-aerial\.png"/);
   assert.match(html, /src="\.\.\/\.\.\/common\/images\/terminal-mokpo-coastal-waterfront\.jpg"/);
   assert.doesNotMatch(html, /portal-hero-slide--jeju|portal-hero-slide--pohang|portal-hero-slide--hongdo|portal-hero-slide--gangjeong/);
   assert.match(html, /<strong data-hero-total>02<\/strong>/);

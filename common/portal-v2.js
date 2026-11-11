@@ -7,7 +7,7 @@
     incheon: 'common/images/portal-hero-island-harbor-wide.png',
     boryeong: 'common/images/portal-hero-island-v3.png',
     gunsan: 'common/images/portal-hero-island-harbor-wide.png',
-    mokpo: 'common/images/portal-hero-mokpo-terminal.jpg',
+    mokpo: 'common/images/portal-hero-mokpo-coastal-aerial.png',
     busan: 'common/images/portal-hero-pohang-international-v2.jpg',
     yeosu: 'common/images/portal-hero-seogwipo-gangjeong-color-v2.jpg',
     wando: 'common/images/portal-hero-hongdo-coastal.jpg',

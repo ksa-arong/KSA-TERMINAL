@@ -295,7 +295,7 @@ window.terminalData = {
     "title": { "ko": "목포항 여객선 운항 안내", "en": "" },
     "description": { "ko": "목포항 여객선 운항정보와 터미널 이용안내를 확인하세요.", "en": "" },
     "images": [
-      { "src": "../../common/images/portal-hero-mokpo-terminal.jpg", "alt": "목포항 여객터미널과 바다 전경" },
+      { "src": "../../common/images/portal-hero-mokpo-coastal-aerial.png", "alt": "바다와 여객선이 보이는 목포연안여객선터미널 항공 전경" },
       { "src": "../../common/images/terminal-mokpo-coastal-waterfront.jpg", "alt": "바다에서 바라본 목포연안여객선터미널" },
       { "src": "../../common/images/terminal-mokpo-coastal-front.jpg", "alt": "도로에서 바라본 목포연안여객선터미널" },
       { "src": "../../common/images/terminal-mokpo-international.jpg", "alt": "목포국제여객선터미널 전경" },

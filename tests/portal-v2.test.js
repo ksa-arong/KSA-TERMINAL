@@ -306,7 +306,7 @@ test('지역을 선택하면 해당 지역의 히어로 이미지와 터미널 �
   assert.equal(view.description, '서남해 섬 여행을 시작하는 관문입니다.');
   assert.equal(view.phone, '1666-0910');
   assert.equal(view.href, 'regions/mokpo/index.html');
-  assert.equal(view.image, 'common/images/portal-hero-mokpo-terminal.jpg');
+  assert.equal(view.image, 'common/images/portal-hero-mokpo-coastal-aerial.png');
 });
 
 test('터미널 제목은 이름 앞에 선택 지역명을 함께 표시한다', () => {
@@ -356,7 +356,7 @@ test('선택한 지역을 화면에 적용하고 지도와 지역 버튼의 선�
     description: '서남해 섬 여행을 시작하는 관문입니다.',
     phone: '1666-0910',
     href: 'regions/mokpo/index.html',
-    image: 'common/images/portal-hero-mokpo-terminal.jpg',
+    image: 'common/images/portal-hero-mokpo-coastal-aerial.png',
     imageAlt: '목포 여객선터미널과 바다 풍경'
   };
 
